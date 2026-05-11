@@ -10,7 +10,7 @@ WORKDIR /app
 COPY . .
 
 # Se o seu projeto usa Maven, descomente a linha abaixo:
-# RUN ./mvnw clean package
+RUN ./mvnw clean package
 
 # Se for Java puro (sem Maven/Gradle), vamos compilar manualmente:
 # Isso compila todos os arquivos .java dentro de src para a pasta out
