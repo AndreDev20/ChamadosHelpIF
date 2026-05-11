@@ -1,6 +1,23 @@
 version: '3.8'
 
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chamados-app
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/chamados_db
+      SPRING_DATASOURCE_USERNAME: chamados
+      SPRING_DATASOURCE_PASSWORD: chamados123
+    networks:
+      - chamados-network
+
   mariadb:
     image: mariadb:11
     container_name: chamados-db
