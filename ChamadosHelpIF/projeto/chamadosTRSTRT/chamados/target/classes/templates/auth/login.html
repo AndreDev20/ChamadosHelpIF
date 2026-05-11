@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — HelpIF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a1628;
+            --navy-mid: #112240;
+            --accent: #00d68f;
+            --accent-dim: #00a36c;
+            --accent-glow: rgba(0,214,143,0.2);
+            --surface: #f0f4f8;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f1923;
+            --muted: #6b7a99;
+            --danger-bg: rgba(239,68,68,0.08);
+            --danger: #dc2626;
+            --font: 'Outfit', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font);
+            background: var(--surface);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Fundo decorativo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -30%;
+            left: -20%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(0,214,143,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%;
+            right: -15%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(10,22,40,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+            padding: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── LOGO TOPO ── */
+        .brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .brand-logo {
+            width: 54px; height: 54px;
+            background: var(--navy);
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.15rem;
+            color: var(--accent);
+            box-shadow: 0 8px 32px rgba(10,22,40,0.18), 0 0 0 1px rgba(0,214,143,0.15);
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+        }
+        .brand p {
+            font-size: 0.88rem;
+            color: var(--muted);
+            margin-top: 0.25rem;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 2.2rem 2rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 0.2rem;
+        }
+        .card-sub {
+            font-size: 0.83rem;
+            color: var(--muted);
+            margin-bottom: 1.6rem;
+        }
+
+        /* ── ALERT ── */
+        .alert-erro {
+            background: var(--danger-bg);
+            border: 1px solid rgba(220,38,38,0.2);
+            border-radius: 10px;
+            padding: 0.7rem 1rem;
+            color: var(--danger);
+            font-size: 0.84rem;
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        /* ── FIELDS ── */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 1.1rem;
+        }
+        label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--muted);
+        }
+        .input-wrap { position: relative; }
+        .input-icon {
+            position: absolute;
+            left: 0.85rem; top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            pointer-events: none;
+        }
+        input {
+            width: 100%;
+            padding: 0.7rem 0.9rem 0.7rem 2.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-family: var(--font);
+            background: var(--surface);
+            color: var(--text);
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: #fff;
+        }
+        input::placeholder { color: #b0bcd4; }
+
+        /* ── SUBMIT ── */
+        .btn-submit {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 0.4rem;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: var(--font);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            letter-spacing: 0.01em;
+        }
+        .btn-submit:hover {
+            background: var(--navy-mid, #112240);
+            box-shadow: 0 4px 20px rgba(10,22,40,0.25);
+            transform: translateY(-1px);
+        }
+        .btn-submit:active { transform: translateY(0); }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 1.4rem 0;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+        .footer-note strong { color: var(--navy); }
+    </style>
+</head>
+<body>
+<div class="login-wrapper">
+
+    <div class="brand">
+        <div class="brand-logo">HI</div>
+        <h1>HelpIF</h1>
+        <p>Sistema de Chamados — IFSP</p>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Bem-vindo de volta</div>
+        <div class="card-sub">Entre com suas credenciais institucionais para continuar.</div>
+
+        <div class="alert-erro" th:if="${erro}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span th:text="${erro}"></span>
+        </div>
+
+        <form method="post" th:action="@{/auth/login}">
+
+            <div class="field-group">
+                <label for="email">E-mail</label>
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                    </span>
+                    <input type="email" id="email" name="email" required
+                           placeholder="seu@ifsp.edu.br" autocomplete="email">
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label for="senha">Senha</label>
+                <div class="input-wrap">
+                    <span class="input-icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </span>
+                    <input type="password" id="senha" name="senha" required
+                           placeholder="••••••••" autocomplete="current-password">
+                </div>
+            </div>
+
+            <button class="btn-submit" type="submit">
+                Entrar
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </button>
+        </form>
+
+        <div class="divider"></div>
+        <div class="footer-note">
+            Acesso restrito a colaboradores do <strong>IFSP</strong>.<br>
+            Em caso de problemas, contate o administrador do sistema.
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Chamado — HelpIF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a1628; --navy-mid: #112240; --navy-light: #1d3461;
+            --accent: #00d68f; --accent-dim: #00a36c; --accent-glow: rgba(0,214,143,0.15);
+            --warn: #ffb830; --warn-bg: rgba(255,184,48,0.12);
+            --info: #3b82f6; --info-bg: rgba(59,130,246,0.12);
+            --danger: #ff5c5c; --danger-bg: rgba(255,92,92,0.1);
+            --success-bg: rgba(0,214,143,0.12);
+            --surface: #f4f7fb; --card: #ffffff; --border: #e2e8f0;
+            --text: #0f1923; --muted: #6b7a99;
+            --font: 'Outfit', sans-serif; --mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font); background: var(--surface); color: var(--text); min-height: 100vh; }
+        .app-shell { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            width: 72px; background: var(--navy);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 1.5rem 0; gap: 0.5rem;
+            position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+        }
+        .sidebar-logo {
+            width: 42px; height: 42px; background: var(--accent); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem; font-weight: 800; font-size: 1.1rem;
+            color: var(--navy); letter-spacing: -1px; box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .sidebar-icon {
+            width: 44px; height: 44px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: background 0.2s;
+            color: rgba(255,255,255,0.45); text-decoration: none;
+        }
+        .sidebar-icon:hover { background: var(--navy-light); color: white; }
+        .sidebar-icon.active { background: var(--accent-glow); color: var(--accent); }
+        .sidebar-bottom { margin-top: auto; }
+        .main-area { margin-left: 72px; flex: 1; display: flex; flex-direction: column; }
+
+        .topbar {
+            background: white; border-bottom: 1px solid var(--border);
+            padding: 0 2rem; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 50;
+        }
+        .topbar-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--muted); }
+        .topbar-breadcrumb .crumb-active { color: var(--text); font-weight: 600; }
+        .topbar-right { display: flex; align-items: center; gap: 1rem; }
+        .user-chip {
+            display: flex; align-items: center; gap: 0.6rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 40px; padding: 0.35rem 0.9rem 0.35rem 0.5rem;
+            font-size: 0.85rem; font-weight: 500;
+        }
+        .user-avatar {
+            width: 28px; height: 28px; background: var(--navy); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-size: 0.75rem; font-weight: 700;
+        }
+
+        .content { padding: 2.5rem; max-width: 780px; width: 100%; margin: 0 auto; }
+
+        .page-header { margin-bottom: 2rem; animation: slideDown 0.5s ease both; }
+        .page-header h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.5px; color: var(--navy); }
+        .page-header p { color: var(--muted); margin-top: 0.3rem; font-size: 0.95rem; }
+
+        .id-chip {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; padding: 0.3rem 0.7rem;
+            font-family: var(--mono); font-size: 0.82rem;
+            color: var(--muted); margin-bottom: 0.4rem;
+        }
+
+        .form-card {
+            background: white; border-radius: 20px; border: 1px solid var(--border);
+            overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            animation: slideUp 0.5s ease 0.1s both;
+        }
+        .form-card-header {
+            background: var(--navy-mid); padding: 1.8rem 2rem;
+            position: relative; overflow: hidden;
+        }
+        .form-card-header::before {
+            content: ''; position: absolute; top: -40px; right: -40px;
+            width: 160px; height: 160px; background: rgba(0,214,143,0.08); border-radius: 50%;
+        }
+        .header-badge {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: rgba(255,184,48,0.15); color: var(--warn);
+            font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.7rem;
+            border-radius: 20px; margin-bottom: 0.6rem;
+            border: 1px solid rgba(255,184,48,0.3); position: relative;
+        }
+        .form-card-header h2 { font-size: 1.15rem; font-weight: 700; color: white; position: relative; }
+        .form-card-header p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; position: relative; }
+
+        .form-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.4rem; }
+        .field-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+        label {
+            font-size: 0.8rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.06em; color: var(--navy-light);
+        }
+        .field-hint { font-size: 0.78rem; color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+        input, select, textarea {
+            width: 100%; padding: 0.78rem 1rem;
+            border: 1.5px solid var(--border); border-radius: 10px;
+            font-size: 0.93rem; font-family: var(--font); color: var(--text);
+            background: var(--surface); transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none; appearance: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); background: white;
+        }
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7a99' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 0.9rem center;
+            padding-right: 2.5rem; cursor: pointer;
+        }
+        select:disabled { opacity: 0.5; cursor: not-allowed; }
+        textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+
+        /* ── CATEGORIA PILLS ─────────────────────────────────── */
+        .categoria-pills {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .categoria-pill {
+            flex: 1;
+            position: relative;
+        }
+
+        .categoria-pill input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .categoria-pill label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+            color: var(--muted);
+            background: var(--surface);
+            transition: all 0.2s;
+        }
+
+        .categoria-pill input[type="radio"]:checked + label {
+            border-color: var(--accent);
+            background: rgba(0, 214, 143, 0.08);
+            color: var(--navy);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .categoria-pill label:hover {
+            border-color: var(--accent-dim);
+            color: var(--navy);
+        }
+
+        .divider { height: 1px; background: var(--border); margin: 0.4rem 0; }
+        .section-label {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        /* STATUS PILLS */
+        .status-selector { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .status-pill {
+            flex: 1; min-width: 120px;
+            padding: 0.7rem 1rem; border-radius: 10px; border: 2px solid var(--border);
+            font-size: 0.85rem; font-weight: 600; font-family: var(--font);
+            cursor: pointer; transition: all 0.2s; text-align: center; background: var(--surface);
+            display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+        }
+        .status-pill input[type="radio"] { display: none; }
+        .status-pill.selected-CRIADO { background: var(--warn-bg); border-color: var(--warn); color: #92660a; }
+        .status-pill.selected-EM_ANALISE { background: var(--info-bg); border-color: var(--info); color: #1d4ed8; }
+        .status-pill.selected-CONCLUIDO { background: var(--success-bg); border-color: var(--accent); color: #047857; }
+
+        #statusHidden { display: none; }
+
+        .form-footer {
+            padding: 1.5rem 2rem; border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1rem; background: var(--surface);
+        }
+        .btn-submit {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            background: var(--accent); color: var(--navy); border: none;
+            border-radius: 12px; padding: 0.85rem 2rem;
+            font-size: 0.95rem; font-weight: 700; font-family: var(--font);
+            cursor: pointer; transition: all 0.2s; letter-spacing: 0.01em;
+            box-shadow: 0 4px 16px rgba(0,214,143,0.35);
+        }
+        .btn-submit:hover { background: var(--accent-dim); transform: translateY(-1px); }
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: white; color: var(--muted); border: 1.5px solid var(--border);
+            border-radius: 12px; padding: 0.85rem 1.5rem;
+            font-size: 0.9rem; font-weight: 600; font-family: var(--font);
+            text-decoration: none; transition: all 0.2s;
+        }
+        .btn-back:hover { border-color: var(--navy); color: var(--navy); }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 600px) {
+            .sidebar { width: 0; overflow: hidden; }
+            .main-area { margin-left: 0; }
+            .content { padding: 1.2rem; }
+            .field-row { grid-template-columns: 1fr; }
+            .form-footer { flex-direction: column-reverse; }
+            .btn-submit, .btn-back { width: 100%; justify-content: center; }
+            .categoria-pills { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-shell">
+    <nav class="sidebar">
+        <div class="sidebar-logo">HI</div>
+        <a href="#" class="sidebar-icon active" title="Admin">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </a>
+        <div class="sidebar-bottom">
+            <a th:href="@{/auth/logout}" class="sidebar-icon" title="Sair">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <div class="main-area">
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <span>HelpIF</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <a th:href="@{/admin}" style="color:inherit; text-decoration:none;">Administração</a>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span class="crumb-active">Editar Chamado</span>
+            </div>
+            <div class="topbar-right">
+                <div class="user-chip">
+                    <div class="user-avatar">A</div>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="page-header">
+                <div class="id-chip">
+                    📋 Chamado <span th:text="'#' + ${incidente.id}"></span>
+                </div>
+                <h1>Editar Chamado</h1>
+                <p>Altere as informações e atualize o status do chamado</p>
+            </div>
+
+            <div class="form-card">
+                <div class="form-card-header">
+                    <div class="header-badge">✏️ Modo de Edição</div>
+                    <h2>Atualizar Chamado <span th:text="'#' + ${incidente.id}"></span></h2>
+                    <p>Aberto em <span th:text="${#temporals.format(incidente.datetime, 'dd/MM/yyyy \'às\' HH:mm')}"></span></p>
+                </div>
+
+                <form method="post" th:action="@{/admin/incidente/editar/{id}(id=${incidente.id})}">
+
+                    <div class="form-body">
+
+                        <!-- ① LOCALIZAÇÃO -->
+                        <div class="section-label">📍 Localização</div>
+
+                        <div class="field-row">
+                            <div class="field-group">
+                                <label for="bloco">Área / Bloco</label>
+                                <select id="bloco" name="bloco" required onchange="atualizarLocais('')">
+                                    <option th:each="b : ${blocos}"
+                                            th:value="${b}"
+                                            th:text="${b.descricao}"
+                                            th:selected="${b == incidente.bloco}"></option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label for="localEspecifico">Local Específico</label>
+                                <select id="localEspecifico" name="localEspecifico" required>
+                                    <option value="">Carregando...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- ② CATEGORIA -->
+                        <div class="section-label">🏷️ Categoria</div>
+
+                        <div class="field-group">
+                            <label>Tipo de chamado</label>
+                            <div class="categoria-pills">
+                                <div class="categoria-pill" th:each="cat : ${categorias}">
+                                    <input type="radio"
+                                           name="categoria"
+                                           th:id="'cat-' + ${cat.name()}"
+                                           th:value="${cat.name()}"
+                                           th:checked="${cat == incidente.categoria}"
+                                           required>
+                                    <label th:for="'cat-' + ${cat.name()}"
+                                           th:text="${cat == T(br.edu.ifsp.chamados.enums.CategoriaIncidente).MANUTENCAO} ? '🔧 Manutenção' : '🔬 Laboratório'">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- ③ DESCRIÇÃO -->
+                        <div class="section-label">📋 Descrição</div>
+
+                        <div class="field-group">
+                            <label for="observacao">Observação</label>
+                            <textarea id="observacao" name="observacao" required
+                                      th:text="${incidente.observacao}"></textarea>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- ④ STATUS -->
+                        <div class="section-label">🔄 Status do Chamado</div>
+
+                        <!-- Hidden select que será submetido -->
+                        <select id="statusHidden" name="status" required>
+                            <option th:each="s : ${statuses}"
+                                    th:value="${s}"
+                                    th:text="${s.name()}"
+                                    th:selected="${s == incidente.status}"></option>
+                        </select>
+
+                        <!-- Pills visuais -->
+                        <div class="status-selector" id="statusPills">
+                            <label class="status-pill" th:each="s : ${statuses}"
+                                   th:id="'pill-' + ${s.name()}"
+                                   th:classappend="${s == incidente.status} ? 'selected-' + ${s.name()} : ''"
+                                   th:onclick="'selectStatus(\'' + ${s.name()} + '\')'">
+                                <input type="radio" th:value="${s}" th:checked="${s == incidente.status}">
+                                <span th:text="${s.name() == 'CRIADO'} ? '🟡 Criado' :
+                                               (${s.name() == 'EM_ANALISE'} ? '🔵 Em Análise' : '✅ Concluído')"></span>
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="form-footer">
+                        <a class="btn-back" th:href="@{/admin}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn-submit">
+                            Salvar Alterações
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const locaisPorBloco = /*[[${locaisPorBloco}]]*/ '{}';
+    const dados = JSON.parse(locaisPorBloco);
+    const localAtual = /*[[${incidente.localEspecifico.name()}]]*/ '';
+
+    function atualizarLocais(selecionado) {
+        const bloco  = document.getElementById('bloco').value;
+        const select = document.getElementById('localEspecifico');
+        select.innerHTML = '';
+        if (bloco && dados[bloco]) {
+            dados[bloco].forEach(function(local) {
+                const opt = document.createElement('option');
+                opt.value = local.name;
+                opt.textContent = local.descricao;
+                if (local.name === selecionado) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+    }
+
+    document.getElementById('bloco').addEventListener('change', function() { atualizarLocais(''); });
+    atualizarLocais(localAtual);
+
+    // Status pills
+    function selectStatus(statusName) {
+        document.getElementById('statusHidden').value = statusName;
+        document.querySelectorAll('.status-pill').forEach(p => {
+            p.className = 'status-pill';
+        });
+        const pill = document.getElementById('pill-' + statusName);
+        if (pill) pill.classList.add('selected-' + statusName);
+    }
+</script>
+</body>
+</html>

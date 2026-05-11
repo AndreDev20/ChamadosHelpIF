@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: chamados-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chamados_db
+      MYSQL_USER: chamados
+      MYSQL_PASSWORD: chamados123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - chamados-network
+
+volumes:
+  mariadb_data:
+
+networks:
+  chamados-network:
+    driver: bridge

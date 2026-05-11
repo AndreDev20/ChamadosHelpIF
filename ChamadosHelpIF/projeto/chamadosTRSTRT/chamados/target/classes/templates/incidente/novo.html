@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Chamado — HelpIF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a1628;
+            --navy-mid: #112240;
+            --navy-light: #1d3461;
+            --accent: #00d68f;
+            --accent-dim: #00a36c;
+            --accent-glow: rgba(0, 214, 143, 0.18);
+            --warn: #ffb830;
+            --danger: #ff5c5c;
+            --surface: #f4f7fb;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f1923;
+            --muted: #6b7a99;
+            --font: 'Outfit', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font);
+            background: var(--surface);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR + LAYOUT ─────────────────────────────── */
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 72px;
+            background: var(--navy);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 0;
+            gap: 0.5rem;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            width: 42px;
+            height: 42px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--navy);
+            letter-spacing: -1px;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .sidebar-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: rgba(255,255,255,0.45);
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+
+        .sidebar-icon:hover { background: var(--navy-light); color: white; }
+        .sidebar-icon.active {
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        .sidebar-bottom { margin-top: auto; }
+
+        .main-area {
+            margin-left: 72px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── TOPBAR ─────────────────────────────────────────── */
+        .topbar {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .topbar-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .topbar-breadcrumb .crumb-active {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .topbar-breadcrumb svg { opacity: 0.4; }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 0.35rem 0.9rem 0.35rem 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .btn-logout {
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .btn-logout:hover { color: var(--danger); border-color: var(--danger); }
+
+        /* ── CONTENT ────────────────────────────────────────── */
+        .content {
+            padding: 2rem 2.5rem;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            animation: slideDown 0.5s ease both;
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--navy);
+        }
+
+        .page-header p {
+            color: var(--muted);
+            margin-top: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        /* ── ALERTS ─────────────────────────────────────────── */
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            animation: slideDown 0.4s ease both;
+        }
+
+        .alert-success {
+            background: rgba(0, 214, 143, 0.1);
+            border: 1px solid rgba(0, 214, 143, 0.35);
+            color: #00704a;
+        }
+
+        .alert-error {
+            background: rgba(255, 92, 92, 0.08);
+            border: 1px solid rgba(255, 92, 92, 0.3);
+            color: #c0392b;
+        }
+
+        .alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+        /* ── FORM CARD ──────────────────────────────────────── */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            animation: slideUp 0.5s ease 0.1s both;
+        }
+
+        .form-card-header {
+            background: var(--navy);
+            padding: 1.8rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card-header::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 160px; height: 160px;
+            background: var(--accent-glow);
+            border-radius: 50%;
+        }
+
+        .form-card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; left: 40%;
+            width: 200px; height: 200px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+        }
+
+        .form-card-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: white;
+            position: relative;
+        }
+
+        .form-card-header p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.2rem;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--accent-glow);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            margin-bottom: 0.6rem;
+            border: 1px solid rgba(0,214,143,0.3);
+        }
+
+        .form-body {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+        }
+
+        /* ── FORM FIELDS ─────────────────────────────────────── */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--navy-light);
+        }
+
+        .field-hint {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.78rem 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.93rem;
+            font-family: var(--font);
+            color: var(--text);
+            background: var(--surface);
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none;
+            appearance: none;
+        }
+
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: white;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7a99' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.9rem center;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+
+        select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        /* ── CATEGORIA PILLS ─────────────────────────────────── */
+        .categoria-pills {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .categoria-pill {
+            flex: 1;
+            position: relative;
+        }
+
+        .categoria-pill input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .categoria-pill label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+            color: var(--muted);
+            background: var(--surface);
+            transition: all 0.2s;
+        }
+
+        .categoria-pill input[type="radio"]:checked + label {
+            border-color: var(--accent);
+            background: rgba(0, 214, 143, 0.08);
+            color: var(--navy);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .categoria-pill label:hover {
+            border-color: var(--accent-dim);
+            color: var(--navy);
+        }
+
+        /* ── FILE UPLOAD ─────────────────────────────────────── */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: var(--surface);
+            position: relative;
+        }
+
+        .upload-zone:hover, .upload-zone.drag-over {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .upload-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.25rem;
+        }
+
+        .upload-hint {
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        .upload-preview {
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            padding: 0.7rem 1rem;
+            background: rgba(0,214,143,0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(0,214,143,0.25);
+        }
+
+        .upload-preview.show { display: flex; }
+
+        .preview-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .preview-info { flex: 1; text-align: left; }
+        .preview-name { font-size: 0.83rem; font-weight: 600; color: var(--navy); }
+        .preview-size { font-size: 0.75rem; color: var(--muted); }
+        .preview-remove { cursor: pointer; color: var(--danger); font-size: 1.1rem; padding: 0.2rem; }
+
+        /* ── DIVIDER ─────────────────────────────────────────── */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.4rem 0;
+        }
+
+        /* ── SECTION LABEL ───────────────────────────────────── */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── SUBMIT BUTTON ───────────────────────────────────── */
+        .form-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: var(--surface);
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--accent);
+            color: var(--navy);
+            border: none;
+            border-radius: 12px;
+            padding: 0.85rem 2rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.01em;
+            box-shadow: 0 4px 16px rgba(0,214,143,0.35);
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-dim);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(0,214,143,0.45);
+        }
+
+        .btn-submit:active { transform: translateY(0); }
+
+        .btn-submit svg { transition: transform 0.2s; }
+        .btn-submit:hover svg { transform: translateX(3px); }
+
+        .footer-hint {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        /* ── CHAR COUNTER ────────────────────────────────────── */
+        .counter-wrapper {
+            position: relative;
+        }
+
+        .char-counter {
+            position: absolute;
+            bottom: 0.6rem;
+            right: 0.8rem;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            color: var(--muted);
+            pointer-events: none;
+        }
+
+        .char-counter.warn { color: var(--warn); }
+        .char-counter.limit { color: var(--danger); }
+
+        /* ── ANIMATIONS ──────────────────────────────────────── */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── CONTENT LAYOUT ─────────────────────────────────── */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .content-main {
+            min-width: 0;
+        }
+
+        .content-side {
+            position: sticky;
+            top: 84px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        /* ── INFO CARD (lateral) ─────────────────────────────── */
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+
+        .info-card-header {
+            background: var(--navy);
+            padding: 1.2rem 1.4rem;
+        }
+
+        .info-card-header h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .info-card-header p {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.15rem;
+        }
+
+        .info-card-body {
+            padding: 1.2rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .info-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            padding: 0.8rem;
+            background: var(--surface);
+            border-radius: 10px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .info-tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+        .info-tip-title { font-size: 0.8rem; font-weight: 700; color: var(--navy); margin-bottom: 0.2rem; }
+        .info-tip-text { font-size: 0.77rem; color: var(--muted); line-height: 1.5; }
+
+        .status-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .status-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            position: relative;
+        }
+
+        .status-step:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 26px;
+            width: 2px;
+            height: calc(100% - 4px);
+            background: var(--border);
+        }
+
+        .step-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--muted);
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+            z-index: 1;
+        }
+
+        .step-dot.active {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .step-content {
+            padding-bottom: 1rem;
+        }
+
+        .step-title { font-size: 0.8rem; font-weight: 700; color: var(--navy); }
+        .step-desc { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; line-height: 1.4; }
+
+        /* ── FORM CARD WIDE ──────────────────────────────────── */
+        .form-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.4rem 2rem;
+        }
+
+        .form-section-full {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 1100px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-side {
+                position: static;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .content-side { grid-template-columns: 1fr; }
+            .form-body { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .sidebar { width: 0; overflow: hidden; }
+            .main-area { margin-left: 0; }
+            .content { padding: 1.2rem; }
+            .field-row { grid-template-columns: 1fr; }
+            .form-footer { flex-direction: column; }
+            .btn-submit { width: 100%; justify-content: center; }
+            .categoria-pills { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">HI</div>
+
+        <a href="/incidente/novo" class="sidebar-icon active" title="Novo Chamado">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+        </a>
+
+        <div class="sidebar-bottom">
+            <a th:href="@{/auth/logout}" class="sidebar-icon" title="Sair">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main-area">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <span>HelpIF</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span>Chamados</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span class="crumb-active">Novo Chamado</span>
+            </div>
+            <div class="topbar-right">
+                <div class="user-chip">
+                    <div class="user-avatar" th:text="${#strings.substring(#authentication.name, 0, 1).toUpperCase()}">U</div>
+                    <span th:text="${#authentication.name}">Usuário</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="content">
+
+            <div class="page-header">
+                <h1>Abrir Chamado</h1>
+                <p>Preencha os campos abaixo para registrar seu chamado.</p>
+            </div>
+
+            <!-- ALERTS -->
+            <div class="alert alert-success" th:if="${sucesso}">
+                <span class="alert-icon">✅</span>
+                <span th:text="${sucesso}"></span>
+            </div>
+            <div class="alert alert-error" th:if="${erro}">
+                <span class="alert-icon">⚠️</span>
+                <span th:text="${erro}"></span>
+            </div>
+
+            <div class="content-grid">
+
+                <!-- COLUNA PRINCIPAL: FORMULÁRIO -->
+                <div class="content-main">
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <div class="header-badge">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
+                                Novo Registro
+                            </div>
+                            <h2>Formulário de Chamado</h2>
+                            <p>Todos os campos marcados são obrigatórios</p>
+                        </div>
+
+                        <form method="post" th:action="@{/incidente/novo}" enctype="multipart/form-data">
+
+                            <div class="form-body">
+
+                                <!-- ① LOCALIZAÇÃO -->
+                                <div class="form-section-full">
+                                    <div class="section-label">📍 Localização</div>
+                                </div>
+
+                                <div class="field-group">
+                                    <label for="bloco">Área / Bloco</label>
+                                    <select id="bloco" name="bloco" required onchange="atualizarLocais()">
+                                        <option value="">Selecione a área...</option>
+                                        <option th:each="b : ${blocos}"
+                                                th:value="${b}"
+                                                th:text="${b.descricao}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="field-group">
+                                    <label for="localEspecifico">Local Específico</label>
+                                    <select id="localEspecifico" name="localEspecifico" required disabled>
+                                        <option value="">Selecione a área primeiro...</option>
+                                    </select>
+                                </div>
+
+                                <!-- ② CATEGORIA -->
+                                <div class="form-section-full">
+                                    <div class="divider"></div>
+                                    <div class="section-label" style="margin-top:0.8rem;">🏷️ Categoria</div>
+                                    <div class="field-group" style="margin-top:0.8rem;">
+                                        <label>Tipo de chamado
+                                            <span class="field-hint">— Selecione a categoria que melhor descreve o problema</span>
+                                        </label>
+                                        <div class="categoria-pills">
+                                            <div class="categoria-pill" th:each="cat : ${categorias}">
+                                                <input type="radio"
+                                                       name="categoria"
+                                                       th:id="'cat-' + ${cat.name()}"
+                                                       th:value="${cat.name()}"
+                                                       required>
+                                                <label th:for="'cat-' + ${cat.name()}"
+                                                       th:text="${cat == T(br.edu.ifsp.chamados.enums.CategoriaIncidente).MANUTENCAO} ? '🔧 Manutenção' : '🔬 Laboratório'">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ③ DESCRIÇÃO DO PROBLEMA -->
+                                <div class="form-section-full">
+                                    <div class="divider"></div>
+                                    <div class="section-label" style="margin-top:0.8rem;">📋 Descrição do problema</div>
+                                    <div class="field-group" style="margin-top:0.8rem;">
+                                        <label for="observacao">Descreva o problema
+                                            <span class="field-hint">— Seja específico para agilizar o atendimento</span>
+                                        </label>
+                                        <div class="counter-wrapper">
+                                            <textarea id="observacao" name="observacao" required
+                                                placeholder="Ex: Lâmpada queimada no corredor próximo à sala 205, afetando a iluminação do andar..."
+                                                maxlength="1000" style="min-height:140px;"></textarea>
+                                            <span class="char-counter" id="charCount">0 / 1000</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ④ ANEXO -->
+                                <div class="form-section-full">
+                                    <div class="divider"></div>
+                                    <div class="section-label" style="margin-top:0.8rem;">📎 Evidência fotográfica</div>
+                                    <div class="field-group" style="margin-top:0.8rem;">
+                                        <label>Foto do problema
+                                            <span class="field-hint">— Opcional · JPG, PNG, WebP · máx. 2MB</span>
+                                        </label>
+                                        <div class="upload-zone" id="uploadZone">
+                                            <input type="file" id="anexo" name="anexo" accept="image/*" onchange="handleFile(this)">
+                                            <span class="upload-icon">🖼️</span>
+                                            <div class="upload-title">Arraste uma imagem aqui</div>
+                                            <div class="upload-hint">ou clique para selecionar do seu dispositivo</div>
+                                        </div>
+                                        <div class="upload-preview" id="uploadPreview">
+                                            <img id="previewThumb" class="preview-thumb" src="" alt="preview">
+                                            <div class="preview-info">
+                                                <div class="preview-name" id="previewName">—</div>
+                                                <div class="preview-size" id="previewSize">—</div>
+                                            </div>
+                                            <span class="preview-remove" onclick="removeFile()">✕</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- FOOTER -->
+                            <div class="form-footer">
+                                <span class="footer-hint">
+                                    🔒 Seu chamado será registrado com data e hora automáticas
+                                </span>
+                                <button type="submit" class="btn-submit">
+                                    Enviar Chamado
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <!-- COLUNA LATERAL: DICAS E STATUS -->
+                <div class="content-side">
+
+                    <!-- Card: Dicas -->
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <h3>💡 Dicas para um bom chamado</h3>
+                            <p>Agilize o seu atendimento</p>
+                        </div>
+                        <div class="info-card-body">
+                            <div class="info-tip">
+                                <span class="info-tip-icon">📍</span>
+                                <div>
+                                    <div class="info-tip-title">Localização precisa</div>
+                                    <div class="info-tip-text">Informe o bloco e o local específico do problema para facilitar o deslocamento da equipe.</div>
+                                </div>
+                            </div>
+                            <div class="info-tip">
+                                <span class="info-tip-icon">📝</span>
+                                <div>
+                                    <div class="info-tip-title">Descrição detalhada</div>
+                                    <div class="info-tip-text">Descreva o que está acontecendo, desde quando e como está afetando o funcionamento.</div>
+                                </div>
+                            </div>
+                            <div class="info-tip">
+                                <span class="info-tip-icon">📷</span>
+                                <div>
+                                    <div class="info-tip-title">Foto ajuda muito</div>
+                                    <div class="info-tip-text">Uma imagem clara do problema acelera o diagnóstico e o atendimento pela equipe técnica.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card: Fluxo do chamado -->
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <h3>🔄 Fluxo do chamado</h3>
+                            <p>O que acontece após o envio</p>
+                        </div>
+                        <div class="info-card-body">
+                            <div class="status-steps">
+                                <div class="status-step">
+                                    <div class="step-dot active">1</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Abertura</div>
+                                        <div class="step-desc">Chamado registrado e aguardando triagem da equipe.</div>
+                                    </div>
+                                </div>
+                                <div class="status-step">
+                                    <div class="step-dot">2</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Em andamento</div>
+                                        <div class="step-desc">Equipe técnica designada para resolver o problema.</div>
+                                    </div>
+                                </div>
+                                <div class="status-step">
+                                    <div class="step-dot">3</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Concluído</div>
+                                        <div class="step-desc">Problema resolvido e chamado encerrado.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div><!-- end content-grid -->
+
+        </main>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    // ── Dados de locais por bloco (Thymeleaf injeta JSON) ──
+    const locaisPorBloco = /*[[${locaisPorBloco}]]*/ '{}';
+    const dados = JSON.parse(locaisPorBloco);
+
+    // ── Select dinâmico de locais ──
+    function atualizarLocais() {
+        const bloco = document.getElementById('bloco').value;
+        const select = document.getElementById('localEspecifico');
+
+        select.innerHTML = '<option value="">Selecione o local...</option>';
+        select.disabled = true;
+
+        if (bloco && dados[bloco]) {
+            dados[bloco].forEach(function(local) {
+                const opt = document.createElement('option');
+                opt.value = local.name;
+                opt.textContent = local.descricao;
+                select.appendChild(opt);
+            });
+            select.disabled = false;
+        }
+    }
+
+    // ── Contador de caracteres ──
+    const textarea = document.getElementById('observacao');
+    const counter  = document.getElementById('charCount');
+
+    textarea.addEventListener('input', function() {
+        const len = this.value.length;
+        const max = parseInt(this.getAttribute('maxlength') || 1000);
+        counter.textContent = len + ' / ' + max;
+        counter.className = 'char-counter' + (len > max * 0.9 ? (len >= max ? ' limit' : ' warn') : '');
+    });
+
+    // ── Upload preview ──
+    function handleFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const preview   = document.getElementById('uploadPreview');
+        const thumb     = document.getElementById('previewThumb');
+        const nameEl    = document.getElementById('previewName');
+        const sizeEl    = document.getElementById('previewSize');
+
+        const reader = new FileReader();
+        reader.onload = function(e) { thumb.src = e.target.result; };
+        reader.readAsDataURL(file);
+
+        nameEl.textContent = file.name;
+        sizeEl.textContent = (file.size / 1024).toFixed(1) + ' KB';
+        preview.classList.add('show');
+    }
+
+    function removeFile() {
+        document.getElementById('anexo').value = '';
+        document.getElementById('uploadPreview').classList.remove('show');
+    }
+
+    // ── Drag-and-drop ──
+    const zone = document.getElementById('uploadZone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const input = document.getElementById('anexo');
+        input.files = e.dataTransfer.files;
+        handleFile(input);
+    });
+</script>
+
+</body>
+</html>

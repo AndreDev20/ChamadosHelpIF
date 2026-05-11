@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manutenção — HelpIF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a1628; --navy-mid: #112240; --navy-light: #1d3461;
+            --accent: #00d68f; --accent-dim: #00a36c; --accent-glow: rgba(0,214,143,0.18);
+            --warn: #f59e0b; --warn-bg: rgba(245,158,11,0.1);
+            --info: #3b82f6; --info-bg: rgba(59,130,246,0.1);
+            --success: #10b981; --success-bg: rgba(16,185,129,0.1);
+            --danger: #ef4444;
+            --surface: #f4f7fb; --card: #ffffff; --border: #e2e8f0;
+            --text: #0f1923; --muted: #6b7a99;
+            --font: 'Outfit', sans-serif; --mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font); background: var(--surface); color: var(--text); min-height: 100vh; }
+        .app-shell { display: flex; min-height: 100vh; }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 72px; background: var(--navy);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 1.5rem 0; gap: 0.4rem;
+            position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+        }
+        .sidebar-logo {
+            width: 42px; height: 42px; background: var(--accent); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem; font-weight: 800; font-size: 1rem;
+            color: var(--navy); box-shadow: 0 0 24px var(--accent-glow); letter-spacing: -1px;
+        }
+        .sidebar-icon {
+            width: 44px; height: 44px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.4); text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar-icon:hover { background: var(--navy-light); color: rgba(255,255,255,0.9); }
+        .sidebar-icon.active { background: var(--accent-glow); color: var(--accent); }
+        .sidebar-bottom { margin-top: auto; }
+
+        /* MAIN */
+        .main-area { margin-left: 72px; flex: 1; display: flex; flex-direction: column; }
+
+        /* TOPBAR */
+        .topbar {
+            background: var(--card); border-bottom: 1px solid var(--border);
+            padding: 0 2rem; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 50;
+        }
+        .topbar-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--muted); }
+        .topbar-breadcrumb svg { opacity: 0.4; }
+        .crumb-active { color: var(--text); font-weight: 600; }
+        .user-chip {
+            display: flex; align-items: center; gap: 0.6rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 40px; padding: 0.35rem 1rem 0.35rem 0.5rem;
+            font-size: 0.85rem; font-weight: 500; text-decoration: none; color: var(--text);
+        }
+        .user-avatar {
+            width: 30px; height: 30px; background: var(--warn); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 0.75rem; font-weight: 800;
+        }
+
+        /* CONTENT */
+        .content { padding: 2rem 2.5rem; flex: 1; }
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.5px; color: var(--navy); }
+        .page-header p { color: var(--muted); margin-top: 0.35rem; font-size: 0.95rem; }
+
+        /* STATS */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card {
+            background: var(--card); border-radius: 14px; border: 1px solid var(--border);
+            padding: 1.1rem 1.3rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .stat-card.yellow { border-color: rgba(245,158,11,0.35); }
+        .stat-card.blue   { border-color: rgba(59,130,246,0.3); }
+        .stat-card.green  { border-color: rgba(16,185,129,0.3); }
+        .stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem; }
+        .stat-value { font-size: 2rem; font-weight: 800; color: var(--navy); line-height: 1; }
+        .stat-card.yellow .stat-value { color: #b45309; }
+        .stat-card.blue   .stat-value { color: #1d4ed8; }
+        .stat-card.green  .stat-value { color: #059669; }
+
+        /* INFO BANNER */
+        .info-banner {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+            border-radius: 16px; padding: 1.4rem 1.8rem;
+            display: flex; align-items: flex-start; gap: 1rem;
+            margin-bottom: 2rem; color: #fff;
+        }
+        .info-banner-icon {
+            width: 40px; height: 40px; min-width: 40px;
+            background: var(--accent-glow); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent);
+        }
+        .info-banner h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .info-banner p  { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+        /* SECTION */
+        .section-card {
+            background: var(--card); border-radius: 16px; border: 1px solid var(--border);
+            overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.05); margin-bottom: 2.5rem;
+        }
+        .section-header {
+            background: var(--navy); padding: 1rem 1.6rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .section-header h2 { font-size: 0.95rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
+        .section-count { font-size: 0.78rem; color: rgba(255,255,255,0.45); font-family: var(--mono); }
+
+        /* TABLE */
+        .tbl-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        thead th {
+            background: #f8fafc; font-size: 0.72rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted);
+            padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap;
+        }
+        tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
+        tbody tr:hover { background: #f8faff; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody td { padding: 0.85rem 1rem; font-size: 0.875rem; vertical-align: middle; }
+        tbody tr.empty td { text-align: center; color: var(--muted); padding: 3rem; font-style: italic; }
+
+        .id-cell { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); font-weight: 600; white-space: nowrap; }
+        .obs-cell { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .local-bloco { font-size: 0.78rem; font-weight: 700; color: var(--navy); }
+        .local-esp   { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+        .thumb {
+            width: 44px; height: 44px; object-fit: cover;
+            border-radius: 8px; border: 2px solid var(--border);
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: block;
+        }
+        .thumb:hover { transform: scale(1.12); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+        .no-img { color: var(--muted); }
+
+        /* BADGES */
+        .badge {
+            display: inline-block; padding: 0.25rem 0.7rem;
+            border-radius: 20px; font-size: 0.7rem;
+            font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+        }
+        .badge-CRIADO     { background: rgba(0,214,143,0.12); color: #00a36c; }
+        .badge-EM_ANALISE { background: rgba(245,158,11,0.12); color: #b45309; }
+        .badge-CONCLUIDO  { background: rgba(59,130,246,0.12); color: #1d4ed8; }
+
+        /* ACTIONS */
+        .actions { display: flex; align-items: center; gap: 0.4rem; flex-wrap: nowrap; }
+        .actions form { margin: 0; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.35rem 0.75rem; border-radius: 7px;
+            font-size: 0.78rem; font-weight: 600;
+            border: none; cursor: pointer; text-decoration: none;
+            transition: filter 0.15s, transform 0.1s; white-space: nowrap;
+            font-family: var(--font);
+        }
+        .btn:hover  { filter: brightness(1.12); transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; filter: none !important; }
+        .btn-analise  { background: var(--warn);    color: #fff; }
+        .btn-concluir { background: var(--success);  color: #fff; }
+        .btn-detalhe  { background: var(--navy);     color: #fff; }
+
+        /* LIGHTBOX */
+        .lightbox {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.85); z-index: 9999;
+            align-items: center; justify-content: center; backdrop-filter: blur(4px);
+        }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 88vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .lightbox-close {
+            position: absolute; top: 1.5rem; right: 1.5rem;
+            background: rgba(255,255,255,0.15); border: none; color: #fff;
+            width: 42px; height: 42px; border-radius: 50%; font-size: 1.1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+    </style>
+</head>
+<body>
+<div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">HI</div>
+        <a class="sidebar-icon active" th:href="@{/manutencao}" title="Chamados">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+            </svg>
+        </a>
+        <div class="sidebar-bottom">
+            <a class="sidebar-icon" th:href="@{/auth/logout}" title="Sair">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main-area">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+            <div class="topbar-breadcrumb">
+                <span>HelpIF</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span class="crumb-active">Manutenção</span>
+            </div>
+            <a class="user-chip" th:href="@{/auth/logout}" title="Sair">
+                <div class="user-avatar">M</div>
+                <span>Manutenção</span>
+            </a>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="content">
+
+            <div class="page-header">
+                <h1>Painel de Manutenção</h1>
+                <p>Gerencie, acompanhe e atualize o status dos chamados atribuídos à equipe.</p>
+            </div>
+
+            <!-- INFO BANNER -->
+            <div class="info-banner">
+                <div class="info-banner-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3>Responsabilidades da Equipe de Manutenção</h3>
+                    <p>Receba, avalie e execute os chamados. Atualize o status conforme o andamento, registre observações técnicas, soluções aplicadas e evidências. Respeite os SLAs e finalize os chamados após a conclusão do serviço.</p>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Total</div>
+                    <div class="stat-value" th:text="${incidentes.size()}">0</div>
+                </div>
+                <div class="stat-card yellow">
+                    <div class="stat-label">Criados</div>
+                    <div class="stat-value" th:text="${qtdCriados}">0</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-label">Em Análise</div>
+                    <div class="stat-value" th:text="${qtdEmAnalise}">0</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-label">Concluídos</div>
+                    <div class="stat-value" th:text="${qtdConcluidos}">0</div>
+                </div>
+            </div>
+
+            <!-- TABELA -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h2>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Chamados em Aberto
+                    </h2>
+                    <span class="section-count" th:text="'Total: ' + ${incidentes.size()}"></span>
+                </div>
+
+                <div class="tbl-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Observação</th>
+                                <th>Local</th>
+                                <th>Usuário</th>
+                                <th>Data</th>
+                                <th>Anexo</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(incidentes)}" class="empty">
+                                <td colspan="8">Nenhum chamado registrado ainda.</td>
+                            </tr>
+                            <tr th:each="inc : ${incidentes}">
+
+                                <td class="id-cell" th:text="'#' + ${inc.id}"></td>
+
+                                <td class="obs-cell"
+                                    th:text="${#strings.abbreviate(inc.observacao, 50)}"
+                                    th:title="${inc.observacao}"></td>
+
+                                <td>
+                                    <div class="local-bloco" th:text="${inc.bloco.descricao}"></div>
+                                    <div class="local-esp"   th:text="${inc.localEspecifico.descricao}"></div>
+                                </td>
+
+                                <td th:text="${inc.usuario.nome}"></td>
+
+                                <td style="white-space:nowrap; font-family:var(--mono); font-size:0.78rem;"
+                                    th:text="${#temporals.format(inc.datetime, 'dd/MM/yy HH:mm')}"></td>
+
+                                <td>
+                                    <span th:if="${inc.anexo == null or #strings.isEmpty(inc.anexo)}" class="no-img">—</span>
+                                    <img  th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
+                                          th:src="${inc.anexo}" class="thumb" alt="Anexo"
+                                          th:onclick="'openLightbox(\'' + ${inc.id} + '\')'"/>
+                                    <span th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
+                                          th:id="'src-' + ${inc.id}"
+                                          th:attr="data-src=${inc.anexo}"
+                                          style="display:none"></span>
+                                </td>
+
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="'badge-' + ${inc.status.name()}"
+                                          th:text="${inc.status.name() == 'CRIADO'} ? 'Criado' :
+                                                   (${inc.status.name() == 'EM_ANALISE'} ? 'Em Análise' : 'Concluído')">
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="actions">
+                                        <!-- Detalhes / registro técnico -->
+                                        <a class="btn btn-detalhe"
+                                           th:href="@{/manutencao/chamado/{id}(id=${inc.id})}">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                            Detalhes
+                                        </a>
+
+                                        <!-- Em Análise -->
+                                        <form method="post"
+                                              th:action="@{/manutencao/em-analise/{id}(id=${inc.id})}">
+                                            <button class="btn btn-analise" type="submit"
+                                                    th:disabled="${inc.status.name() == 'EM_ANALISE' or inc.status.name() == 'CONCLUIDO'}">
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                Em Análise
+                                            </button>
+                                        </form>
+
+                                        <!-- Concluir -->
+                                        <form method="post"
+                                              th:action="@{/manutencao/concluir/{id}(id=${inc.id})}"
+                                              onsubmit="return confirm('Confirmar conclusão do chamado #' + this.dataset.id + '?')"
+                                              th:data-id="${inc.id}">
+                                            <button class="btn btn-concluir" type="submit"
+                                                    th:disabled="${inc.status.name() == 'CONCLUIDO'}">
+                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                                Concluir
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightboxImg" src="" alt="Anexo" onclick="event.stopPropagation()">
+</div>
+
+<script>
+    function openLightbox(id) {
+        var span = document.getElementById('src-' + id);
+        if (!span) return;
+        document.getElementById('lightboxImg').src = span.getAttribute('data-src');
+        document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('open');
+        document.getElementById('lightboxImg').src = '';
+    }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
