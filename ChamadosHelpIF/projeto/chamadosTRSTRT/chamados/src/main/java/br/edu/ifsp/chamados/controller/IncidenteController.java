@@ -28,10 +28,16 @@ public class IncidenteController {
     private final UsuarioRepository usuarioRepository;
 
     @GetMapping("/novo")
-    public String novoIncidente(Model model) throws JsonProcessingException {
+    public String novoIncidente(Model model,
+                                @AuthenticationPrincipal UserDetails userDetails) throws JsonProcessingException {
         model.addAttribute("blocos", BlocoLocal.values());
         model.addAttribute("locaisPorBloco", buildLocaisPorBlocoJson());
         model.addAttribute("categorias", CategoriaIncidente.values());
+        // Passa o nome do usuário para o template sem depender de #authentication
+        if (userDetails != null) {
+            usuarioRepository.findByEmail(userDetails.getUsername())
+                    .ifPresent(u -> model.addAttribute("nomeUsuario", u.getNome()));
+        }
         return "incidente/novo";
     }
 
@@ -47,8 +53,13 @@ public class IncidenteController {
             Usuario usuario = usuarioRepository.findByEmail(userDetails.getUsername()).orElseThrow();
             incidenteService.criar(observacao, bloco, localEspecifico, categoria, anexo, usuario);
             model.addAttribute("sucesso", "Chamado enviado com sucesso!");
+            model.addAttribute("nomeUsuario", usuario.getNome());
         } catch (Exception e) {
             model.addAttribute("erro", "Erro ao enviar chamado: " + e.getMessage());
+            if (userDetails != null) {
+                usuarioRepository.findByEmail(userDetails.getUsername())
+                        .ifPresent(u -> model.addAttribute("nomeUsuario", u.getNome()));
+            }
         }
         try {
             model.addAttribute("blocos", BlocoLocal.values());
@@ -58,7 +69,6 @@ public class IncidenteController {
         return "incidente/novo";
     }
 
-    // Monta um JSON { "BLOCO_ENUM": [ {name, descricao}, ... ] } para o select dinâmico no JS
     private String buildLocaisPorBlocoJson() throws JsonProcessingException {
         Map<String, List<Map<String, String>>> map = new LinkedHashMap<>();
         for (BlocoLocal bloco : BlocoLocal.values()) {
