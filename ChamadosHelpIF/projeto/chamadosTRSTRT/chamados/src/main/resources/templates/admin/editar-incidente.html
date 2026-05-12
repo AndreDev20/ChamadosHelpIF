@@ -298,7 +298,7 @@
                                 <label for="bloco">Área / Bloco</label>
                                 <select id="bloco" name="bloco" required onchange="atualizarLocais('')">
                                     <option th:each="b : ${blocos}"
-                                            th:value="${b}"
+                                            th:value="${b.name()}"
                                             th:text="${b.descricao}"
                                             th:selected="${b == incidente.bloco}"></option>
                                 </select>
@@ -352,7 +352,7 @@
                         <!-- Hidden select que será submetido -->
                         <select id="statusHidden" name="status" required>
                             <option th:each="s : ${statuses}"
-                                    th:value="${s}"
+                                    th:value="${s.name()}"
                                     th:text="${s.name()}"
                                     th:selected="${s == incidente.status}"></option>
                         </select>
@@ -363,7 +363,7 @@
                                    th:id="'pill-' + ${s.name()}"
                                    th:classappend="${s == incidente.status} ? 'selected-' + ${s.name()} : ''"
                                    th:onclick="'selectStatus(\'' + ${s.name()} + '\')'">
-                                <input type="radio" th:value="${s}" th:checked="${s == incidente.status}">
+                                <input type="radio" th:value="${s.name()}" th:checked="${s == incidente.status}">
                                 <span th:text="${s.name() == 'CRIADO'} ? '🟡 Criado' :
                                                (${s.name() == 'EM_ANALISE'} ? '🔵 Em Análise' : '✅ Concluído')"></span>
                             </label>
@@ -410,6 +410,10 @@
 
     document.getElementById('bloco').addEventListener('change', function() { atualizarLocais(''); });
     atualizarLocais(localAtual);
+
+    // Inicializa status correto no hidden e destaca a pill ativa
+    const statusInicial = /*[[${incidente.status.name()}]]*/ 'CRIADO';
+    selectStatus(statusInicial);
 
     // Status pills
     function selectStatus(statusName) {
