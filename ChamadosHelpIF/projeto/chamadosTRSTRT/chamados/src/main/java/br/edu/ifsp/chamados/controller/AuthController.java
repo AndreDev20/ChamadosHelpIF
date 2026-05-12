@@ -1,9 +1,9 @@
 package br.edu.ifsp.chamados.controller;
 
 import br.edu.ifsp.chamados.entity.Usuario;
-import br.edu.ifsp.chamados.enums.Role;
 import br.edu.ifsp.chamados.service.AuthService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -25,23 +25,30 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestParam String email,
                         @RequestParam String senha,
+                        HttpServletRequest request,
                         HttpServletResponse response,
                         Model model) {
         try {
             String token = authService.autenticar(email, senha);
 
+            // Grava o JWT no cookie ANTES do redirect.
+            // O browser envia o cookie no próximo request (o redirect),
+            // e aí o JwtAuthFilter consegue autenticar corretamente.
             Cookie cookie = new Cookie("jwt", token);
             cookie.setHttpOnly(true);
             cookie.setPath("/");
             cookie.setMaxAge(86400); // 1 dia
             response.addCookie(cookie);
 
-            // Redireciona baseado na role
+            // Invalida qualquer sessão antiga para evitar conflito de contexto
+            request.getSession().invalidate();
+            request.getSession(true); // cria nova sessão limpa
+
             Usuario usuario = authService.buscarPorEmail(email);
             return switch (usuario.getRole()) {
-                case ADMIN -> "redirect:/admin";
+                case ADMIN      -> "redirect:/admin";
                 case MANUTENCAO -> "redirect:/manutencao";
-                case COMUM -> "redirect:/incidente/novo";
+                case COMUM      -> "redirect:/incidente/novo";
             };
 
         } catch (Exception e) {
@@ -51,11 +58,18 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletResponse response) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // Apaga o cookie JWT
         Cookie cookie = new Cookie("jwt", "");
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
+
+        // Invalida a sessão
+        try {
+            request.getSession().invalidate();
+        } catch (Exception ignored) {}
+
         return "redirect:/auth/login";
     }
 }
