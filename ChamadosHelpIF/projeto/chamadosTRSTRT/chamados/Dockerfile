@@ -1,29 +1,24 @@
-# Estágio 1: Build com Maven
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+# Estágio 1: Build com Maven e Java 17
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copia o arquivo de configuração de dependências
+# Copia o pom.xml e baixa as dependências
 COPY pom.xml .
-
-# Baixa as dependências (Spring, Lombok, etc) - isso acelera builds futuros
 RUN mvn dependency:go-offline
 
-# Copia a pasta src
+# Copia o código fonte e gera o JAR
 COPY src ./src
-
-# Compila e gera o arquivo .jar (o pacote final da aplicação)
 RUN mvn clean package -DskipTests
 
-# Estágio 2: Execução
-FROM eclipse-temurin:21-jre
+# Estágio 2: Execução com JRE 17
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-# Copia o arquivo .jar que o Maven gerou na pasta target
-# O '*' serve para pegar qualquer nome de arquivo que termine em .jar
+# Copia o JAR gerado no estágio de build
 COPY --from=build /app/target/*.jar app.jar
 
-# Porta padrão
+# Expõe a porta 8080 (Padrão Spring Boot)
 EXPOSE 8080
 
-# Comando para rodar o Spring Boot
-CMD ["java", "-jar", "app.jar"]
+# Comando para rodar a aplicação
+ENTRYPOINT ["java", "-jar", "app.jar"]
