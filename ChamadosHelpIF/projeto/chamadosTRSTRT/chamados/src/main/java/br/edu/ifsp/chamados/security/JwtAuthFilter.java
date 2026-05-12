@@ -29,27 +29,40 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        // Não filtra as rotas públicas de auth
+        String path = request.getRequestURI();
+        if (path.startsWith("/auth/") || path.startsWith("/css/")
+                || path.startsWith("/js/") || path.startsWith("/images/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = extractTokenFromCookie(request);
 
-        if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (token != null && !token.isBlank()
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
                 String email = jwtUtil.extractEmail(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                 if (jwtUtil.isTokenValid(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContext context = SecurityContextHolder.createEmptyContext();
                     context.setAuthentication(authToken);
                     SecurityContextHolder.setContext(context);
 
-                    // Persiste o contexto na sessão HTTP para que o redirect pós-login funcione
+                    // Persiste na sessão HTTP para que o redirect pós-login funcione
                     securityContextRepository.saveContext(context, request, response);
                 }
             } catch (Exception ignored) {
-                // Token inválido — deixa o Spring Security redirecionar para login
+                // Token inválido ou expirado — SecurityContext fica vazio,
+                // o Spring redireciona para /auth/login
+                SecurityContextHolder.clearContext();
             }
         }
 
