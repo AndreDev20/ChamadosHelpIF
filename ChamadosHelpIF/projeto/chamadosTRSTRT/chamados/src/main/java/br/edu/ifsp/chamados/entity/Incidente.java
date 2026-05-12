@@ -43,7 +43,7 @@ public class Incidente {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String observacao;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String anexo;
 
     @ManyToOne(fetch = FetchType.LAZY)
