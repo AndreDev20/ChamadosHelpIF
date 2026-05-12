@@ -1,28 +1,29 @@
-# Estágio 1: Compilação
-FROM eclipse-temurin:21-jdk AS build
+# Estágio 1: Build com Maven
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copia todo o conteúdo da pasta do projeto
-COPY . .
+# Copia o arquivo de configuração de dependências
+COPY pom.xml .
 
-# Cria a pasta de saída e compila todos os arquivos .java
-# O find busca todos os arquivos dentro de src/ e o javac compila para a pasta out/
-RUN mkdir -p out
-RUN find src -name "*.java" > sources.txt
-RUN javac -d out @sources.txt
+# Baixa as dependências (Spring, Lombok, etc) - isso acelera builds futuros
+RUN mvn dependency:go-offline
 
-# Estágio 2: Execução (Imagem leve)
+# Copia a pasta src
+COPY src ./src
+
+# Compila e gera o arquivo .jar (o pacote final da aplicação)
+RUN mvn clean package -DskipTests
+
+# Estágio 2: Execução
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copia apenas os arquivos compilados (os .class) do estágio anterior
-COPY --from=build /app/out .
+# Copia o arquivo .jar que o Maven gerou na pasta target
+# O '*' serve para pegar qualquer nome de arquivo que termine em .jar
+COPY --from=build /app/target/*.jar app.jar
 
-# Porta padrão do Render
+# Porta padrão
 EXPOSE 8080
 
-# --- CONFIGURAÇÃO MANUAL IMPORTANTE ---
-# No IntelliJ, você tem uma classe com o método: public static void main(String[] args)
-# Se o arquivo for "Principal.java" e não tiver "package" no topo, use: CMD ["java", "Principal"]
-# Se ele estiver dentro de um pacote, use: CMD ["java", "nome.do.pacote.Principal"]
-CMD ["java", "Main"]
+# Comando para rodar o Spring Boot
+CMD ["java", "-jar", "app.jar"]
