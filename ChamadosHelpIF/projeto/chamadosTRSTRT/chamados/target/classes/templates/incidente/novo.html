@@ -735,7 +735,153 @@
             .btn-submit { width: 100%; justify-content: center; }
             .categoria-pills { flex-direction: column; }
         }
-    </style>
+    
+        /* ════════════════════════════════════════════
+           RESPONSIVIDADE MOBILE
+           ════════════════════════════════════════════ */
+
+        /* Bottom nav (mobile) */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 60px;
+            background: var(--navy);
+            z-index: 200;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            align-items: center;
+            justify-content: space-around;
+        }
+        .mobile-nav a {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.5); text-decoration: none; gap: 0.15rem;
+            font-size: 0.6rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+            flex: 1; height: 100%; transition: color 0.2s;
+        }
+        .mobile-nav a.active, .mobile-nav a:hover { color: var(--accent); }
+        .mobile-nav svg { flex-shrink: 0; }
+
+        @media (max-width: 768px) {
+            /* Esconde sidebar, mostra bottom nav */
+            .sidebar { display: none !important; }
+            .mobile-nav { display: flex !important; }
+
+            /* Remove margem da sidebar */
+            .main-area { margin-left: 0 !important; }
+
+            /* Padding do content + espaço p/ bottom nav */
+            .content { padding: 1rem 1rem 5rem 1rem !important; }
+
+            /* Topbar mais compacta */
+            .topbar { padding: 0 1rem !important; height: 56px !important; }
+            .topbar-breadcrumb { font-size: 0.78rem !important; }
+            /* Esconde partes do breadcrumb no mobile (mantém só o último) */
+            .topbar-breadcrumb > *:not(:last-child) { display: none; }
+            .topbar-breadcrumb > svg { display: none; }
+
+            /* User chip simplificado */
+            .user-chip span { display: none; }
+            .user-chip { padding: 0.3rem !important; border-radius: 50% !important; }
+
+            /* Títulos menores */
+            .page-header h1 { font-size: 1.3rem !important; }
+
+            /* Stats: 2 colunas */
+            .stats-row { grid-template-columns: repeat(2, 1fr) !important; gap: 0.6rem !important; }
+            .stat-value { font-size: 1.5rem !important; }
+
+            /* Info banner compacto */
+            .info-banner { padding: 1rem !important; }
+            .info-banner p { display: none; }
+
+            /* Seção header: empilha título e contagem */
+            .section-header { flex-wrap: wrap; gap: 0.4rem; padding: 0.8rem 1rem !important; }
+
+            /* TABELAS → CARDS em mobile */
+            .tbl-wrap { overflow-x: visible !important; }
+            table { display: block !important; }
+            thead { display: none !important; }
+            tbody { display: flex !important; flex-direction: column !important; gap: 0.75rem !important; padding: 0.75rem !important; }
+            tbody tr {
+                display: grid !important;
+                grid-template-columns: auto 1fr !important;
+                gap: 0.3rem 0.6rem !important;
+                border: 1px solid var(--border) !important;
+                border-radius: 12px !important;
+                padding: 0.9rem !important;
+                background: var(--card) !important;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+                border-bottom: 1px solid var(--border) !important;
+            }
+            tbody tr.empty {
+                display: block !important;
+                text-align: center !important;
+                padding: 2rem !important;
+                border: 2px dashed var(--border) !important;
+            }
+            tbody td {
+                display: contents !important;
+                padding: 0 !important;
+                font-size: 0.82rem !important;
+            }
+            tbody td::before {
+                content: attr(data-label);
+                font-size: 0.65rem !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.06em !important;
+                color: var(--muted) !important;
+                align-self: center !important;
+                white-space: nowrap !important;
+            }
+            /* Ações: ocupa linha inteira */
+            tbody td:last-child {
+                grid-column: 1 / -1 !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 0.4rem !important;
+                margin-top: 0.4rem !important;
+                padding-top: 0.5rem !important;
+                border-top: 1px dashed var(--border) !important;
+            }
+            tbody td:last-child::before { display: none !important; }
+            .actions { flex-wrap: wrap !important; }
+            .btn { font-size: 0.8rem !important; padding: 0.4rem 0.8rem !important; }
+
+            /* Obs cell: não trunca no mobile */
+            .obs-cell { white-space: normal !important; max-width: none !important; }
+
+            /* Formulários */
+            .field-row { grid-template-columns: 1fr !important; }
+            .form-footer { flex-direction: column-reverse !important; gap: 0.6rem !important; }
+            .btn-submit, .btn-back, .btn-save {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+            .form-body { padding: 1.2rem !important; }
+            .content { max-width: 100% !important; }
+
+            /* Grids de layout */
+            .content-grid { grid-template-columns: 1fr !important; }
+            .content-side { position: static !important; display: flex !important; flex-direction: column !important; }
+            .detail-grid  { grid-template-columns: 1fr !important; }
+
+            /* Categoria pills */
+            .categoria-pills { flex-direction: column !important; }
+            .status-selector { flex-direction: column !important; }
+
+            /* Card detalhe */
+            .info-row { grid-template-columns: 110px 1fr !important; }
+
+            /* Page header */
+            .page-header { flex-direction: column !important; align-items: flex-start !important; }
+        }
+
+        @media (max-width: 380px) {
+            .stats-row { grid-template-columns: 1fr 1fr !important; }
+            .btn { font-size: 0.75rem !important; padding: 0.35rem 0.6rem !important; }
+        }
+</style>
 </head>
 <body>
 
@@ -774,8 +920,8 @@
             </div>
             <div class="topbar-right">
                 <div class="user-chip">
-                    <div class="user-avatar" th:text="${#strings.substring(#authentication.name, 0, 1).toUpperCase()}">U</div>
-                    <span th:text="${#authentication.name}">Usuário</span>
+                    <div class="user-avatar" th:text="${nomeUsuario != null ? #strings.substring(nomeUsuario, 0, 1).toUpperCase() : 'U'}">U</div>
+                    <span th:text="${nomeUsuario != null ? nomeUsuario : 'Usuário'}">Usuário</span>
                 </div>
             </div>
         </header>
@@ -1066,6 +1212,19 @@
         handleFile(input);
     });
 </script>
+
+
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="mobile-nav">
+        <a th:href="@{/incidente/novo}" class="active">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Novo Chamado
+        </a>
+        <a th:href="@{/auth/logout}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sair
+        </a>
+    </nav>
 
 </body>
 </html>
