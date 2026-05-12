@@ -1,26 +1,28 @@
-# Estágio de Compilação
-FROM openjdk:21-slim AS build
+# Estágio 1: Compilação
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
-# Copia tudo da pasta atual para o container
+# Copia todo o conteúdo da pasta do projeto
 COPY . .
 
-# Compila todos os arquivos .java dentro da pasta src
-# Se você tiver bibliotecas .jar na pasta lib, precisará incluí-las aqui
-RUN mkdir -p out && find src -name "*.java" > sources.txt
+# Cria a pasta de saída e compila todos os arquivos .java
+# O find busca todos os arquivos dentro de src/ e o javac compila para a pasta out/
+RUN mkdir -p out
+RUN find src -name "*.java" > sources.txt
 RUN javac -d out @sources.txt
 
-# Estágio de Execução
-FROM openjdk:21-slim
+# Estágio 2: Execução (Imagem leve)
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copia o que foi compilado
+# Copia apenas os arquivos compilados (os .class) do estágio anterior
 COPY --from=build /app/out .
 
-# O Render precisa que a aplicação escute em uma porta (geralmente 8080 ou 10000)
+# Porta padrão do Render
 EXPOSE 8080
 
-# IMPORTANTE: Troque 'Main' pelo nome da sua classe principal
-# Se o seu programa for uma interface gráfica (Swing/AWT), ele NÃO vai funcionar no Render,
-# pois o Render é apenas para aplicações Web ou APIs.
+# --- CONFIGURAÇÃO MANUAL IMPORTANTE ---
+# No IntelliJ, você tem uma classe com o método: public static void main(String[] args)
+# Se o arquivo for "Principal.java" e não tiver "package" no topo, use: CMD ["java", "Principal"]
+# Se ele estiver dentro de um pacote, use: CMD ["java", "nome.do.pacote.Principal"]
 CMD ["java", "Main"]
