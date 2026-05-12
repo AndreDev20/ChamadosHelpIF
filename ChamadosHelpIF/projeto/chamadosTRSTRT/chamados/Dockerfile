@@ -1,29 +1,26 @@
-# Estágio de Build
-# Usamos uma imagem que já tenha o JDK 25. 
-# Nota: Como o Java 25 é muito recente, usamos a imagem base do OpenJDK
-FROM openjdk:25-slim AS build
-
-# Define o diretório de trabalho
+# Estágio de Compilação
+FROM openjdk:21-slim AS build
 WORKDIR /app
 
-# Copia os arquivos do projeto para dentro do container
+# Copia tudo da pasta atual para o container
 COPY . .
 
-# Se o seu projeto usa Maven, descomente a linha abaixo:
-RUN ./mvnw clean package
-
-# Se for Java puro (sem Maven/Gradle), vamos compilar manualmente:
-# Isso compila todos os arquivos .java dentro de src para a pasta out
-RUN mkdir -out && javac -d out $(find src -name "*.java")
+# Compila todos os arquivos .java dentro da pasta src
+# Se você tiver bibliotecas .jar na pasta lib, precisará incluí-las aqui
+RUN mkdir -p out && find src -name "*.java" > sources.txt
+RUN javac -d out @sources.txt
 
 # Estágio de Execução
-FROM openjdk:25-slim
-
+FROM openjdk:21-slim
 WORKDIR /app
 
-# Copia o que foi compilado no estágio anterior
+# Copia o que foi compilado
 COPY --from=build /app/out .
 
-# Comando para rodar a classe principal
-# Substitua 'Main' pelo nome da sua classe principal (que tem o public static void main)
+# O Render precisa que a aplicação escute em uma porta (geralmente 8080 ou 10000)
+EXPOSE 8080
+
+# IMPORTANTE: Troque 'Main' pelo nome da sua classe principal
+# Se o seu programa for uma interface gráfica (Swing/AWT), ele NÃO vai funcionar no Render,
+# pois o Render é apenas para aplicações Web ou APIs.
 CMD ["java", "Main"]
