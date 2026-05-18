@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -402,7 +402,7 @@
             </svg>
         </a>
 
-        <a class="sidebar-icon" href="#sec-usuarios" title="Usuários" onclick="document.getElementById('sec-usuarios').scrollIntoView({behavior:'smooth'}); return false;">
+        <a class="sidebar-icon" href="javascript:void(0)" title="Usuários" onclick="document.getElementById('sec-usuarios').scrollIntoView({behavior:'smooth'});">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
@@ -432,15 +432,15 @@
             </div>
             <div class="user-menu-wrap">
                 <div class="user-chip" id="userChip" onclick="toggleDropdown()">
-                    <div class="user-avatar" sec:authentication="name" th:text="${#strings.toUpperCase(#strings.substring(#authentication.name, 0, 1))}">A</div>
-                    <span sec:authentication="name">Administrador</span>
+                    <div class="user-avatar" th:text="${inicialLogado}">A</div>
+                    <span th:text="${nomeLogado}">Administrador</span>
                     <span class="chip-caret">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                     </span>
                 </div>
                 <div class="user-dropdown" id="userDropdown">
                     <div class="dropdown-header">
-                        <div class="dropdown-name" sec:authentication="name">Administrador</div>
+                        <div class="dropdown-name" th:text="${nomeLogado}">Administrador</div>
                         <div class="dropdown-role">Admin do Sistema</div>
                     </div>
                     <a class="dropdown-item" th:href="@{/admin}">
@@ -682,7 +682,7 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             Painel
         </a>
-        <a href="#sec-usuarios" onclick="document.getElementById('sec-usuarios').scrollIntoView({behavior:'smooth'}); return false;">
+        <a href="javascript:void(0)" onclick="document.getElementById('sec-usuarios').scrollIntoView({behavior:'smooth'});">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             Usuários
         </a>
