@@ -495,7 +495,7 @@
                                     <img  th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
                                           th:src="${inc.anexo}"
                                           class="thumb" alt="Anexo"
-                                          th:onclick="'openLightbox(\'' + ${inc.id} + '\')'"/>
+                                          th:attr="data-inc-id=${inc.id}"/>
                                     <!-- src guardado em data-attr para evitar XSS via onclick inline com base64 longo -->
                                     <span th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
                                           th:id="'src-' + ${inc.id}"
@@ -608,26 +608,10 @@
 </div>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-    <img id="lightboxImg" src="" alt="Anexo" onclick="event.stopPropagation()">
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <img id="lightboxImg" src="" alt="Anexo">
 </div>
-
-<script>
-    function openLightbox(id) {
-        var span = document.getElementById('src-' + id);
-        if (!span) return;
-        document.getElementById('lightboxImg').src = span.getAttribute('data-src');
-        document.getElementById('lightbox').classList.add('open');
-    }
-    function closeLightbox() {
-        document.getElementById('lightbox').classList.remove('open');
-        document.getElementById('lightboxImg').src = '';
-    }
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeLightbox();
-    });
-</script>
 
     <!-- MOBILE BOTTOM NAV -->
     <nav class="mobile-nav">
@@ -644,6 +628,44 @@
             Sair
         </a>
     </nav>
+
+<script>
+    /* ── Lightbox via event delegation — sem onclick inline ── */
+    document.addEventListener('DOMContentLoaded', function () {
+        var lightbox = document.getElementById('lightbox');
+        var lbImg    = document.getElementById('lightboxImg');
+        var lbClose  = document.getElementById('lightboxClose');
+
+        function openLightbox(incId) {
+            var span = document.getElementById('src-' + incId);
+            if (!span) return;
+            lbImg.src = span.getAttribute('data-src');
+            lightbox.classList.add('open');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('open');
+            lbImg.src = '';
+        }
+
+        /* Clique nas thumbnails via event delegation */
+        document.addEventListener('click', function (e) {
+            var thumb = e.target.closest('.thumb');
+            if (thumb) {
+                openLightbox(thumb.getAttribute('data-inc-id'));
+                return;
+            }
+            /* Clique no backdrop fecha o lightbox */
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        lbClose.addEventListener('click', closeLightbox);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    });
+</script>
 
 </body>
 </html>
