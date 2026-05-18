@@ -359,6 +359,33 @@
             .stats-row { grid-template-columns: 1fr 1fr !important; }
             .btn { font-size: 0.75rem !important; padding: 0.35rem 0.6rem !important; }
         }
+
+        /* USER DROPDOWN */
+        .user-menu-wrap { position: relative; }
+        .user-chip { cursor: pointer; user-select: none; transition: border-color 0.2s, box-shadow 0.2s; }
+        .user-chip:hover { border-color: #c8d6e5; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .user-chip.open  { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .chip-caret { color: var(--muted); transition: transform 0.2s; display: flex; align-items: center; margin-left: 0.2rem; }
+        .user-chip.open .chip-caret { transform: rotate(180deg); }
+        .user-dropdown {
+            display: none; position: absolute; top: calc(100% + 8px); right: 0;
+            min-width: 190px; background: var(--card);
+            border: 1px solid var(--border); border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12); overflow: hidden; z-index: 200;
+        }
+        .user-dropdown.open { display: block; }
+        .dropdown-header { padding: 0.9rem 1.1rem 0.7rem; border-bottom: 1px solid var(--border); }
+        .dropdown-name   { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+        .dropdown-role   { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+        .dropdown-item {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.7rem 1.1rem; font-size: 0.85rem; font-weight: 500;
+            color: var(--text); text-decoration: none; transition: background 0.15s;
+        }
+        .dropdown-item:hover { background: var(--surface); }
+        .dropdown-item.danger { color: #ef4444; }
+        .dropdown-item.danger:hover { background: rgba(239,68,68,0.07); }
+        .dropdown-divider { height: 1px; background: var(--border); }
 </style>
 </head>
 <body>
@@ -403,9 +430,10 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 <span class="crumb-active">Painel Admin</span>
             </div>
-            <a class="user-chip" th:href="@{/auth/logout}" title="Sair">
-                <div class="user-avatar">A</div>
-                <span>Administrador</span>
+            <a class="user-chip" th:href="@{/auth/logout}" title="Sair do sistema">
+                <div class="user-avatar" th:text="${inicialLogado}">A</div>
+                <span th:text="${nomeLogado}">Administrador</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:0.2rem;color:var(--muted)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             </a>
         </header>
 
@@ -494,13 +522,9 @@
                                     <span th:if="${inc.anexo == null or #strings.isEmpty(inc.anexo)}" class="no-img">—</span>
                                     <img  th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
                                           th:src="${inc.anexo}"
-                                          class="thumb" alt="Anexo"
-                                          th:onclick="'openLightbox(\'' + ${inc.id} + '\')'"/>
-                                    <!-- src guardado em data-attr para evitar XSS via onclick inline com base64 longo -->
-                                    <span th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
-                                          th:id="'src-' + ${inc.id}"
                                           th:attr="data-src=${inc.anexo}"
-                                          style="display:none"></span>
+                                          class="thumb" alt="Anexo"
+                                          onclick="openLightboxFromImg(this)"/>
                                 </td>
 
                                 <td data-label="Status">
@@ -536,7 +560,7 @@
             </div>
 
             <!-- ══ TABELA DE USUÁRIOS ══ -->
-            <div class="section-card">
+            <div class="section-card" id="sec-usuarios">
                 <div class="section-header">
                     <h2>
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -567,16 +591,17 @@
                             <tr th:if="${#lists.isEmpty(usuarios)}" class="empty">
                                 <td colspan="5">Nenhum usuário cadastrado.</td>
                             </tr>
-                            <tr th:each="u : ${usuarios}">
+                            <tr th:unless="${#lists.isEmpty(usuarios)}" th:each="u : ${usuarios}">
                                 <td data-label="ID" data-label="ID" class="id-cell" th:text="'#' + ${u.id}"></td>
                                 <td data-label="Nome" data-label="Observação" style="font-weight:600;" th:text="${u.nome}"></td>
                                 <td data-label="E-mail" data-label="Local" style="color:var(--muted); font-size:0.83rem;" th:text="${u.email}"></td>
                                 <td data-label="Tipo" data-label="Usuário">
                                     <span class="role-badge"
-                                          th:classappend="${u.role.name() == 'ADMIN'} ? 'role-ADMIN' :
-                                                         (${u.role.name() == 'MANUTENCAO'} ? 'role-MANUTENCAO' : 'role-COMUM')"
-                                          th:text="${u.role.name() == 'ADMIN'} ? 'Admin' :
-                                                   (${u.role.name() == 'MANUTENCAO'} ? 'Manutenção' : 'Comum')">
+                                          th:classappend="${u.role != null and u.role.name() == 'ADMIN'} ? 'role-ADMIN' :
+                                                         (${u.role != null and u.role.name() == 'MANUTENCAO'} ? 'role-MANUTENCAO' : 'role-COMUM')"
+                                          th:text="${u.role == null} ? '—' :
+                                                   (${u.role.name() == 'ADMIN'} ? 'Admin' :
+                                                   (${u.role.name() == 'MANUTENCAO'} ? 'Manutenção' : 'Comum'))">
                                     </span>
                                 </td>
                                 <td data-label="Ações" data-label="Data">
@@ -614,10 +639,9 @@
 </div>
 
 <script>
-    function openLightbox(id) {
-        var span = document.getElementById('src-' + id);
-        if (!span) return;
-        document.getElementById('lightboxImg').src = span.getAttribute('data-src');
+    function openLightboxFromImg(img) {
+        var src = img.getAttribute('data-src') || img.src;
+        document.getElementById('lightboxImg').src = src;
         document.getElementById('lightbox').classList.add('open');
     }
     function closeLightbox() {
@@ -644,6 +668,8 @@
             Sair
         </a>
     </nav>
+
+
 
 </body>
 </html>
