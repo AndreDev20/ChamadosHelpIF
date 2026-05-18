@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -54,16 +53,9 @@ public class SecurityConfig {
                     response.sendRedirect("/auth/login"))
             )
 
-            // Logout via GET (AuthController já limpa o cookie manualmente)
-            .logout(logout -> logout
-                .logoutUrl("/auth/logout")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
-                .deleteCookies("jwt")
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutSuccessUrl("/auth/login")
-                .permitAll()
-            )
+            // Logout é tratado inteiramente pelo AuthController (@GetMapping("/auth/logout"))
+            // O JwtAuthFilter já ignora /auth/*, então o request chega direto ao controller
+            .logout(logout -> logout.disable())
 
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
