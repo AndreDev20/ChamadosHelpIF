@@ -32,8 +32,9 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    /** Retorna todos os usuários via query explícita (evita problemas de dialeto/cache). */
     public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
+        return usuarioRepository.findAllOrdered();
     }
 
     public Usuario buscarPorId(Long id) {
