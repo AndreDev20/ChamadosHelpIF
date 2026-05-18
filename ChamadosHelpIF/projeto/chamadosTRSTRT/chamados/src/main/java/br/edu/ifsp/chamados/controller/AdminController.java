@@ -29,14 +29,17 @@ public class AdminController {
     @GetMapping
     public String painel(Model model) {
         List<Incidente> incidentes = incidenteService.listarTodos();
+        if (incidentes == null) incidentes = new ArrayList<>();
 
-        // Contagens pré-calculadas no Java para evitar erro com .stream() no Thymeleaf
         long qtdCriados    = incidentes.stream().filter(i -> i.getStatus() == StatusIncidente.CRIADO).count();
         long qtdEmAnalise  = incidentes.stream().filter(i -> i.getStatus() == StatusIncidente.EM_ANALISE).count();
         long qtdConcluidos = incidentes.stream().filter(i -> i.getStatus() == StatusIncidente.CONCLUIDO).count();
 
+        List<?> usuarios = usuarioService.listarTodos();
+        if (usuarios == null) usuarios = new ArrayList<>();
+
         model.addAttribute("incidentes",    incidentes);
-        model.addAttribute("usuarios",      usuarioService.listarTodos());
+        model.addAttribute("usuarios",      usuarios);
         model.addAttribute("qtdCriados",    qtdCriados);
         model.addAttribute("qtdEmAnalise",  qtdEmAnalise);
         model.addAttribute("qtdConcluidos", qtdConcluidos);
