@@ -402,7 +402,7 @@
             </svg>
         </a>
 
-        <a class="sidebar-icon" href="javascript:void(0)" title="Usuários" onclick="document.getElementById('sec-usuarios').scrollIntoView({behavior:'smooth'});">
+        <a class="sidebar-icon" th:href="@{/admin/usuario/novo}" title="Novo Usuário">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
@@ -431,7 +431,7 @@
                 <span class="crumb-active">Painel Admin</span>
             </div>
             <div class="user-menu-wrap">
-                <div class="user-chip" id="userChip" onclick="toggleDropdown()">
+                <div class="user-chip" id="userChip" onclick="toggleDropdown(event)">
                     <div class="user-avatar" th:text="${inicialLogado}">A</div>
                     <span th:text="${nomeLogado}">Administrador</span>
                     <span class="chip-caret">
@@ -542,7 +542,7 @@
                                     <img  th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
                                           th:src="${inc.anexo}"
                                           class="thumb" alt="Anexo"
-                                          th:onclick="'openLightbox(\'' + ${inc.id} + '\')'"/>
+                                          th:attr="onclick='openLightbox(' + ${inc.id} + ')'"/>
                                     <!-- src guardado em data-attr para evitar XSS via onclick inline com base64 longo -->
                                     <span th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
                                           th:id="'src-' + ${inc.id}"
@@ -682,7 +682,7 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             Painel
         </a>
-        <a href="javascript:void(0)" onclick="document.getElementById('sec-usuarios').scrollIntoView({behavior:'smooth'});">
+        <a th:href="@{/admin/usuario/novo}">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             Usuários
         </a>
@@ -694,7 +694,8 @@
 
 
 <script>
-function toggleDropdown() {
+function toggleDropdown(e) {
+    e.stopPropagation();
     document.getElementById('userChip').classList.toggle('open');
     document.getElementById('userDropdown').classList.toggle('open');
 }
