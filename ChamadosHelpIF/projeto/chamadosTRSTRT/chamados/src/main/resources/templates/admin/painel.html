@@ -359,33 +359,6 @@
             .stats-row { grid-template-columns: 1fr 1fr !important; }
             .btn { font-size: 0.75rem !important; padding: 0.35rem 0.6rem !important; }
         }
-
-        /* USER DROPDOWN */
-        .user-menu-wrap { position: relative; }
-        .user-chip { cursor: pointer; user-select: none; transition: border-color 0.2s, box-shadow 0.2s; }
-        .user-chip:hover { border-color: #c8d6e5; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .user-chip.open  { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-        .chip-caret { color: var(--muted); transition: transform 0.2s; display: flex; align-items: center; margin-left: 0.2rem; }
-        .user-chip.open .chip-caret { transform: rotate(180deg); }
-        .user-dropdown {
-            display: none; position: absolute; top: calc(100% + 8px); right: 0;
-            min-width: 190px; background: var(--card);
-            border: 1px solid var(--border); border-radius: 14px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12); overflow: hidden; z-index: 200;
-        }
-        .user-dropdown.open { display: block; }
-        .dropdown-header { padding: 0.9rem 1.1rem 0.7rem; border-bottom: 1px solid var(--border); }
-        .dropdown-name   { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
-        .dropdown-role   { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
-        .dropdown-item {
-            display: flex; align-items: center; gap: 0.6rem;
-            padding: 0.7rem 1.1rem; font-size: 0.85rem; font-weight: 500;
-            color: var(--text); text-decoration: none; transition: background 0.15s;
-        }
-        .dropdown-item:hover { background: var(--surface); }
-        .dropdown-item.danger { color: #ef4444; }
-        .dropdown-item.danger:hover { background: rgba(239,68,68,0.07); }
-        .dropdown-divider { height: 1px; background: var(--border); }
 </style>
 </head>
 <body>
@@ -430,30 +403,10 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 <span class="crumb-active">Painel Admin</span>
             </div>
-            <div class="user-menu-wrap">
-                <div class="user-chip" id="userChip" onclick="toggleDropdown()">
-                    <div class="user-avatar">A</div>
-                    <span>Administrador</span>
-                    <span class="chip-caret">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                    </span>
-                </div>
-                <div class="user-dropdown" id="userDropdown">
-                    <div class="dropdown-header">
-                        <div class="dropdown-name">Administrador</div>
-                        <div class="dropdown-role">Admin do Sistema</div>
-                    </div>
-                    <a class="dropdown-item" th:href="@{/admin}">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                        Painel
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item danger" th:href="@{/auth/logout}">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                        Sair
-                    </a>
-                </div>
-            </div>
+            <a class="user-chip" th:href="@{/auth/logout}" title="Sair">
+                <div class="user-avatar">A</div>
+                <span>Administrador</span>
+            </a>
         </header>
 
         <!-- CONTENT -->
@@ -692,19 +645,5 @@
         </a>
     </nav>
 
-
-<script>
-function toggleDropdown() {
-    document.getElementById('userChip').classList.toggle('open');
-    document.getElementById('userDropdown').classList.toggle('open');
-}
-document.addEventListener('click', function(e) {
-    var wrap = document.querySelector('.user-menu-wrap');
-    if (wrap && !wrap.contains(e.target)) {
-        document.getElementById('userChip').classList.remove('open');
-        document.getElementById('userDropdown').classList.remove('open');
-    }
-});
-</script>
 </body>
 </html>
