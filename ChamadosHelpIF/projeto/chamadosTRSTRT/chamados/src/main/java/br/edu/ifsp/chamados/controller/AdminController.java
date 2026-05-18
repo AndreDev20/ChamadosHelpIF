@@ -6,6 +6,7 @@ import br.edu.ifsp.chamados.enums.LocalEspecifico;
 import br.edu.ifsp.chamados.enums.Role;
 import br.edu.ifsp.chamados.enums.StatusIncidente;
 import br.edu.ifsp.chamados.entity.Incidente;
+import br.edu.ifsp.chamados.service.AuthService;
 import br.edu.ifsp.chamados.service.IncidenteService;
 import br.edu.ifsp.chamados.service.UsuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,10 +26,27 @@ public class AdminController {
 
     private final IncidenteService incidenteService;
     private final UsuarioService usuarioService;
+    private final AuthService authService;
 
     @GetMapping
-    public String painel(Model model) {
+    public String painel(Model model, java.security.Principal principal) {
         List<Incidente> incidentes = incidenteService.listarTodos();
+
+        // Nome do usuário logado para exibir no chip de perfil
+        if (principal != null) {
+            String email = principal.getName();
+            try {
+                br.edu.ifsp.chamados.entity.Usuario u = authService.buscarPorEmail(email);
+                model.addAttribute("nomeLogado", u.getNome());
+                model.addAttribute("inicialLogado", u.getNome().substring(0, 1).toUpperCase());
+            } catch (Exception e) {
+                model.addAttribute("nomeLogado", email);
+                model.addAttribute("inicialLogado", "A");
+            }
+        } else {
+            model.addAttribute("nomeLogado", "Admin");
+            model.addAttribute("inicialLogado", "A");
+        }
 
         // Contagens pré-calculadas no Java para evitar erro com .stream() no Thymeleaf
         long qtdCriados    = incidentes.stream().filter(i -> i.getStatus() == StatusIncidente.CRIADO).count();
