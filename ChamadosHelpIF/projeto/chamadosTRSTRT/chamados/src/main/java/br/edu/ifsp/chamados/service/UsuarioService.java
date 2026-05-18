@@ -6,6 +6,7 @@ import br.edu.ifsp.chamados.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -32,9 +33,9 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    /** Retorna todos os usuários via query explícita (evita problemas de dialeto/cache). */
+    /** Retorna todos os usuários ordenados por ID. */
     public List<Usuario> listarTodos() {
-        return usuarioRepository.findAllOrdered();
+        return usuarioRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Usuario buscarPorId(Long id) {
