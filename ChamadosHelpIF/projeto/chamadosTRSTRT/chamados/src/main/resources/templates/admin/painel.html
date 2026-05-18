@@ -495,12 +495,7 @@
                                     <img  th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
                                           th:src="${inc.anexo}"
                                           class="thumb" alt="Anexo"
-                                          th:attr="data-inc-id=${inc.id}"/>
-                                    <!-- src guardado em data-attr para evitar XSS via onclick inline com base64 longo -->
-                                    <span th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
-                                          th:id="'src-' + ${inc.id}"
-                                          th:attr="data-src=${inc.anexo}"
-                                          style="display:none"></span>
+                                          th:id="'thumb-' + ${inc.id}"/>
                                 </td>
 
                                 <td data-label="Status">
@@ -636,10 +631,9 @@
         var lbImg    = document.getElementById('lightboxImg');
         var lbClose  = document.getElementById('lightboxClose');
 
-        function openLightbox(incId) {
-            var span = document.getElementById('src-' + incId);
-            if (!span) return;
-            lbImg.src = span.getAttribute('data-src');
+        function openLightbox(imgSrc) {
+            if (!imgSrc) return;
+            lbImg.src = imgSrc;
             lightbox.classList.add('open');
         }
 
@@ -652,7 +646,7 @@
         document.addEventListener('click', function (e) {
             var thumb = e.target.closest('.thumb');
             if (thumb) {
-                openLightbox(thumb.getAttribute('data-inc-id'));
+                openLightbox(thumb.src);
                 return;
             }
             /* Clique no backdrop fecha o lightbox */
