@@ -563,10 +563,10 @@
                                 <td colspan="5">Nenhum usuário cadastrado.</td>
                             </tr>
                             <tr th:each="u : ${usuarios}">
-                                <td data-label="ID" data-label="ID" class="id-cell" th:text="'#' + ${u.id}"></td>
-                                <td data-label="Nome" data-label="Observação" style="font-weight:600;" th:text="${u.nome}"></td>
-                                <td data-label="E-mail" data-label="Local" style="color:var(--muted); font-size:0.83rem;" th:text="${u.email}"></td>
-                                <td data-label="Tipo" data-label="Usuário">
+                                <td data-label="ID" class="id-cell" th:text="'#' + ${u.id}"></td>
+                                <td data-label="Nome" style="font-weight:600;" th:text="${u.nome}"></td>
+                                <td data-label="E-mail" style="color:var(--muted); font-size:0.83rem;" th:text="${u.email}"></td>
+                                <td data-label="Tipo">
                                     <span class="role-badge"
                                           th:classappend="${u.role.name() == 'ADMIN'} ? 'role-ADMIN' :
                                                          (${u.role.name() == 'MANUTENCAO'} ? 'role-MANUTENCAO' : 'role-COMUM')"
@@ -574,7 +574,7 @@
                                                    (${u.role.name() == 'MANUTENCAO'} ? 'Manutenção' : 'Comum')">
                                     </span>
                                 </td>
-                                <td data-label="Ações" data-label="Data">
+                                <td data-label="Ações">
                                     <div class="actions">
                                         <a class="btn btn-edit"
                                            th:href="@{/admin/usuario/editar/{id}(id=${u.id})}">
