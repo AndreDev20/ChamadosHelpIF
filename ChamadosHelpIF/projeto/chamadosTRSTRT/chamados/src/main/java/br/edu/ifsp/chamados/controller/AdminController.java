@@ -6,6 +6,7 @@ import br.edu.ifsp.chamados.enums.LocalEspecifico;
 import br.edu.ifsp.chamados.enums.Role;
 import br.edu.ifsp.chamados.enums.StatusIncidente;
 import br.edu.ifsp.chamados.entity.Incidente;
+import br.edu.ifsp.chamados.entity.Usuario;
 import br.edu.ifsp.chamados.service.IncidenteService;
 import br.edu.ifsp.chamados.service.UsuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,7 +36,7 @@ public class AdminController {
         long qtdEmAnalise  = incidentes.stream().filter(i -> i.getStatus() == StatusIncidente.EM_ANALISE).count();
         long qtdConcluidos = incidentes.stream().filter(i -> i.getStatus() == StatusIncidente.CONCLUIDO).count();
 
-        List<?> usuarios = usuarioService.listarTodos();
+        List<Usuario> usuarios = usuarioService.listarTodos();
         if (usuarios == null) usuarios = new ArrayList<>();
 
         model.addAttribute("incidentes",    incidentes);
