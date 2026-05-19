@@ -58,6 +58,13 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+
+        <!-- Spring Mail (Brevo SMTP) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- PostgreSQL (Render) -->
         <dependency>
             <groupId>org.postgresql</groupId>
