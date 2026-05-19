@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar E-mail — HelpIF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0a1628; --navy-mid: #112240;
+            --accent: #00d68f; --accent-dim: #00a36c;
+            --accent-glow: rgba(0,214,143,0.2);
+            --surface: #f0f4f8; --card: #ffffff;
+            --border: #e2e8f0; --text: #0f1923; --muted: #6b7a99;
+            --danger-bg: rgba(239,68,68,0.08); --danger: #dc2626;
+            --font: 'Outfit', sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font); background: var(--surface);
+            min-height: 100vh; display: flex; align-items: center;
+            justify-content: center; position: relative; overflow: hidden;
+        }
+        body::before {
+            content: ''; position: fixed; top: -30%; left: -20%;
+            width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(0,214,143,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .wrapper { width: 100%; max-width: 440px; padding: 1rem; position: relative; z-index: 1; }
+        .brand { display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem; }
+        .brand-logo {
+            width: 54px; height: 54px; background: var(--navy); border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.15rem; color: var(--accent);
+            box-shadow: 0 8px 32px rgba(10,22,40,0.18), 0 0 0 1px rgba(0,214,143,0.15);
+            margin-bottom: 1rem; letter-spacing: -1px;
+        }
+        .brand h1 { font-size: 1.5rem; font-weight: 800; color: var(--navy); }
+        .brand p { font-size: 0.88rem; color: var(--muted); margin-top: 0.25rem; }
+        .card {
+            background: var(--card); border-radius: 20px; border: 1px solid var(--border);
+            padding: 2.2rem 2rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .icon-circle {
+            width: 56px; height: 56px; background: rgba(0,214,143,0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.2rem; color: var(--accent);
+        }
+        .card-title { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; text-align: center; }
+        .card-sub { font-size: 0.84rem; color: var(--muted); margin-bottom: 1.8rem; text-align: center; line-height: 1.5; }
+        .email-dest { font-weight: 600; color: var(--navy); }
+        .alert-erro {
+            background: var(--danger-bg); border: 1px solid rgba(220,38,38,0.2);
+            border-radius: 10px; padding: 0.7rem 1rem; color: var(--danger);
+            font-size: 0.84rem; font-weight: 500; margin-bottom: 1.2rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .field-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.4rem; }
+        label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+        .code-input {
+            width: 100%; padding: 0.85rem 1rem;
+            border: 2px solid var(--border); border-radius: 12px;
+            font-size: 1.8rem; font-weight: 700; font-family: var(--font);
+            text-align: center; letter-spacing: 0.5em;
+            background: var(--surface); color: var(--navy);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .code-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); background: #fff; }
+        .btn-submit {
+            width: 100%; padding: 0.8rem;
+            background: var(--navy); color: #fff;
+            border: none; border-radius: 10px; font-size: 0.95rem;
+            font-weight: 700; font-family: var(--font); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+        }
+        .btn-submit:hover { background: var(--navy-mid); box-shadow: 0 4px 20px rgba(10,22,40,0.25); transform: translateY(-1px); }
+        .btn-submit:active { transform: translateY(0); }
+        .divider { height: 1px; background: var(--border); margin: 1.4rem 0; }
+        .footer-note { text-align: center; font-size: 0.82rem; color: var(--muted); }
+        .footer-note a { color: var(--navy); font-weight: 600; text-decoration: none; }
+        .footer-note a:hover { text-decoration: underline; }
+        .expiry-note { font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 0.7rem; }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="brand">
+        <div class="brand-logo">HI</div>
+        <h1>HelpIF</h1>
+        <p>Sistema de Chamados — IFSP</p>
+    </div>
+
+    <div class="card">
+        <div class="icon-circle">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+            </svg>
+        </div>
+        <div class="card-title">Verifique seu e-mail</div>
+        <div class="card-sub">
+            Enviamos um código de 6 dígitos para<br>
+            <span class="email-dest" th:text="${email}">seu@email.com</span>.<br>
+            Digite-o abaixo para ativar sua conta.
+        </div>
+
+        <div class="alert-erro" th:if="${erro}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span th:text="${erro}"></span>
+        </div>
+
+        <form method="post" th:action="@{/auth/verificar}">
+            <input type="hidden" name="email" th:value="${email}">
+
+            <div class="field-group">
+                <label for="codigo">Código de verificação</label>
+                <input type="text" id="codigo" name="codigo" class="code-input"
+                       maxlength="6" inputmode="numeric" pattern="[0-9]{6}"
+                       placeholder="000000" autocomplete="one-time-code" required>
+            </div>
+
+            <button class="btn-submit" type="submit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Confirmar e ativar conta
+            </button>
+        </form>
+
+        <p class="expiry-note">O código expira em 15 minutos.</p>
+
+        <div class="divider"></div>
+        <div class="footer-note">
+            Não recebeu? <a th:href="@{/auth/registro}">Tente novamente</a>
+            &nbsp;·&nbsp;
+            <a th:href="@{/auth/login}">Voltar ao login</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
