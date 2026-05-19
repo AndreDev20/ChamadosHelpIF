@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,7 @@ public class AdminController {
     private final UsuarioService usuarioService;
 
     @GetMapping
+    @Transactional(readOnly = true)
     public String painel(Model model) {
         List<Incidente> incidentes = incidenteService.listarTodos();
         if (incidentes == null) incidentes = new ArrayList<>();
