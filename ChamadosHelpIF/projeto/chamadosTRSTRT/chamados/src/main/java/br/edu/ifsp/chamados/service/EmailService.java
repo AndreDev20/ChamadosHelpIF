@@ -14,7 +14,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.from}")
+    @Value("${BREVO_SMTP_LOGIN:noreply@ifsp.edu.br}")
     private String remetente;
 
     public void enviarCodigoVerificacao(String destinatario, String nome, String codigo) {
