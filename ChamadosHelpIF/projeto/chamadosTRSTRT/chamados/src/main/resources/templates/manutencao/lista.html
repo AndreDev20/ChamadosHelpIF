@@ -212,22 +212,22 @@
 
             <!-- STATS CLICÁVEIS -->
             <div class="stats-row">
-                <div class="stat-card" id="card-todos" onclick="filtrarStatus('TODOS')" title="Mostrar todos">
+                <div class="stat-card" id="card-todos" title="Mostrar todos">
                     <div class="stat-label">Total</div>
                     <div class="stat-value" th:text="${incidentes.size()}">0</div>
                     <div class="stat-hint">Clique para ver todos</div>
                 </div>
-                <div class="stat-card yellow" id="card-CRIADO" onclick="filtrarStatus('CRIADO')" title="Filtrar Criados">
+                <div class="stat-card yellow" id="card-CRIADO" title="Filtrar Criados">
                     <div class="stat-label">Criados</div>
                     <div class="stat-value" th:text="${qtdCriados}">0</div>
                     <div class="stat-hint">Aguardando análise</div>
                 </div>
-                <div class="stat-card blue" id="card-EM_ANALISE" onclick="filtrarStatus('EM_ANALISE')" title="Filtrar Em Análise">
+                <div class="stat-card blue" id="card-EM_ANALISE" title="Filtrar Em Análise">
                     <div class="stat-label">Em Análise</div>
                     <div class="stat-value" th:text="${qtdEmAnalise}">0</div>
                     <div class="stat-hint">Em atendimento</div>
                 </div>
-                <div class="stat-card green" id="card-CONCLUIDO" onclick="filtrarStatus('CONCLUIDO')" title="Filtrar Concluídos">
+                <div class="stat-card green" id="card-CONCLUIDO" title="Filtrar Concluídos">
                     <div class="stat-label">Concluídos</div>
                     <div class="stat-value" th:text="${qtdConcluidos}">0</div>
                     <div class="stat-hint">Finalizados</div>
@@ -238,23 +238,23 @@
             <div class="filters-bar">
                 <div class="filter-group filter-search">
                     <span class="filter-label">Busca livre</span>
-                    <input type="text" class="filter-input" id="busca" placeholder="Buscar por descrição, local, usuário..." oninput="aplicarFiltros()">
+                    <input type="text" class="filter-input" id="busca" placeholder="Buscar por descrição, local, usuário...">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Bloco / Local</span>
-                    <select class="filter-select" id="filtroBloco" onchange="aplicarFiltros()">
+                    <select class="filter-select" id="filtroBloco">
                         <option value="">Todos os locais</option>
                         <option th:each="b : ${blocos}" th:value="${b.descricao}" th:text="${b.descricao}"></option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Ordenar por data</span>
-                    <select class="filter-select" id="filtroOrdem" onchange="aplicarFiltros()">
+                    <select class="filter-select" id="filtroOrdem">
                         <option value="desc">Mais recentes primeiro</option>
                         <option value="asc">Mais antigos primeiro (SLA)</option>
                     </select>
                 </div>
-                <button class="btn-reset" onclick="resetarFiltros()">✕ Limpar filtros</button>
+                <button class="btn-reset" id="btnResetar">✕ Limpar filtros</button>
             </div>
 
             <!-- TABELA -->
@@ -274,14 +274,14 @@
                     <table id="tabelaChamados">
                         <thead>
                             <tr>
-                                <th onclick="ordenarPorColuna(0)">#</th>
+                                <th>#</th>
                                 <th>Descrição</th>
-                                <th onclick="ordenarPorColuna(2)">Local</th>
+                                <th>Local</th>
                                 <th>Usuário</th>
-                                <th onclick="ordenarPorColuna(4)" id="th-data">Data ▼</th>
+                                <th>Data ▼</th>
                                 <th>SLA</th>
                                 <th>Anexo</th>
-                                <th onclick="ordenarPorColuna(7)">Status</th>
+                                <th>Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -358,9 +358,10 @@
                                             </button>
                                         </form>
                                         <!-- Concluir abre modal com solução obrigatória -->
-                                        <button class="btn btn-concluir"
+                                        <button class="btn btn-concluir btn-abrir-modal"
                                                 th:disabled="${inc.status.name() == 'CONCLUIDO'}"
-                                                th:onclick="'abrirModalConcluir(' + ${inc.id} + ', \'' + ${#strings.abbreviate(inc.observacao,40)} + '\')'">
+                                                th:data-chamado-id="${inc.id}"
+                                                th:data-chamado-obs="${#strings.abbreviate(inc.observacao,40)}">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                                             Concluir
                                         </button>
@@ -383,7 +384,7 @@
 
 <!-- MODAL DE CONCLUSÃO -->
 <div class="modal-overlay" id="modalConcluir">
-    <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal">
         <div class="modal-header">
             <div class="modal-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -409,12 +410,12 @@
                     <div class="modal-file-label">Clique para anexar foto do serviço concluído</div>
                     <div class="modal-file-chosen" id="nomeArquivo" style="display:none;"></div>
                     <input type="file" id="evidenciaFile" name="evidencia" accept="image/*"
-                           onchange="mostrarNomeArquivo(this)">
+                          >
                 </div>
             </div>
 
             <div class="modal-actions">
-                <button type="button" class="btn-modal-cancel" onclick="fecharModal()">Cancelar</button>
+                <button type="button" class="btn-modal-cancel" id="btnCancelarModal">Cancelar</button>
                 <button type="submit" class="btn-modal-confirm">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     Confirmar Conclusão
@@ -425,131 +426,154 @@
 </div>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-    <img id="lightboxImg" src="" alt="Anexo" onclick="event.stopPropagation()">
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close">✕</button>
+    <img id="lightboxImg" src="" alt="Anexo">
 </div>
 
 <script>
-// ── DADOS DA TABELA ───────────────────────────────────────────────────────────
-const tbody         = document.getElementById('tbodyPrincipal');
-const emptyState    = document.getElementById('emptyState');
-const contadorEl    = document.getElementById('contadorVisivel');
-let filtroStatusAtivo = 'TODOS';
+document.addEventListener('DOMContentLoaded', function () {
 
-// ── STAT CARDS FILTRO RÁPIDO ──────────────────────────────────────────────────
-function filtrarStatus(status) {
-    filtroStatusAtivo = status;
-    // Highlight card
-    document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-filter'));
-    const alvo = status === 'TODOS' ? document.getElementById('card-todos') : document.getElementById('card-' + status);
-    if (alvo) alvo.classList.add('active-filter');
-    aplicarFiltros();
-}
+    const tbody      = document.getElementById('tbodyPrincipal');
+    const emptyState = document.getElementById('emptyState');
+    const contadorEl = document.getElementById('contadorVisivel');
+    const lbImg      = document.getElementById('lightboxImg');
+    const lightbox   = document.getElementById('lightbox');
+    let filtroStatusAtivo = 'TODOS';
 
-// ── FILTROS AVANÇADOS ─────────────────────────────────────────────────────────
-function normalizar(s) {
-    return (s || '').toLowerCase()
-        .normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
-}
+    // ── FILTRO STATUS (stat cards) ────────────────────────────────────────────
+    function filtrarStatus(status) {
+        filtroStatusAtivo = status;
+        document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-filter'));
+        const alvo = status === 'TODOS'
+            ? document.getElementById('card-todos')
+            : document.getElementById('card-' + status);
+        if (alvo) alvo.classList.add('active-filter');
+        aplicarFiltros();
+    }
 
-function aplicarFiltros() {
-    const busca  = normalizar(document.getElementById('busca').value);
-    const bloco  = normalizar(document.getElementById('filtroBloco').value);
-    const ordem  = document.getElementById('filtroOrdem').value;
+    document.getElementById('card-todos').addEventListener('click', () => filtrarStatus('TODOS'));
+    document.getElementById('card-CRIADO').addEventListener('click', () => filtrarStatus('CRIADO'));
+    document.getElementById('card-EM_ANALISE').addEventListener('click', () => filtrarStatus('EM_ANALISE'));
+    document.getElementById('card-CONCLUIDO').addEventListener('click', () => filtrarStatus('CONCLUIDO'));
 
-    const rows = Array.from(tbody.querySelectorAll('tr[data-id]'));
+    // ── FILTROS AVANÇADOS ─────────────────────────────────────────────────────
+    function normalizar(s) {
+        return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+    }
 
-    let visiveis = 0;
-    rows.forEach(tr => {
-        const status  = tr.dataset.status  || '';
-        const blocoDR = normalizar(tr.dataset.bloco);
-        const local   = normalizar(tr.dataset.local);
-        const obs     = normalizar(tr.dataset.obs);
-        const usuario = normalizar(tr.dataset.usuario);
-        const id      = (tr.dataset.id || '').trim();
-        // also search inside visible td text for robustness
-        const tdText  = normalizar(tr.textContent);
+    function aplicarFiltros() {
+        const busca = normalizar(document.getElementById('busca').value);
+        const bloco = normalizar(document.getElementById('filtroBloco').value);
+        const ordem = document.getElementById('filtroOrdem').value;
+        const rows  = Array.from(tbody.querySelectorAll('tr[data-id]'));
 
-        const passaStatus = filtroStatusAtivo === 'TODOS' || status === filtroStatusAtivo;
-        const passaBloco  = !bloco || blocoDR === bloco;
-        const passaBusca  = !busca || obs.includes(busca) || local.includes(busca)
-                                   || blocoDR.includes(busca) || usuario.includes(busca)
-                                   || id.includes(busca) || tdText.includes(busca);
+        let visiveis = 0;
+        rows.forEach(tr => {
+            const status  = tr.dataset.status   || '';
+            const blocoDR = normalizar(tr.dataset.bloco);
+            const local   = normalizar(tr.dataset.local);
+            const obs     = normalizar(tr.dataset.obs);
+            const usuario = normalizar(tr.dataset.usuario);
+            const id      = (tr.dataset.id || '').trim();
+            const tdText  = normalizar(tr.textContent);
 
-        if (passaStatus && passaBloco && passaBusca) {
-            tr.classList.remove('hidden-row');
-            visiveis++;
-        } else {
-            tr.classList.add('hidden-row');
+            const passaStatus = filtroStatusAtivo === 'TODOS' || status === filtroStatusAtivo;
+            const passaBloco  = !bloco || blocoDR === bloco;
+            const passaBusca  = !busca || obs.includes(busca) || local.includes(busca)
+                              || blocoDR.includes(busca) || usuario.includes(busca)
+                              || id.includes(busca) || tdText.includes(busca);
+
+            if (passaStatus && passaBloco && passaBusca) {
+                tr.classList.remove('hidden-row');
+                visiveis++;
+            } else {
+                tr.classList.add('hidden-row');
+            }
+        });
+
+        const visivelRows = rows.filter(r => !r.classList.contains('hidden-row'));
+        visivelRows.sort((a, b) => {
+            const ta = a.dataset.ts || '';
+            const tb = b.dataset.ts || '';
+            return ordem === 'asc' ? ta.localeCompare(tb) : tb.localeCompare(ta);
+        });
+        visivelRows.forEach(r => tbody.appendChild(r));
+
+        emptyState.style.display = visiveis === 0 ? 'block' : 'none';
+        contadorEl.textContent   = 'Exibindo: ' + visiveis;
+    }
+
+    function resetarFiltros() {
+        document.getElementById('busca').value       = '';
+        document.getElementById('filtroBloco').value = '';
+        document.getElementById('filtroOrdem').value = 'desc';
+        filtroStatusAtivo = 'TODOS';
+        document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-filter'));
+        aplicarFiltros();
+    }
+
+    document.getElementById('busca').addEventListener('input', aplicarFiltros);
+    document.getElementById('filtroBloco').addEventListener('change', aplicarFiltros);
+    document.getElementById('filtroOrdem').addEventListener('change', aplicarFiltros);
+    document.getElementById('btnResetar').addEventListener('click', resetarFiltros);
+
+    // ── MODAL DE CONCLUSÃO ────────────────────────────────────────────────────
+    document.querySelectorAll('.btn-abrir-modal').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id      = this.dataset.chamadoId;
+            const descricao = this.dataset.chamadoObs || '';
+            document.getElementById('formConcluir').action = '/manutencao/concluir/' + id;
+            document.getElementById('solucaoAplicada').value = '';
+            document.getElementById('evidenciaFile').value  = '';
+            document.getElementById('nomeArquivo').style.display = 'none';
+            document.getElementById('modalSubtitle').textContent = 'Chamado #' + id + ': ' + descricao;
+            document.getElementById('modalConcluir').classList.add('open');
+            setTimeout(() => document.getElementById('solucaoAplicada').focus(), 100);
+        });
+    });
+
+    document.getElementById('btnCancelarModal').addEventListener('click', function () {
+        document.getElementById('modalConcluir').classList.remove('open');
+    });
+
+    document.getElementById('evidenciaFile').addEventListener('change', function () {
+        const el = document.getElementById('nomeArquivo');
+        if (this.files && this.files[0]) {
+            el.textContent = '📎 ' + this.files[0].name;
+            el.style.display = 'block';
         }
     });
 
-    // Ordenar linhas visíveis por timestamp
-    const visivelRows = rows.filter(r => !r.classList.contains('hidden-row'));
-    visivelRows.sort((a, b) => {
-        const ta = a.dataset.ts || '';
-        const tb = b.dataset.ts || '';
-        return ordem === 'asc' ? ta.localeCompare(tb) : tb.localeCompare(ta);
-    });
-    visivelRows.forEach(r => tbody.appendChild(r));
-
-    emptyState.style.display = visiveis === 0 ? 'block' : 'none';
-    contadorEl.textContent   = 'Exibindo: ' + visiveis;
-}
-
-function resetarFiltros() {
-    document.getElementById('busca').value       = '';
-    document.getElementById('filtroBloco').value = '';
-    document.getElementById('filtroOrdem').value = 'desc';
-    filtroStatusAtivo = 'TODOS';
-    document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-filter'));
-    aplicarFiltros();
-}
-
-// ── MODAL DE CONCLUSÃO ────────────────────────────────────────────────────────
-function abrirModalConcluir(id, descricao) {
-    document.getElementById('formConcluir').action = '/manutencao/concluir/' + id;
-    document.getElementById('solucaoAplicada').value = '';
-    document.getElementById('evidenciaFile').value   = '';
-    document.getElementById('nomeArquivo').style.display = 'none';
-    document.getElementById('modalSubtitle').textContent = 'Chamado #' + id + ': ' + descricao;
-    document.getElementById('modalConcluir').classList.add('open');
-    setTimeout(() => document.getElementById('solucaoAplicada').focus(), 100);
-}
-
-function fecharModal() {
-    document.getElementById('modalConcluir').classList.remove('open');
-}
-
-function mostrarNomeArquivo(input) {
-    const el = document.getElementById('nomeArquivo');
-    if (input.files && input.files[0]) {
-        el.textContent = '📎 ' + input.files[0].name;
-        el.style.display = 'block';
+    // ── LIGHTBOX ──────────────────────────────────────────────────────────────
+    function closeLightbox() {
+        lightbox.classList.remove('open');
+        lbImg.src = '';
     }
-}
 
-// ── LIGHTBOX ──────────────────────────────────────────────────────────────────
-const lightbox = document.getElementById('lightbox');
-const lbImg    = document.getElementById('lightboxImg');
+    lightbox.addEventListener('click', closeLightbox);
+    document.getElementById('btnCloseLightbox').addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeLightbox();
+    });
+    lbImg.addEventListener('click', function (e) { e.stopPropagation(); });
 
-function closeLightbox() {
-    lightbox.classList.remove('open');
-    lbImg.src = '';
-}
+    document.addEventListener('click', function (e) {
+        const thumb = e.target.closest('.thumb');
+        if (thumb) { lbImg.src = thumb.src; lightbox.classList.add('open'); }
+    });
 
-document.addEventListener('click', function(e) {
-    const thumb = e.target.closest('.thumb');
-    if (thumb) { lbImg.src = thumb.src; lightbox.classList.add('open'); }
-});
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeLightbox();
+            document.getElementById('modalConcluir').classList.remove('open');
+        }
+    });
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') { closeLightbox(); fecharModal(); }
-});
+    // ── INIT ──────────────────────────────────────────────────────────────────
+    aplicarFiltros();
 
-// Inicializar contador
-aplicarFiltros();
+}); // DOMContentLoaded
 </script>
 </body>
 </html>
