@@ -7,187 +7,163 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --navy: #0a1628; --navy-mid: #112240; --navy-light: #1d3461;
-            --accent: #00d68f; --accent-dim: #00a36c; --accent-glow: rgba(0,214,143,0.18);
-            --warn: #f59e0b; --warn-bg: rgba(245,158,11,0.1);
-            --info: #3b82f6; --info-bg: rgba(59,130,246,0.1);
-            --success: #10b981; --success-bg: rgba(16,185,129,0.1);
-            --danger: #ef4444;
-            --surface: #f4f7fb; --card: #ffffff; --border: #e2e8f0;
-            --text: #0f1923; --muted: #6b7a99;
-            --font: 'Outfit', sans-serif; --mono: 'JetBrains Mono', monospace;
+            --navy:#0a1628;--navy-mid:#112240;--navy-light:#1d3461;
+            --accent:#00d68f;--accent-dim:#00a36c;--accent-glow:rgba(0,214,143,0.18);
+            --warn:#f59e0b;--warn-bg:rgba(245,158,11,0.1);
+            --info:#3b82f6;--info-bg:rgba(59,130,246,0.1);
+            --success:#10b981;--success-bg:rgba(16,185,129,0.1);
+            --danger:#ef4444;--danger-bg:rgba(239,68,68,0.08);
+            --surface:#f4f7fb;--card:#fff;--border:#e2e8f0;
+            --text:#0f1923;--muted:#6b7a99;
+            --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font); background: var(--surface); color: var(--text); min-height: 100vh; }
-        .app-shell { display: flex; min-height: 100vh; }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:var(--font);background:var(--surface);color:var(--text);min-height:100vh;}
+        .app-shell{display:flex;min-height:100vh;}
 
         /* SIDEBAR */
-        .sidebar {
-            width: 72px; background: var(--navy);
-            display: flex; flex-direction: column; align-items: center;
-            padding: 1.5rem 0; gap: 0.4rem;
-            position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
-        }
-        .sidebar-logo {
-            width: 42px; height: 42px; background: var(--accent); border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1.5rem; font-weight: 800; font-size: 1rem;
-            color: var(--navy); box-shadow: 0 0 24px var(--accent-glow); letter-spacing: -1px;
-        }
-        .sidebar-icon {
-            width: 44px; height: 44px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.4); text-decoration: none;
-            transition: background 0.2s, color 0.2s;
-        }
-        .sidebar-icon:hover { background: var(--navy-light); color: rgba(255,255,255,0.9); }
-        .sidebar-icon.active { background: var(--accent-glow); color: var(--accent); }
-        .sidebar-bottom { margin-top: auto; }
+        .sidebar{width:72px;background:var(--navy);display:flex;flex-direction:column;align-items:center;padding:1.5rem 0;gap:.4rem;position:fixed;top:0;left:0;bottom:0;z-index:100;}
+        .sidebar-logo{width:42px;height:42px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-weight:800;font-size:1rem;color:var(--navy);box-shadow:0 0 24px var(--accent-glow);letter-spacing:-1px;}
+        .sidebar-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);text-decoration:none;transition:background .2s,color .2s;}
+        .sidebar-icon:hover{background:var(--navy-light);color:rgba(255,255,255,.9);}
+        .sidebar-icon.active{background:var(--accent-glow);color:var(--accent);}
+        .sidebar-bottom{margin-top:auto;}
 
         /* MAIN */
-        .main-area { margin-left: 72px; flex: 1; display: flex; flex-direction: column; }
+        .main-area{margin-left:72px;flex:1;display:flex;flex-direction:column;}
 
         /* TOPBAR */
-        .topbar {
-            background: var(--card); border-bottom: 1px solid var(--border);
-            padding: 0 2rem; height: 64px;
-            display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 50;
-        }
-        .topbar-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--muted); }
-        .topbar-breadcrumb svg { opacity: 0.4; }
-        .crumb-active { color: var(--text); font-weight: 600; }
-        .user-chip {
-            display: flex; align-items: center; gap: 0.6rem;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 40px; padding: 0.35rem 1rem 0.35rem 0.5rem;
-            font-size: 0.85rem; font-weight: 500; text-decoration: none; color: var(--text);
-        }
-        .user-avatar {
-            width: 30px; height: 30px; background: var(--warn); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 0.75rem; font-weight: 800;
-        }
+        .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+        .topbar-breadcrumb{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--muted);}
+        .crumb-active{color:var(--text);font-weight:600;}
+        .user-chip{display:flex;align-items:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:40px;padding:.35rem 1rem .35rem .5rem;font-size:.85rem;font-weight:500;text-decoration:none;color:var(--text);}
+        .user-avatar{width:30px;height:30px;background:var(--warn);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;font-weight:800;}
 
         /* CONTENT */
-        .content { padding: 2rem 2.5rem; flex: 1; }
-        .page-header { margin-bottom: 2rem; }
-        .page-header h1 { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.5px; color: var(--navy); }
-        .page-header p { color: var(--muted); margin-top: 0.35rem; font-size: 0.95rem; }
+        .content{padding:2rem 2.5rem;flex:1;}
+        .page-header{margin-bottom:2rem;}
+        .page-header h1{font-size:1.85rem;font-weight:800;letter-spacing:-.5px;color:var(--navy);}
+        .page-header p{color:var(--muted);margin-top:.35rem;font-size:.95rem;}
 
-        /* STATS */
-        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
-        .stat-card {
-            background: var(--card); border-radius: 14px; border: 1px solid var(--border);
-            padding: 1.1rem 1.3rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .stat-card.yellow { border-color: rgba(245,158,11,0.35); }
-        .stat-card.blue   { border-color: rgba(59,130,246,0.3); }
-        .stat-card.green  { border-color: rgba(16,185,129,0.3); }
-        .stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem; }
-        .stat-value { font-size: 2rem; font-weight: 800; color: var(--navy); line-height: 1; }
-        .stat-card.yellow .stat-value { color: #b45309; }
-        .stat-card.blue   .stat-value { color: #1d4ed8; }
-        .stat-card.green  .stat-value { color: #059669; }
+        /* STATS — clicáveis */
+        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+        .stat-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:1.1rem 1.3rem;box-shadow:0 2px 8px rgba(0,0,0,.04);cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;user-select:none;}
+        .stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1);}
+        .stat-card.active-filter{box-shadow:0 0 0 2px var(--accent);}
+        .stat-card.yellow{border-color:rgba(245,158,11,.35);}
+        .stat-card.yellow.active-filter{box-shadow:0 0 0 2px var(--warn);}
+        .stat-card.blue{border-color:rgba(59,130,246,.3);}
+        .stat-card.blue.active-filter{box-shadow:0 0 0 2px var(--info);}
+        .stat-card.green{border-color:rgba(16,185,129,.3);}
+        .stat-card.green.active-filter{box-shadow:0 0 0 2px var(--success);}
+        .stat-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem;}
+        .stat-value{font-size:2rem;font-weight:800;color:var(--navy);line-height:1;}
+        .stat-hint{font-size:.68rem;color:var(--muted);margin-top:.3rem;}
+        .stat-card.yellow .stat-value{color:#b45309;}
+        .stat-card.blue   .stat-value{color:#1d4ed8;}
+        .stat-card.green  .stat-value{color:#059669;}
 
-        /* INFO BANNER */
-        .info-banner {
-            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
-            border-radius: 16px; padding: 1.4rem 1.8rem;
-            display: flex; align-items: flex-start; gap: 1rem;
-            margin-bottom: 2rem; color: #fff;
+        /* FILTROS */
+        .filters-bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.4rem;margin-bottom:1.5rem;display:flex;flex-wrap:wrap;gap:.8rem;align-items:flex-end;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+        .filter-group{display:flex;flex-direction:column;gap:.3rem;flex:1;min-width:160px;}
+        .filter-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
+        .filter-input,.filter-select{
+            padding:.5rem .8rem;border:1.5px solid var(--border);border-radius:8px;
+            font-size:.85rem;font-family:var(--font);background:var(--surface);color:var(--text);
+            transition:border-color .2s,box-shadow .2s;
         }
-        .info-banner-icon {
-            width: 40px; height: 40px; min-width: 40px;
-            background: var(--accent-glow); border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--accent);
-        }
-        .info-banner h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
-        .info-banner p  { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
+        .filter-input:focus,.filter-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);background:#fff;}
+        .filter-search{flex:2;min-width:200px;}
+        .btn-reset{padding:.5rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;font-weight:600;font-family:var(--font);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;align-self:flex-end;}
+        .btn-reset:hover{border-color:var(--danger);color:var(--danger);}
 
         /* SECTION */
-        .section-card {
-            background: var(--card); border-radius: 16px; border: 1px solid var(--border);
-            overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.05); margin-bottom: 2.5rem;
-        }
-        .section-header {
-            background: var(--navy); padding: 1rem 1.6rem;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .section-header h2 { font-size: 0.95rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
-        .section-count { font-size: 0.78rem; color: rgba(255,255,255,0.45); font-family: var(--mono); }
+        .section-card{background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.05);margin-bottom:2.5rem;}
+        .section-header{background:var(--navy);padding:1rem 1.6rem;display:flex;align-items:center;justify-content:space-between;}
+        .section-header h2{font-size:.95rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:.5rem;}
+        .section-count{font-size:.78rem;color:rgba(255,255,255,.45);font-family:var(--mono);}
 
         /* TABLE */
-        .tbl-wrap { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        thead th {
-            background: #f8fafc; font-size: 0.72rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted);
-            padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap;
-        }
-        tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
-        tbody tr:hover { background: #f8faff; }
-        tbody tr:last-child { border-bottom: none; }
-        tbody td { padding: 0.85rem 1rem; font-size: 0.875rem; vertical-align: middle; }
-        tbody tr.empty td { text-align: center; color: var(--muted); padding: 3rem; font-style: italic; }
+        .tbl-wrap{overflow-x:auto;}
+        table{width:100%;border-collapse:collapse;}
+        thead th{background:#f8fafc;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;}
+        thead th:hover{color:var(--navy);}
+        thead th.sort-asc::after{content:' ▲';font-size:.6rem;}
+        thead th.sort-desc::after{content:' ▼';font-size:.6rem;}
+        tbody tr{border-bottom:1px solid #f1f5f9;transition:background .15s;}
+        tbody tr:hover{background:#f8faff;}
+        tbody tr:last-child{border-bottom:none;}
+        tbody tr.hidden-row{display:none;}
+        tbody td{padding:.85rem 1rem;font-size:.875rem;vertical-align:middle;}
+        tbody tr.empty td{text-align:center;color:var(--muted);padding:3rem;font-style:italic;}
 
-        .id-cell { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); font-weight: 600; white-space: nowrap; }
-        .obs-cell { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .local-bloco { font-size: 0.78rem; font-weight: 700; color: var(--navy); }
-        .local-esp   { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+        .id-cell{font-family:var(--mono);font-size:.8rem;color:var(--muted);font-weight:600;white-space:nowrap;}
+        .obs-cell{max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .local-bloco{font-size:.78rem;font-weight:700;color:var(--navy);}
+        .local-esp{font-size:.75rem;color:var(--muted);margin-top:2px;}
 
-        .thumb {
-            width: 44px; height: 44px; object-fit: cover;
-            border-radius: 8px; border: 2px solid var(--border);
-            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: block;
-        }
-        .thumb:hover { transform: scale(1.12); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-        .no-img { color: var(--muted); }
+        /* SLA badge */
+        .sla-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.68rem;font-weight:700;padding:.15rem .5rem;border-radius:20px;white-space:nowrap;}
+        .sla-ok{background:rgba(16,185,129,.1);color:#059669;}
+        .sla-warn{background:rgba(245,158,11,.12);color:#b45309;}
+        .sla-late{background:rgba(239,68,68,.1);color:#dc2626;}
+
+        .thumb{width:44px;height:44px;object-fit:cover;border-radius:8px;border:2px solid var(--border);cursor:pointer;transition:transform .2s,box-shadow .2s;display:block;}
+        .thumb:hover{transform:scale(1.12);box-shadow:0 4px 16px rgba(0,0,0,.15);}
+        .no-img{color:var(--muted);}
 
         /* BADGES */
-        .badge {
-            display: inline-block; padding: 0.25rem 0.7rem;
-            border-radius: 20px; font-size: 0.7rem;
-            font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
-        }
-        .badge-CRIADO     { background: rgba(0,214,143,0.12); color: #00a36c; }
-        .badge-EM_ANALISE { background: rgba(245,158,11,0.12); color: #b45309; }
-        .badge-CONCLUIDO  { background: rgba(59,130,246,0.12); color: #1d4ed8; }
+        .badge{display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+        .badge-CRIADO{background:rgba(0,214,143,.12);color:#00a36c;}
+        .badge-EM_ANALISE{background:rgba(245,158,11,.12);color:#b45309;}
+        .badge-CONCLUIDO{background:rgba(59,130,246,.12);color:#1d4ed8;}
 
         /* ACTIONS */
-        .actions { display: flex; align-items: center; gap: 0.4rem; flex-wrap: nowrap; }
-        .actions form { margin: 0; }
-        .btn {
-            display: inline-flex; align-items: center; gap: 0.3rem;
-            padding: 0.35rem 0.75rem; border-radius: 7px;
-            font-size: 0.78rem; font-weight: 600;
-            border: none; cursor: pointer; text-decoration: none;
-            transition: filter 0.15s, transform 0.1s; white-space: nowrap;
-            font-family: var(--font);
-        }
-        .btn:hover  { filter: brightness(1.12); transform: translateY(-1px); }
-        .btn:active { transform: translateY(0); }
-        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; filter: none !important; }
-        .btn-analise  { background: var(--warn);    color: #fff; }
-        .btn-concluir { background: var(--success);  color: #fff; }
-        .btn-detalhe  { background: var(--navy);     color: #fff; }
+        .actions{display:flex;align-items:center;gap:.4rem;flex-wrap:nowrap;}
+        .actions form{margin:0;}
+        .btn{display:inline-flex;align-items:center;gap:.3rem;padding:.35rem .75rem;border-radius:7px;font-size:.78rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;transition:filter .15s,transform .1s;white-space:nowrap;font-family:var(--font);}
+        .btn:hover{filter:brightness(1.12);transform:translateY(-1px);}
+        .btn:active{transform:translateY(0);}
+        .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;filter:none!important;}
+        .btn-analise{background:var(--warn);color:#fff;}
+        .btn-concluir{background:var(--success);color:#fff;}
+        .btn-detalhe{background:var(--navy);color:#fff;}
+
+        /* MODAL DE CONCLUSÃO */
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+        .modal-overlay.open{display:flex;}
+        .modal{background:var(--card);border-radius:20px;padding:2rem;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;}
+        .modal-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem;}
+        .modal-icon{width:42px;height:42px;background:var(--success-bg);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--success);flex-shrink:0;}
+        .modal-title{font-size:1.1rem;font-weight:800;color:var(--navy);}
+        .modal-sub{font-size:.82rem;color:var(--muted);margin-top:.15rem;}
+        .modal-field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.1rem;}
+        .modal-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);}
+        .modal-label .req{color:var(--danger);}
+        .modal-textarea{width:100%;padding:.7rem .9rem;border:1.5px solid var(--border);border-radius:10px;font-size:.875rem;font-family:var(--font);min-height:100px;resize:vertical;background:var(--surface);}
+        .modal-textarea:focus{outline:none;border-color:var(--success);box-shadow:0 0 0 3px rgba(16,185,129,.15);}
+        .modal-file-area{border:2px dashed var(--border);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:var(--surface);}
+        .modal-file-area:hover{border-color:var(--accent);background:#f0fdf8;}
+        .modal-file-area input{display:none;}
+        .modal-file-label{font-size:.82rem;color:var(--muted);margin-top:.3rem;}
+        .modal-file-chosen{font-size:.8rem;color:var(--success);font-weight:600;margin-top:.4rem;}
+        .modal-actions{display:flex;gap:.7rem;margin-top:1.4rem;}
+        .btn-modal-cancel{flex:1;padding:.7rem;border:1.5px solid var(--border);border-radius:10px;font-size:.88rem;font-weight:600;font-family:var(--font);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
+        .btn-modal-cancel:hover{border-color:var(--danger);color:var(--danger);}
+        .btn-modal-confirm{flex:2;padding:.7rem;border:none;border-radius:10px;font-size:.88rem;font-weight:700;font-family:var(--font);background:var(--success);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:filter .2s,transform .1s;}
+        .btn-modal-confirm:hover{filter:brightness(1.1);transform:translateY(-1px);}
 
         /* LIGHTBOX */
-        .lightbox {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.85); z-index: 9999;
-            align-items: center; justify-content: center; backdrop-filter: blur(4px);
-        }
-        .lightbox.open { display: flex; }
-        .lightbox img { max-width: 88vw; max-height: 88vh; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-        .lightbox-close {
-            position: absolute; top: 1.5rem; right: 1.5rem;
-            background: rgba(255,255,255,0.15); border: none; color: #fff;
-            width: 42px; height: 42px; border-radius: 50%; font-size: 1.1rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+        .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+        .lightbox.open{display:flex;}
+        .lightbox img{max-width:88vw;max-height:88vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+        .lightbox-close{position:absolute;top:1.5rem;right:1.5rem;background:rgba(255,255,255,.15);border:none;color:#fff;width:42px;height:42px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+        .lightbox-close:hover{background:rgba(255,255,255,.25);}
+
+        /* EMPTY STATE */
+        .empty-state{text-align:center;padding:4rem 2rem;color:var(--muted);}
+        .empty-state svg{opacity:.3;margin-bottom:1rem;}
+        .empty-state p{font-size:.9rem;}
     </style>
 </head>
 <body>
@@ -201,7 +177,6 @@
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                 <polyline points="14 2 14 8 20 8"/>
                 <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-                <polyline points="10 9 9 9 8 9"/>
             </svg>
         </a>
         <div class="sidebar-bottom">
@@ -215,9 +190,7 @@
         </div>
     </nav>
 
-    <!-- MAIN -->
     <div class="main-area">
-
         <!-- TOPBAR -->
         <header class="topbar">
             <div class="topbar-breadcrumb">
@@ -231,45 +204,57 @@
             </a>
         </header>
 
-        <!-- CONTENT -->
         <main class="content">
-
             <div class="page-header">
                 <h1>Painel de Manutenção</h1>
-                <p>Gerencie, acompanhe e atualize o status dos chamados atribuídos à equipe.</p>
+                <p>Filtre, acompanhe e conclua os chamados com evidências registradas.</p>
             </div>
 
-            <!-- INFO BANNER -->
-            <div class="info-banner">
-                <div class="info-banner-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                    </svg>
-                </div>
-                <div>
-                    <h3>Responsabilidades da Equipe de Manutenção</h3>
-                    <p>Receba, avalie e execute os chamados. Atualize o status conforme o andamento, registre observações técnicas, soluções aplicadas e evidências. Respeite os SLAs e finalize os chamados após a conclusão do serviço.</p>
-                </div>
-            </div>
-
-            <!-- STATS -->
+            <!-- STATS CLICÁVEIS -->
             <div class="stats-row">
-                <div class="stat-card">
+                <div class="stat-card" id="card-todos" onclick="filtrarStatus('TODOS')" title="Mostrar todos">
                     <div class="stat-label">Total</div>
                     <div class="stat-value" th:text="${incidentes.size()}">0</div>
+                    <div class="stat-hint">Clique para ver todos</div>
                 </div>
-                <div class="stat-card yellow">
+                <div class="stat-card yellow" id="card-CRIADO" onclick="filtrarStatus('CRIADO')" title="Filtrar Criados">
                     <div class="stat-label">Criados</div>
                     <div class="stat-value" th:text="${qtdCriados}">0</div>
+                    <div class="stat-hint">Aguardando análise</div>
                 </div>
-                <div class="stat-card blue">
+                <div class="stat-card blue" id="card-EM_ANALISE" onclick="filtrarStatus('EM_ANALISE')" title="Filtrar Em Análise">
                     <div class="stat-label">Em Análise</div>
                     <div class="stat-value" th:text="${qtdEmAnalise}">0</div>
+                    <div class="stat-hint">Em atendimento</div>
                 </div>
-                <div class="stat-card green">
+                <div class="stat-card green" id="card-CONCLUIDO" onclick="filtrarStatus('CONCLUIDO')" title="Filtrar Concluídos">
                     <div class="stat-label">Concluídos</div>
                     <div class="stat-value" th:text="${qtdConcluidos}">0</div>
+                    <div class="stat-hint">Finalizados</div>
                 </div>
+            </div>
+
+            <!-- FILTROS AVANÇADOS -->
+            <div class="filters-bar">
+                <div class="filter-group filter-search">
+                    <span class="filter-label">Busca livre</span>
+                    <input type="text" class="filter-input" id="busca" placeholder="Buscar por descrição, local, usuário..." oninput="aplicarFiltros()">
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Bloco / Local</span>
+                    <select class="filter-select" id="filtroBloco" onchange="aplicarFiltros()">
+                        <option value="">Todos os locais</option>
+                        <option th:each="b : ${blocos}" th:value="${b.descricao}" th:text="${b.descricao}"></option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Ordenar por data</span>
+                    <select class="filter-select" id="filtroOrdem" onchange="aplicarFiltros()">
+                        <option value="desc">Mais recentes primeiro</option>
+                        <option value="asc">Mais antigos primeiro (SLA)</option>
+                    </select>
+                </div>
+                <button class="btn-reset" onclick="resetarFiltros()">✕ Limpar filtros</button>
             </div>
 
             <!-- TABELA -->
@@ -280,30 +265,38 @@
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                             <polyline points="14 2 14 8 20 8"/>
                         </svg>
-                        Chamados em Aberto
+                        Chamados
                     </h2>
-                    <span class="section-count" th:text="'Total: ' + ${incidentes.size()}"></span>
+                    <span class="section-count" id="contadorVisivel"></span>
                 </div>
 
                 <div class="tbl-wrap">
-                    <table>
+                    <table id="tabelaChamados">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Observação</th>
-                                <th>Local</th>
+                                <th onclick="ordenarPorColuna(0)">#</th>
+                                <th>Descrição</th>
+                                <th onclick="ordenarPorColuna(2)">Local</th>
                                 <th>Usuário</th>
-                                <th>Data</th>
+                                <th onclick="ordenarPorColuna(4)" id="th-data">Data ▼</th>
+                                <th>SLA</th>
                                 <th>Anexo</th>
-                                <th>Status</th>
+                                <th onclick="ordenarPorColuna(7)">Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tbodyPrincipal">
                             <tr th:if="${#lists.isEmpty(incidentes)}" class="empty">
-                                <td colspan="8">Nenhum chamado registrado ainda.</td>
+                                <td colspan="9">Nenhum chamado registrado ainda.</td>
                             </tr>
-                            <tr th:each="inc : ${incidentes}">
+                            <tr th:each="inc : ${incidentes}"
+                                th:data-status="${inc.status.name()}"
+                                th:data-bloco="${inc.bloco.descricao}"
+                                th:data-local="${inc.localEspecifico.descricao}"
+                                th:data-obs="${inc.observacao}"
+                                th:data-usuario="${inc.usuario.nome}"
+                                th:data-ts="${#temporals.format(inc.datetime, 'yyyyMMddHHmm')}"
+                                th:data-id="${inc.id}">
 
                                 <td class="id-cell" th:text="'#' + ${inc.id}"></td>
 
@@ -318,18 +311,29 @@
 
                                 <td th:text="${inc.usuario.nome}"></td>
 
-                                <td style="white-space:nowrap; font-family:var(--mono); font-size:0.78rem;"
-                                    th:text="${#temporals.format(inc.datetime, 'dd/MM/yy HH:mm')}"></td>
+                                <td style="white-space:nowrap;font-family:var(--mono);font-size:.78rem;"
+                                    th:text="${#temporals.format(inc.datetime,'dd/MM/yy HH:mm')}"></td>
+
+                                <!-- SLA: verde <24h, amarelo 24-48h, vermelho >48h -->
+                                <td>
+                                    <span class="sla-badge"
+                                          th:with="horas=${#temporals.format(inc.datetime,'yyyyMMddHHmm')}"
+                                          th:classappend="${inc.status.name() == 'CONCLUIDO'} ? 'sla-ok' :
+                                                         (${#temporals.createNow().minusHours(48).isAfter(inc.datetime)} ? 'sla-late' :
+                                                         (${#temporals.createNow().minusHours(24).isAfter(inc.datetime)} ? 'sla-warn' : 'sla-ok'))">
+                                        <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                                        <span th:text="${inc.status.name() == 'CONCLUIDO'} ? 'OK' :
+                                                       (${#temporals.createNow().minusHours(48).isAfter(inc.datetime)} ? 'Atrasado' :
+                                                       (${#temporals.createNow().minusHours(24).isAfter(inc.datetime)} ? 'Atenção' : 'No prazo'))"></span>
+                                    </span>
+                                </td>
 
                                 <td>
                                     <span th:if="${inc.anexo == null or #strings.isEmpty(inc.anexo)}" class="no-img">—</span>
                                     <img  th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
-                                          th:src="${inc.anexo}" class="thumb" alt="Anexo"
-                                          th:onclick="'openLightbox(\'' + ${inc.id} + '\')'"/>
-                                    <span th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
-                                          th:id="'src-' + ${inc.id}"
-                                          th:attr="data-src=${inc.anexo}"
-                                          style="display:none"></span>
+                                          th:src="${inc.anexo}"
+                                          th:id="'thumb-' + ${inc.id}"
+                                          class="thumb" alt="Anexo"/>
                                 </td>
 
                                 <td>
@@ -342,43 +346,81 @@
 
                                 <td>
                                     <div class="actions">
-                                        <!-- Detalhes / registro técnico -->
-                                        <a class="btn btn-detalhe"
-                                           th:href="@{/manutencao/chamado/{id}(id=${inc.id})}">
+                                        <a class="btn btn-detalhe" th:href="@{/manutencao/chamado/{id}(id=${inc.id})}">
                                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                                             Detalhes
                                         </a>
-
-                                        <!-- Em Análise -->
-                                        <form method="post"
-                                              th:action="@{/manutencao/em-analise/{id}(id=${inc.id})}">
+                                        <form method="post" th:action="@{/manutencao/em-analise/{id}(id=${inc.id})}">
                                             <button class="btn btn-analise" type="submit"
                                                     th:disabled="${inc.status.name() == 'EM_ANALISE' or inc.status.name() == 'CONCLUIDO'}">
                                                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                                                 Em Análise
                                             </button>
                                         </form>
-
-                                        <!-- Concluir -->
-                                        <form method="post"
-                                              th:action="@{/manutencao/concluir/{id}(id=${inc.id})}"
-                                              onsubmit="return confirm('Confirmar conclusão do chamado #' + this.dataset.id + '?')"
-                                              th:data-id="${inc.id}">
-                                            <button class="btn btn-concluir" type="submit"
-                                                    th:disabled="${inc.status.name() == 'CONCLUIDO'}">
-                                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                                                Concluir
-                                            </button>
-                                        </form>
+                                        <!-- Concluir abre modal com solução obrigatória -->
+                                        <button class="btn btn-concluir"
+                                                th:disabled="${inc.status.name() == 'CONCLUIDO'}"
+                                                th:onclick="'abrirModalConcluir(' + ${inc.id} + ', \'' + ${#strings.abbreviate(inc.observacao,40)} + '\')'">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                            Concluir
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+
+                    <!-- empty state quando filtros não encontram nada -->
+                    <div class="empty-state" id="emptyState" style="display:none;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <p>Nenhum chamado encontrado com os filtros aplicados.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- MODAL DE CONCLUSÃO -->
+<div class="modal-overlay" id="modalConcluir">
+    <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+                <div class="modal-title">Concluir Chamado</div>
+                <div class="modal-sub" id="modalSubtitle">Registre a solução aplicada antes de finalizar.</div>
+            </div>
+        </div>
+
+        <form id="formConcluir" method="post" enctype="multipart/form-data">
+            <div class="modal-field">
+                <label class="modal-label">Solução aplicada <span class="req">*</span></label>
+                <textarea class="modal-textarea" name="solucaoAplicada" id="solucaoAplicada"
+                          placeholder="Descreva detalhadamente o que foi feito para resolver o chamado..."
+                          required minlength="10"></textarea>
+            </div>
+
+            <div class="modal-field">
+                <label class="modal-label">Foto de evidência <span style="color:var(--muted);font-weight:400;">(opcional)</span></label>
+                <div class="modal-file-area" onclick="document.getElementById('evidenciaFile').click()">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <div class="modal-file-label">Clique para anexar foto do serviço concluído</div>
+                    <div class="modal-file-chosen" id="nomeArquivo" style="display:none;"></div>
+                    <input type="file" id="evidenciaFile" name="evidencia" accept="image/*"
+                           onchange="mostrarNomeArquivo(this)">
                 </div>
             </div>
 
-        </main>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn-modal-confirm">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Confirmar Conclusão
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -389,17 +431,119 @@
 </div>
 
 <script>
-    function openLightbox(id) {
-        var span = document.getElementById('src-' + id);
-        if (!span) return;
-        document.getElementById('lightboxImg').src = span.getAttribute('data-src');
-        document.getElementById('lightbox').classList.add('open');
+// ── DADOS DA TABELA ───────────────────────────────────────────────────────────
+const tbody         = document.getElementById('tbodyPrincipal');
+const emptyState    = document.getElementById('emptyState');
+const contadorEl    = document.getElementById('contadorVisivel');
+let filtroStatusAtivo = 'TODOS';
+
+// ── STAT CARDS FILTRO RÁPIDO ──────────────────────────────────────────────────
+function filtrarStatus(status) {
+    filtroStatusAtivo = status;
+    // Highlight card
+    document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-filter'));
+    const alvo = status === 'TODOS' ? document.getElementById('card-todos') : document.getElementById('card-' + status);
+    if (alvo) alvo.classList.add('active-filter');
+    aplicarFiltros();
+}
+
+// ── FILTROS AVANÇADOS ─────────────────────────────────────────────────────────
+function aplicarFiltros() {
+    const busca  = document.getElementById('busca').value.toLowerCase().trim();
+    const bloco  = document.getElementById('filtroBloco').value.toLowerCase();
+    const ordem  = document.getElementById('filtroOrdem').value;
+
+    const rows = Array.from(tbody.querySelectorAll('tr[data-id]'));
+
+    // Filtrar
+    let visiveis = 0;
+    rows.forEach(tr => {
+        const status  = tr.dataset.status  || '';
+        const blocoDR = (tr.dataset.bloco  || '').toLowerCase();
+        const local   = (tr.dataset.local  || '').toLowerCase();
+        const obs     = (tr.dataset.obs    || '').toLowerCase();
+        const usuario = (tr.dataset.usuario|| '').toLowerCase();
+        const id      = (tr.dataset.id     || '').toLowerCase();
+
+        const passaStatus = filtroStatusAtivo === 'TODOS' || status === filtroStatusAtivo;
+        const passaBloco  = !bloco || blocoDR.includes(bloco);
+        const passaBusca  = !busca || obs.includes(busca) || local.includes(busca)
+                                   || blocoDR.includes(busca) || usuario.includes(busca)
+                                   || id.includes(busca);
+
+        if (passaStatus && passaBloco && passaBusca) {
+            tr.classList.remove('hidden-row');
+            visiveis++;
+        } else {
+            tr.classList.add('hidden-row');
+        }
+    });
+
+    // Ordenar linhas visíveis por timestamp
+    const visivelRows = rows.filter(r => !r.classList.contains('hidden-row'));
+    visivelRows.sort((a, b) => {
+        const ta = a.dataset.ts || '';
+        const tb = b.dataset.ts || '';
+        return ordem === 'asc' ? ta.localeCompare(tb) : tb.localeCompare(ta);
+    });
+    visivelRows.forEach(r => tbody.appendChild(r));
+
+    emptyState.style.display = visiveis === 0 ? 'block' : 'none';
+    contadorEl.textContent   = 'Exibindo: ' + visiveis;
+}
+
+function resetarFiltros() {
+    document.getElementById('busca').value       = '';
+    document.getElementById('filtroBloco').value = '';
+    document.getElementById('filtroOrdem').value = 'desc';
+    filtroStatusAtivo = 'TODOS';
+    document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-filter'));
+    aplicarFiltros();
+}
+
+// ── MODAL DE CONCLUSÃO ────────────────────────────────────────────────────────
+function abrirModalConcluir(id, descricao) {
+    document.getElementById('formConcluir').action = '/manutencao/concluir/' + id;
+    document.getElementById('solucaoAplicada').value = '';
+    document.getElementById('evidenciaFile').value   = '';
+    document.getElementById('nomeArquivo').style.display = 'none';
+    document.getElementById('modalSubtitle').textContent = 'Chamado #' + id + ': ' + descricao;
+    document.getElementById('modalConcluir').classList.add('open');
+    setTimeout(() => document.getElementById('solucaoAplicada').focus(), 100);
+}
+
+function fecharModal() {
+    document.getElementById('modalConcluir').classList.remove('open');
+}
+
+function mostrarNomeArquivo(input) {
+    const el = document.getElementById('nomeArquivo');
+    if (input.files && input.files[0]) {
+        el.textContent = '📎 ' + input.files[0].name;
+        el.style.display = 'block';
     }
-    function closeLightbox() {
-        document.getElementById('lightbox').classList.remove('open');
-        document.getElementById('lightboxImg').src = '';
-    }
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+}
+
+// ── LIGHTBOX ──────────────────────────────────────────────────────────────────
+const lightbox = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lightboxImg');
+
+function closeLightbox() {
+    lightbox.classList.remove('open');
+    lbImg.src = '';
+}
+
+document.addEventListener('click', function(e) {
+    const thumb = e.target.closest('.thumb');
+    if (thumb) { lbImg.src = thumb.src; lightbox.classList.add('open'); }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeLightbox(); fecharModal(); }
+});
+
+// Inicializar contador
+aplicarFiltros();
 </script>
 </body>
 </html>
