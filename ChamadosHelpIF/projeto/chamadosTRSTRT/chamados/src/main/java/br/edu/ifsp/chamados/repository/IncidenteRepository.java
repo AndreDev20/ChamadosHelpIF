@@ -15,6 +15,9 @@ public interface IncidenteRepository extends JpaRepository<Incidente, Long> {
 
     // ── JOIN FETCH carrega o usuário junto, evitando LazyInitializationException ──
 
+    @Query(value = "SELECT i.* FROM incidentes i ORDER BY i.datetime DESC", nativeQuery = true)
+    List<Incidente> findAllNative();
+
     @Query("SELECT i FROM Incidente i JOIN FETCH i.usuario ORDER BY i.datetime DESC")
     List<Incidente> findAllWithUsuario();
 
