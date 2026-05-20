@@ -45,7 +45,9 @@ public class IncidenteService {
     }
 
     /** Carrega todos os chamados com usuário em memória (JOIN FETCH — evita LazyInitializationException). */
+    @Transactional(readOnly = true)
     public List<Incidente> listarTodos() {
+        // JOIN FETCH garante que usuario não é lazy e evita LazyInitializationException
         return incidenteRepository.findAllWithUsuario();
     }
 
