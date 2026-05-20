@@ -293,7 +293,7 @@
                                 th:data-status="${inc.status.name()}"
                                 th:data-bloco="${inc.bloco.descricao}"
                                 th:data-local="${inc.localEspecifico.descricao}"
-                                th:data-obs="${inc.observacao}"
+                                th:data-obs="${#strings.replace(#strings.abbreviate(inc.observacao,200), '&quot;', '')}"
                                 th:data-usuario="${inc.usuario.nome}"
                                 th:data-ts="${#temporals.format(inc.datetime, 'yyyyMMddHHmm')}"
                                 th:data-id="${inc.id}">
@@ -448,28 +448,34 @@ function filtrarStatus(status) {
 }
 
 // ── FILTROS AVANÇADOS ─────────────────────────────────────────────────────────
+function normalizar(s) {
+    return (s || '').toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+}
+
 function aplicarFiltros() {
-    const busca  = document.getElementById('busca').value.toLowerCase().trim();
-    const bloco  = document.getElementById('filtroBloco').value.toLowerCase();
+    const busca  = normalizar(document.getElementById('busca').value);
+    const bloco  = normalizar(document.getElementById('filtroBloco').value);
     const ordem  = document.getElementById('filtroOrdem').value;
 
     const rows = Array.from(tbody.querySelectorAll('tr[data-id]'));
 
-    // Filtrar
     let visiveis = 0;
     rows.forEach(tr => {
         const status  = tr.dataset.status  || '';
-        const blocoDR = (tr.dataset.bloco  || '').toLowerCase();
-        const local   = (tr.dataset.local  || '').toLowerCase();
-        const obs     = (tr.dataset.obs    || '').toLowerCase();
-        const usuario = (tr.dataset.usuario|| '').toLowerCase();
-        const id      = (tr.dataset.id     || '').toLowerCase();
+        const blocoDR = normalizar(tr.dataset.bloco);
+        const local   = normalizar(tr.dataset.local);
+        const obs     = normalizar(tr.dataset.obs);
+        const usuario = normalizar(tr.dataset.usuario);
+        const id      = (tr.dataset.id || '').trim();
+        // also search inside visible td text for robustness
+        const tdText  = normalizar(tr.textContent);
 
         const passaStatus = filtroStatusAtivo === 'TODOS' || status === filtroStatusAtivo;
-        const passaBloco  = !bloco || blocoDR.includes(bloco);
+        const passaBloco  = !bloco || blocoDR === bloco;
         const passaBusca  = !busca || obs.includes(busca) || local.includes(busca)
                                    || blocoDR.includes(busca) || usuario.includes(busca)
-                                   || id.includes(busca);
+                                   || id.includes(busca) || tdText.includes(busca);
 
         if (passaStatus && passaBloco && passaBusca) {
             tr.classList.remove('hidden-row');
