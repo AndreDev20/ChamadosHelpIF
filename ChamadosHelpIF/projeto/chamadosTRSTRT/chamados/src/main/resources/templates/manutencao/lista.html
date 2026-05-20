@@ -330,6 +330,7 @@
                                 <td style="white-space:nowrap;font-family:var(--mono);font-size:.78rem;"
                                     th:text="${#temporals.format(inc.datetime,'dd/MM/yy HH:mm')}"></td>
 
+                                <td>
                                 <!-- SLA: verde <72h | amarelo 72-168h | vermelho >168h -->
                                     <span class="sla-badge"
                                           th:classappend="${inc.status.name() == 'CONCLUIDO'} ? 'sla-ok' :
@@ -347,6 +348,7 @@
                                     <img  th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
                                           th:src="${inc.anexo}"
                                           th:id="'thumb-' + ${inc.id}"
+                                          th:attr="data-src=${inc.anexo}"
                                           class="thumb" alt="Anexo"/>
                                 </td>
 
@@ -441,7 +443,7 @@
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
-    <button class="lightbox-close">✕</button>
+    <button class="lightbox-close" id="btnCloseLightbox">✕</button>
     <img id="lightboxImg" src="" alt="Anexo">
 </div>
 
@@ -574,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.addEventListener('click', function (e) {
         const thumb = e.target.closest('.thumb');
-        if (thumb) { lbImg.src = thumb.src; lightbox.classList.add('open'); }
+        if (thumb) { lbImg.src = thumb.dataset.src || thumb.src; lightbox.classList.add('open'); }
     });
 
     document.addEventListener('keydown', function (e) {
