@@ -257,6 +257,22 @@
                 <button class="btn-reset" id="btnResetar">✕ Limpar filtros</button>
             </div>
 
+
+            <!-- LEGENDA SLA -->
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.7rem 1.2rem;flex-wrap:wrap;">
+                <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-right:.3rem;">Legenda SLA:</span>
+                <span class="sla-badge sla-ok"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> No prazo</span>
+                <span style="font-size:.75rem;color:var(--muted);">até 72h</span>
+                <span style="color:var(--border);font-size:.8rem;">·</span>
+                <span class="sla-badge sla-warn"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Pendente</span>
+                <span style="font-size:.75rem;color:var(--muted);">72h – 168h (7 dias)</span>
+                <span style="color:var(--border);font-size:.8rem;">·</span>
+                <span class="sla-badge sla-late"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Atrasado</span>
+                <span style="font-size:.75rem;color:var(--muted);">acima de 168h</span>
+                <span style="color:var(--border);font-size:.8rem;">·</span>
+                <span class="sla-badge sla-ok"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Concluído</span>
+                <span style="font-size:.75rem;color:var(--muted);">finalizado</span>
+            </div>
             <!-- TABELA -->
             <div class="section-card">
                 <div class="section-header">
@@ -314,17 +330,15 @@
                                 <td style="white-space:nowrap;font-family:var(--mono);font-size:.78rem;"
                                     th:text="${#temporals.format(inc.datetime,'dd/MM/yy HH:mm')}"></td>
 
-                                <!-- SLA: verde <24h, amarelo 24-48h, vermelho >48h -->
-                                <td>
+                                <!-- SLA: verde <72h | amarelo 72-168h | vermelho >168h -->
                                     <span class="sla-badge"
-                                          th:with="horas=${#temporals.format(inc.datetime,'yyyyMMddHHmm')}"
                                           th:classappend="${inc.status.name() == 'CONCLUIDO'} ? 'sla-ok' :
-                                                         (${#temporals.createNow().minusHours(48).isAfter(inc.datetime)} ? 'sla-late' :
-                                                         (${#temporals.createNow().minusHours(24).isAfter(inc.datetime)} ? 'sla-warn' : 'sla-ok'))">
+                                                         (${#temporals.createNow().minusHours(168).isAfter(inc.datetime)} ? 'sla-late' :
+                                                         (${#temporals.createNow().minusHours(72).isAfter(inc.datetime)} ? 'sla-warn' : 'sla-ok'))">
                                         <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-                                        <span th:text="${inc.status.name() == 'CONCLUIDO'} ? 'OK' :
-                                                       (${#temporals.createNow().minusHours(48).isAfter(inc.datetime)} ? 'Atrasado' :
-                                                       (${#temporals.createNow().minusHours(24).isAfter(inc.datetime)} ? 'Atenção' : 'No prazo'))"></span>
+                                        <span th:text="${inc.status.name() == 'CONCLUIDO'} ? 'Concluído' :
+                                                       (${#temporals.createNow().minusHours(168).isAfter(inc.datetime)} ? 'Atrasado' :
+                                                       (${#temporals.createNow().minusHours(72).isAfter(inc.datetime)} ? 'Pendente' : 'No prazo'))"></span>
                                     </span>
                                 </td>
 
