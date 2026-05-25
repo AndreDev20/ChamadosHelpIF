@@ -12,125 +12,75 @@
             --warn:#f59e0b;--warn-bg:rgba(245,158,11,0.12);
             --info:#3b82f6;--info-bg:rgba(59,130,246,0.12);
             --success:#10b981;--success-bg:rgba(16,185,129,0.12);
-            --danger:#ef4444;--danger-bg:rgba(239,68,68,0.08);
             --surface:#f4f7fb;--card:#fff;--border:#e2e8f0;
-            --text:#0f1923;--muted:#6b7a99;
-            --font:'Outfit',sans-serif;
+            --text:#0f1923;--muted:#6b7a99;--font:'Outfit',sans-serif;
         }
         *{box-sizing:border-box;margin:0;padding:0;}
         body{font-family:var(--font);background:var(--surface);color:var(--text);min-height:100vh;}
         .app-shell{display:flex;min-height:100vh;}
-
-        /* SIDEBAR */
         .sidebar{width:72px;background:var(--navy);display:flex;flex-direction:column;align-items:center;padding:1.5rem 0;gap:.4rem;position:fixed;top:0;left:0;bottom:0;z-index:100;}
-        .sidebar-logo{width:42px;height:42px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-weight:800;font-size:1rem;color:var(--navy);box-shadow:0 0 24px var(--accent-glow);letter-spacing:-1px;}
+        .sidebar-logo{width:42px;height:42px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-weight:800;font-size:1rem;color:var(--navy);letter-spacing:-1px;}
         .sidebar-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);text-decoration:none;transition:background .2s,color .2s;}
         .sidebar-icon:hover{background:var(--navy-light);color:rgba(255,255,255,.9);}
-        .sidebar-icon.active{background:var(--accent-glow);color:var(--accent);}
+        .sidebar-icon.active{background:rgba(0,214,143,.18);color:var(--accent);}
         .sidebar-bottom{margin-top:auto;}
-
-        /* MAIN */
         .main-area{margin-left:72px;flex:1;display:flex;flex-direction:column;}
-
-        /* TOPBAR */
         .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
         .topbar-breadcrumb{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--muted);}
         .crumb-active{color:var(--text);font-weight:600;}
-        .user-chip{display:flex;align-items:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:40px;padding:.35rem 1rem .35rem .5rem;font-size:.85rem;font-weight:500;text-decoration:none;color:var(--text);}
+        .user-chip{display:flex;align-items:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:40px;padding:.35rem 1rem .35rem .5rem;font-size:.85rem;font-weight:500;}
         .user-avatar{width:30px;height:30px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:.75rem;font-weight:800;}
-
-        /* CONTENT */
         .content{padding:2.5rem;max-width:800px;width:100%;margin:0 auto;}
         .page-header{margin-bottom:2rem;}
         .id-chip{display:inline-flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.3rem .7rem;font-size:.82rem;color:var(--muted);margin-bottom:.5rem;}
         .page-header h1{font-size:1.9rem;font-weight:800;letter-spacing:-.5px;color:var(--navy);}
         .page-header p{color:var(--muted);margin-top:.35rem;font-size:.95rem;}
-
-        /* FORM CARD */
         .form-card{background:var(--card);border-radius:20px;border:1px solid var(--border);overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.06);}
-        .form-card-header{background:var(--navy-mid);padding:1.8rem 2rem;position:relative;overflow:hidden;}
-        .form-card-header::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(0,214,143,.08);border-radius:50%;}
-        .header-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.15);color:var(--warn);font-size:.75rem;font-weight:600;padding:.25rem .7rem;border-radius:20px;margin-bottom:.6rem;border:1px solid rgba(245,158,11,.3);position:relative;}
-        .form-card-header h2{font-size:1.15rem;font-weight:700;color:#fff;position:relative;}
-        .form-card-header p{font-size:.85rem;color:rgba(255,255,255,.5);margin-top:.2rem;position:relative;}
-
-        /* FORM FIELDS */
+        .form-card-header{background:var(--navy-mid);padding:1.8rem 2rem;}
+        .header-badge{display:inline-flex;align-items:center;background:rgba(245,158,11,.15);color:var(--warn);font-size:.75rem;font-weight:600;padding:.25rem .7rem;border-radius:20px;margin-bottom:.6rem;border:1px solid rgba(245,158,11,.3);}
+        .form-card-header h2{font-size:1.15rem;font-weight:700;color:#fff;}
+        .form-card-header p{font-size:.85rem;color:rgba(255,255,255,.5);margin-top:.2rem;}
         .form-body{padding:2rem;display:flex;flex-direction:column;gap:1.4rem;}
         .field-group{display:flex;flex-direction:column;gap:.5rem;}
         .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
         .section-label{display:flex;align-items:center;gap:.6rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
         .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
-        .divider{height:1px;background:var(--border);margin:.2rem 0;}
-
-        label{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-light);}
-        input, select, textarea{
-            width:100%;padding:.78rem 1rem;
-            border:1.5px solid var(--border);border-radius:10px;
-            font-size:.93rem;font-family:var(--font);color:var(--text);
-            background:var(--surface);transition:border-color .2s,box-shadow .2s,background .2s;
-            outline:none;appearance:none;
-        }
+        .divider{height:1px;background:var(--border);}
+        label.field-label{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-light);}
+        input,select,textarea{width:100%;padding:.78rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-size:.93rem;font-family:var(--font);color:var(--text);background:var(--surface);transition:border-color .2s,box-shadow .2s;outline:none;appearance:none;}
         input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);background:#fff;}
-        select{
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7a99' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat:no-repeat;background-position:right .9rem center;
-            padding-right:2.5rem;cursor:pointer;
-        }
+        select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7a99' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.5rem;cursor:pointer;}
         textarea{resize:vertical;min-height:120px;line-height:1.6;}
-
         /* CATEGORIA PILLS */
         .cat-pills{display:flex;gap:.8rem;}
         .cat-pill{flex:1;position:relative;}
         .cat-pill input[type="radio"]{position:absolute;opacity:0;width:0;height:0;}
-        .cat-pill label{
-            display:flex;align-items:center;justify-content:center;gap:.5rem;
-            padding:.85rem 1rem;border:2px solid var(--border);border-radius:12px;
-            cursor:pointer;font-size:.88rem;font-weight:600;
-            text-transform:none;letter-spacing:0;color:var(--muted);
-            background:var(--surface);transition:all .2s;
-        }
+        .cat-pill label{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1rem;border:2px solid var(--border);border-radius:12px;cursor:pointer;font-size:.88rem;font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted);background:var(--surface);transition:all .2s;}
         .cat-pill input[type="radio"]:checked + label{border-color:var(--accent);background:rgba(0,214,143,.08);color:var(--navy);box-shadow:0 0 0 3px var(--accent-glow);}
-        .cat-pill label:hover{border-color:var(--accent-dim);color:var(--navy);}
-
         /* STATUS PILLS */
         .status-pills{display:flex;gap:.6rem;flex-wrap:wrap;}
-        .status-pill{
-            flex:1;min-width:120px;padding:.7rem 1rem;border-radius:10px;
-            border:2px solid var(--border);font-size:.85rem;font-weight:600;
-            font-family:var(--font);cursor:pointer;transition:all .2s;
-            text-align:center;background:var(--surface);
-            display:flex;align-items:center;justify-content:center;gap:.4rem;
-        }
+        .status-pill{flex:1;min-width:120px;padding:.75rem 1rem;border-radius:10px;border:2px solid var(--border);font-size:.88rem;font-weight:600;font-family:var(--font);cursor:pointer;transition:all .2s;text-align:center;background:var(--surface);display:flex;align-items:center;justify-content:center;gap:.4rem;color:var(--muted);}
         .status-pill:hover{border-color:var(--muted);}
-        .pill-CRIADO.active{background:var(--warn-bg);border-color:var(--warn);color:#92660a;}
-        .pill-EM_ANALISE.active{background:var(--info-bg);border-color:var(--info);color:#1d4ed8;}
-        .pill-CONCLUIDO.active{background:var(--success-bg);border-color:var(--success);color:#047857;}
-
+        .status-pill.pill-active-CRIADO{background:var(--warn-bg);border-color:var(--warn);color:#92660a;}
+        .status-pill.pill-active-EM_ANALISE{background:var(--info-bg);border-color:var(--info);color:#1d4ed8;}
+        .status-pill.pill-active-CONCLUIDO{background:var(--success-bg);border-color:var(--success);color:#047857;}
         /* FORM FOOTER */
         .form-footer{padding:1.5rem 2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--surface);}
-        .btn-submit{display:inline-flex;align-items:center;gap:.6rem;background:var(--accent);color:var(--navy);border:none;border-radius:12px;padding:.85rem 2rem;font-size:.95rem;font-weight:700;font-family:var(--font);cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,214,143,.35);}
+        .btn-submit{display:inline-flex;align-items:center;gap:.6rem;background:var(--accent);color:var(--navy);border:none;border-radius:12px;padding:.85rem 2rem;font-size:.95rem;font-weight:700;font-family:var(--font);cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,214,143,.3);}
         .btn-submit:hover{background:var(--accent-dim);transform:translateY(-1px);}
         .btn-back{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:12px;padding:.85rem 1.5rem;font-size:.9rem;font-weight:600;font-family:var(--font);text-decoration:none;transition:all .2s;}
         .btn-back:hover{border-color:var(--navy);color:var(--navy);}
-
-        /* ALERT DE ERRO */
-        .alert-erro{background:var(--danger-bg);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:.8rem 1rem;color:var(--danger);font-size:.85rem;font-weight:500;margin-bottom:1rem;}
-
         /* MOBILE */
         .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--navy);z-index:200;border-top:1px solid rgba(255,255,255,.08);align-items:center;justify-content:space-around;}
         .mobile-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.5);text-decoration:none;gap:.15rem;font-size:.6rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;flex:1;height:100%;transition:color .2s;}
-        .mobile-nav a.active,.mobile-nav a:hover{color:var(--accent);}
-
+        .mobile-nav a:hover,.mobile-nav a.active{color:var(--accent);}
         @media(max-width:768px){
-            .sidebar{display:none!important;}
-            .mobile-nav{display:flex!important;}
+            .sidebar{display:none!important;}.mobile-nav{display:flex!important;}
             .main-area{margin-left:0!important;}
             .content{padding:1rem 1rem 5rem!important;max-width:100%!important;}
             .topbar{padding:0 1rem!important;height:56px!important;}
-            .topbar-breadcrumb>*:not(:last-child){display:none;}
-            .topbar-breadcrumb>svg{display:none;}
-            .user-chip span{display:none;}
-            .user-chip{padding:.3rem!important;border-radius:50%!important;}
+            .topbar-breadcrumb>*:not(:last-child){display:none;}.topbar-breadcrumb>svg{display:none;}
+            .user-chip span{display:none;}.user-chip{padding:.3rem!important;border-radius:50%!important;}
             .page-header h1{font-size:1.3rem!important;}
             .field-row{grid-template-columns:1fr!important;}
             .cat-pills{flex-direction:column!important;}
@@ -138,7 +88,6 @@
             .form-footer{flex-direction:column-reverse!important;}
             .btn-submit,.btn-back{width:100%!important;justify-content:center!important;}
             .form-body{padding:1.2rem!important;}
-            .form-card-header{padding:1.2rem!important;}
         }
     </style>
 </head>
@@ -146,11 +95,11 @@
 <div class="app-shell">
     <nav class="sidebar">
         <div class="sidebar-logo">HI</div>
-        <a th:href="@{/admin}" class="sidebar-icon active" title="Painel">
+        <a th:href="@{/admin}" class="sidebar-icon active">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </a>
         <div class="sidebar-bottom">
-            <a th:href="@{/auth/logout}" class="sidebar-icon" title="Sair">
+            <a th:href="@{/auth/logout}" class="sidebar-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             </a>
         </div>
@@ -175,14 +124,15 @@
             <div class="page-header">
                 <div class="id-chip">📋 Chamado <span th:text="'#' + ${incidente.id}"></span></div>
                 <h1>Editar Chamado</h1>
-                <p>Altere as informações e atualize o status do chamado.</p>
+                <p>Altere as informações e salve.</p>
             </div>
 
             <div class="form-card">
                 <div class="form-card-header">
                     <div class="header-badge">✏️ Modo de Edição</div>
                     <h2>Chamado <span th:text="'#' + ${incidente.id}"></span></h2>
-                    <p th:text="${incidente.datetime != null} ? 'Aberto em ' + ${#temporals.format(incidente.datetime, 'dd/MM/yyyy HH:mm')} : 'Data não disponível'"></p>
+                    <p th:if="${incidente.datetime != null}"
+                       th:text="'Aberto em ' + ${#temporals.format(incidente.datetime,'dd/MM/yyyy HH:mm')}"></p>
                 </div>
 
                 <form method="post" th:action="@{/admin/incidente/editar/{id}(id=${incidente.id})}">
@@ -190,34 +140,32 @@
                     <div class="form-body">
 
                         <!-- STATUS -->
-                        <div class="section-label">🔄 Status do Chamado</div>
+                        <div class="section-label">🔄 Status</div>
 
-                        <!-- select hidden submetido pelo form -->
-                        <select id="statusSelect" name="status" style="display:none;" required>
+                        <!--
+                            Select oculto enviado no POST.
+                            As pills clicam nele via JS puro — sem th:onclick, sem JSON.
+                        -->
+                        <select id="statusHidden" name="status" style="display:none">
                             <option th:each="s : ${statuses}"
                                     th:value="${s.name()}"
-                                    th:text="${s.name()}"
                                     th:selected="${s == incidente.status}"></option>
                         </select>
 
-                        <!-- pills visuais -->
                         <div class="status-pills">
-                            <button type="button"
-                                    class="status-pill pill-CRIADO"
-                                    th:classappend="${incidente.status.name() == 'CRIADO'} ? ' active' : ''"
-                                    data-status="CRIADO">
+                            <button type="button" class="status-pill"
+                                    id="pill-CRIADO" data-status="CRIADO"
+                                    th:classappend="${incidente.status.name() == 'CRIADO'} ? ' pill-active-CRIADO'">
                                 🟡 Criado
                             </button>
-                            <button type="button"
-                                    class="status-pill pill-EM_ANALISE"
-                                    th:classappend="${incidente.status.name() == 'EM_ANALISE'} ? ' active' : ''"
-                                    data-status="EM_ANALISE">
+                            <button type="button" class="status-pill"
+                                    id="pill-EM_ANALISE" data-status="EM_ANALISE"
+                                    th:classappend="${incidente.status.name() == 'EM_ANALISE'} ? ' pill-active-EM_ANALISE'">
                                 🔵 Em Análise
                             </button>
-                            <button type="button"
-                                    class="status-pill pill-CONCLUIDO"
-                                    th:classappend="${incidente.status.name() == 'CONCLUIDO'} ? ' active' : ''"
-                                    data-status="CONCLUIDO">
+                            <button type="button" class="status-pill"
+                                    id="pill-CONCLUIDO" data-status="CONCLUIDO"
+                                    th:classappend="${incidente.status.name() == 'CONCLUIDO'} ? ' pill-active-CONCLUIDO'">
                                 ✅ Concluído
                             </button>
                         </div>
@@ -228,7 +176,7 @@
                         <div class="section-label">📍 Localização</div>
                         <div class="field-row">
                             <div class="field-group">
-                                <label for="bloco">Área / Bloco</label>
+                                <label class="field-label" for="bloco">Área / Bloco</label>
                                 <select id="bloco" name="bloco" required>
                                     <option th:each="b : ${blocos}"
                                             th:value="${b.name()}"
@@ -237,9 +185,19 @@
                                 </select>
                             </div>
                             <div class="field-group">
-                                <label for="localEspecifico">Local Específico</label>
+                                <label class="field-label" for="localEspecifico">Local Específico</label>
+                                <!--
+                                    Renderizamos TODOS os locais como <option> com data-bloco.
+                                    O JS filtra quais mostrar conforme o bloco selecionado.
+                                    Isso evita JSON com acentos no atributo HTML.
+                                -->
                                 <select id="localEspecifico" name="localEspecifico" required>
-                                    <!-- preenchido pelo JS via data attribute -->
+                                    <option th:each="loc : ${todosLocais}"
+                                            th:value="${loc.name()}"
+                                            th:text="${loc.descricao}"
+                                            th:attr="data-bloco=${loc.bloco.name()}"
+                                            th:selected="${loc == incidente.localEspecifico}">
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -249,7 +207,7 @@
                         <!-- CATEGORIA -->
                         <div class="section-label">🏷️ Categoria</div>
                         <div class="field-group">
-                            <label>Tipo de chamado</label>
+                            <label class="field-label">Tipo de chamado</label>
                             <div class="cat-pills">
                                 <div class="cat-pill" th:each="cat : ${categorias}">
                                     <input type="radio"
@@ -270,12 +228,12 @@
                         <!-- DESCRIÇÃO -->
                         <div class="section-label">📋 Descrição</div>
                         <div class="field-group">
-                            <label for="observacao">Observação</label>
-                            <textarea id="observacao" name="observacao" required
-                                      th:text="${incidente.observacao}"></textarea>
+                            <label class="field-label" for="observacao">Observação</label>
+                            <textarea id="observacao" name="observacao"
+                                      required th:text="${incidente.observacao}"></textarea>
                         </div>
 
-                    </div><!-- /form-body -->
+                    </div>
 
                     <div class="form-footer">
                         <a class="btn-back" th:href="@{/admin}">
@@ -289,12 +247,11 @@
                     </div>
 
                 </form>
-            </div><!-- /form-card -->
+            </div>
         </main>
     </div>
 </div>
 
-<!-- MOBILE NAV -->
 <nav class="mobile-nav">
     <a th:href="@{/admin}" class="active">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -306,67 +263,53 @@
     </a>
 </nav>
 
-<!--
-    locaisPorBloco: JSON com os locais de cada bloco, gerado pelo AdminController.
-    Usamos th:data-* no <body> para evitar problemas com th:inline="javascript"
-    e caracteres especiais no JSON (acentos, aspas, etc).
--->
-<div id="locaisData"
-     th:attr="data-locais=${locaisPorBloco}"
-     th:attr="data-local-atual=${incidente.localEspecifico.name()}"
-     style="display:none;"></div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── LOCAIS POR BLOCO ──────────────────────────────────────────────────────
-    var locaisDataEl  = document.getElementById('locaisData');
-    var dados         = JSON.parse(locaisDataEl.getAttribute('data-locais') || '{}');
-    var localAtual    = locaisDataEl.getAttribute('data-local-atual') || '';
+    // ── LOCAL ESPECÍFICO — filtrado por bloco via data-bloco nas options ──────
+    var selectBloco = document.getElementById('bloco');
+    var selectLocal = document.getElementById('localEspecifico');
 
-    var selectBloco  = document.getElementById('bloco');
-    var selectLocal  = document.getElementById('localEspecifico');
-
-    function preencherLocais(localSelecionado) {
-        var bloco = selectBloco.value;
-        selectLocal.innerHTML = '';
-        if (bloco && dados[bloco]) {
-            dados[bloco].forEach(function (local) {
-                var opt = document.createElement('option');
-                opt.value = local.name;
-                opt.textContent = local.descricao;
-                if (local.name === localSelecionado) opt.selected = true;
-                selectLocal.appendChild(opt);
-            });
-        }
-    }
-
-    selectBloco.addEventListener('change', function () {
-        preencherLocais('');
+    // Guarda todas as options originais
+    var todasOptions = Array.from(selectLocal.options).map(function (o) {
+        return { value: o.value, text: o.text, bloco: o.getAttribute('data-bloco'), selected: o.selected };
     });
 
-    // Preenche com o local atual do incidente
-    preencherLocais(localAtual);
+    function filtrarLocais() {
+        var blocoAtual   = selectBloco.value;
+        var valorAtual   = selectLocal.value;
+        selectLocal.innerHTML = '';
+
+        todasOptions.filter(function (o) {
+            return o.bloco === blocoAtual;
+        }).forEach(function (o) {
+            var opt = document.createElement('option');
+            opt.value = o.value;
+            opt.textContent = o.text;
+            // Mantém selecionado o local original se ainda pertence ao bloco
+            if (o.value === valorAtual || o.selected) opt.selected = true;
+            selectLocal.appendChild(opt);
+        });
+    }
+
+    selectBloco.addEventListener('change', filtrarLocais);
+    filtrarLocais(); // executa na carga para já filtrar pelo bloco atual
 
     // ── STATUS PILLS ──────────────────────────────────────────────────────────
-    var selectStatus = document.getElementById('statusSelect');
+    var statusHidden = document.getElementById('statusHidden');
 
     document.querySelectorAll('.status-pill').forEach(function (pill) {
         pill.addEventListener('click', function () {
-            var status = this.getAttribute('data-status');
-            // Atualiza o select hidden
-            selectStatus.value = status;
-            // Remove active de todos
+            var novoStatus = this.getAttribute('data-status');
+            statusHidden.value = novoStatus;
             document.querySelectorAll('.status-pill').forEach(function (p) {
-                p.classList.remove('active');
+                p.classList.remove('pill-active-CRIADO', 'pill-active-EM_ANALISE', 'pill-active-CONCLUIDO');
             });
-            // Adiciona active no clicado
-            this.classList.add('active');
+            this.classList.add('pill-active-' + novoStatus);
         });
     });
 
 });
 </script>
-
 </body>
 </html>
