@@ -25,18 +25,20 @@ public class IncidenteService {
 
     @Transactional
     public Incidente criar(String observacao, BlocoLocal bloco, LocalEspecifico localEspecifico,
-                           CategoriaIncidente categoria, MultipartFile anexo, Usuario usuario) throws IOException {
+                           CategoriaIncidente categoria, MultipartFile anexo,
+                           Usuario usuario, Usuario responsavel) throws IOException {
         Incidente incidente = Incidente.builder()
                 .observacao(observacao)
                 .bloco(bloco)
                 .localEspecifico(localEspecifico)
                 .categoria(categoria)
                 .usuario(usuario)
+                .responsavel(responsavel)
                 .status(StatusIncidente.CRIADO)
                 .build();
 
         if (anexo != null && !anexo.isEmpty()) {
-            String base64 = Base64.getEncoder().encodeToString(anexo.getBytes());
+            String base64  = Base64.getEncoder().encodeToString(anexo.getBytes());
             String mimeType = anexo.getContentType();
             incidente.setAnexo("data:" + mimeType + ";base64," + base64);
         }
@@ -44,10 +46,8 @@ public class IncidenteService {
         return incidenteRepository.save(incidente);
     }
 
-    /** Carrega todos os chamados com usuário em memória (JOIN FETCH — evita LazyInitializationException). */
     @Transactional(readOnly = true)
     public List<Incidente> listarTodos() {
-        // JOIN FETCH garante que usuario não é lazy e evita LazyInitializationException
         return incidenteRepository.findAllWithUsuario();
     }
 
@@ -67,7 +67,6 @@ public class IncidenteService {
         return incidenteRepository.save(incidente);
     }
 
-    /** Salva qualquer alteração feita diretamente no objeto (usado pelo ManutencaoController). */
     @Transactional
     public Incidente salvarDireto(Incidente incidente) {
         return incidenteRepository.save(incidente);
@@ -81,13 +80,14 @@ public class IncidenteService {
     @Transactional
     public Incidente atualizar(Long id, String observacao, BlocoLocal bloco,
                                LocalEspecifico localEspecifico, CategoriaIncidente categoria,
-                               StatusIncidente status) {
+                               StatusIncidente status, Usuario responsavel) {
         Incidente incidente = buscarPorId(id);
         incidente.setObservacao(observacao);
         incidente.setBloco(bloco);
         incidente.setLocalEspecifico(localEspecifico);
         incidente.setCategoria(categoria);
         incidente.setStatus(status);
+        incidente.setResponsavel(responsavel);
         return incidenteRepository.save(incidente);
     }
 }
