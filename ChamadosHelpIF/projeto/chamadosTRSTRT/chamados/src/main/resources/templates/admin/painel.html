@@ -485,7 +485,8 @@
                                     <div class="local-esp"   th:text="${inc.localEspecifico.descricao}"></div>
                                 </td>
 
-                                <td data-label="Usuário" th:text="${inc.usuario.nome}"></td>
+                                <td data-label="Solicitante" th:text="${inc.usuario.nome}"></td>
+                                <td data-label="Responsável" style="font-weight:600;" th:text="${inc.responsavel != null} ? ${inc.responsavel.nome} : '—'"></td>
 
                                 <td data-label="Data" style="white-space:nowrap; font-family:var(--mono); font-size:0.78rem;"
                                     th:text="${#temporals.format(inc.datetime, 'dd/MM/yy HH:mm')}"></td>

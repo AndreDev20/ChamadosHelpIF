@@ -235,6 +235,20 @@
 
                     </div>
 
+                    <!-- RESPONSÁVEL -->
+                    <div class="section-label">👷 Responsável</div>
+                    <div class="field-group">
+                        <label class="field-label" for="responsavelId">Técnico de Manutenção</label>
+                        <select id="responsavelId" name="responsavelId" required>
+                            <option value="" disabled>Selecione o responsável</option>
+                            <option th:each="tec : ${tecnicos}"
+                                    th:value="${tec.id}"
+                                    th:text="${tec.nome}"
+                                    th:selected="${incidente.responsavel != null and tec.id == incidente.responsavel.id}">
+                            </option>
+                        </select>
+                    </div>
+
                     <div class="form-footer">
                         <a class="btn-back" th:href="@{/admin}">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
