@@ -324,6 +324,15 @@
                     </select>
                 </div>
                 <div class="filter-group">
+                    <span class="filter-label">Responsável</span>
+                    <select class="filter-select" id="filtroResponsavel">
+                        <option value="">Todos</option>
+                        <option th:each="tec : ${tecnicos}"
+                                th:value="${tec.id}"
+                                th:text="${tec.nome}"></option>
+                    </select>
+                </div>
+                <div class="filter-group">
                     <span class="filter-label">Ordenar por data</span>
                     <select class="filter-select" id="filtroOrdem">
                         <option value="desc">Mais recentes primeiro</option>
@@ -388,7 +397,8 @@
                                 th:data-obs="${#strings.replace(#strings.abbreviate(inc.observacao,200), '&quot;', '')}"
                                 th:data-usuario="${inc.usuario.nome}"
                                 th:data-ts="${#temporals.format(inc.datetime, 'yyyyMMddHHmm')}"
-                                th:data-id="${inc.id}">
+                                th:data-id="${inc.id}"
+                                th:data-responsavel="${inc.responsavel != null} ? ${inc.responsavel.id} : ''">
 
                                 <td class="id-cell" data-label="#" th:text="'#' + ${inc.id}"></td>
 
@@ -401,7 +411,8 @@
                                     <div class="local-esp"   th:text="${inc.localEspecifico.descricao}"></div>
                                 </td>
 
-                                <td data-label="Usuário" th:text="${inc.usuario.nome}"></td>
+                                <td data-label="Solicitante" th:text="${inc.usuario.nome}"></td>
+                                <td data-label="Responsável" style="font-weight:600;color:var(--navy);" th:text="${inc.responsavel != null} ? ${inc.responsavel.nome} : '—'"></td>
 
                                 <td data-label="Data" style="white-space:nowrap;font-family:var(--mono);font-size:.78rem;"
                                     th:text="${#temporals.format(inc.datetime,'dd/MM/yy HH:mm')}"></td>
@@ -555,28 +566,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function aplicarFiltros() {
-        const busca = normalizar(document.getElementById('busca').value);
-        const bloco = normalizar(document.getElementById('filtroBloco').value);
-        const ordem = document.getElementById('filtroOrdem').value;
-        const rows  = Array.from(tbody.querySelectorAll('tr[data-id]'));
+        const busca        = normalizar(document.getElementById('busca').value);
+        const bloco        = normalizar(document.getElementById('filtroBloco').value);
+        const responsavel  = (document.getElementById('filtroResponsavel').value || '').trim();
+        const ordem        = document.getElementById('filtroOrdem').value;
+        const rows         = Array.from(tbody.querySelectorAll('tr[data-id]'));
 
         let visiveis = 0;
         rows.forEach(tr => {
-            const status  = tr.dataset.status   || '';
-            const blocoDR = normalizar(tr.dataset.bloco);
-            const local   = normalizar(tr.dataset.local);
-            const obs     = normalizar(tr.dataset.obs);
-            const usuario = normalizar(tr.dataset.usuario);
-            const id      = (tr.dataset.id || '').trim();
-            const tdText  = normalizar(tr.textContent);
+            const status      = tr.dataset.status   || '';
+            const blocoDR     = normalizar(tr.dataset.bloco);
+            const local       = normalizar(tr.dataset.local);
+            const obs         = normalizar(tr.dataset.obs);
+            const usuario     = normalizar(tr.dataset.usuario);
+            const id          = (tr.dataset.id || '').trim();
+            const respId      = (tr.dataset.responsavel || '').trim();
+            const tdText      = normalizar(tr.textContent);
 
-            const passaStatus = filtroStatusAtivo === 'TODOS' || status === filtroStatusAtivo;
-            const passaBloco  = !bloco || blocoDR === bloco;
-            const passaBusca  = !busca || obs.includes(busca) || local.includes(busca)
+            const passaStatus     = filtroStatusAtivo === 'TODOS' || status === filtroStatusAtivo;
+            const passaBloco      = !bloco || blocoDR === bloco;
+            const passaResponsavel = !responsavel || respId === responsavel;
+            const passaBusca      = !busca || obs.includes(busca) || local.includes(busca)
                               || blocoDR.includes(busca) || usuario.includes(busca)
                               || id.includes(busca) || tdText.includes(busca);
 
-            if (passaStatus && passaBloco && passaBusca) {
+            if (passaStatus && passaBloco && passaResponsavel && passaBusca) {
                 tr.classList.remove('hidden-row');
                 visiveis++;
             } else {
@@ -599,6 +613,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function resetarFiltros() {
         document.getElementById('busca').value       = '';
         document.getElementById('filtroBloco').value = '';
+        document.getElementById('filtroResponsavel').value = '';
         document.getElementById('filtroOrdem').value = 'desc';
         filtroStatusAtivo = 'TODOS';
         document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-filter'));
@@ -607,6 +622,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('busca').addEventListener('input', aplicarFiltros);
     document.getElementById('filtroBloco').addEventListener('change', aplicarFiltros);
+    document.getElementById('filtroResponsavel').addEventListener('change', aplicarFiltros);
     document.getElementById('filtroOrdem').addEventListener('change', aplicarFiltros);
     document.getElementById('btnResetar').addEventListener('click', resetarFiltros);
 
