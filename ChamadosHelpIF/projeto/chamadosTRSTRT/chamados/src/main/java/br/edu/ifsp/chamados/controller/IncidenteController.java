@@ -31,7 +31,6 @@ public class IncidenteController {
         model.addAttribute("blocos",       BlocoLocal.values());
         model.addAttribute("todosLocais",  LocalEspecifico.values());
         model.addAttribute("categorias",   CategoriaIncidente.values());
-        model.addAttribute("tecnicos",     usuarioRepository.findByRole(Role.MANUTENCAO));
         if (userDetails != null) {
             usuarioRepository.findByEmail(userDetails.getUsername())
                     .ifPresent(u -> model.addAttribute("nomeUsuario", u.getNome()));
@@ -44,14 +43,14 @@ public class IncidenteController {
                                  @RequestParam BlocoLocal bloco,
                                  @RequestParam LocalEspecifico localEspecifico,
                                  @RequestParam CategoriaIncidente categoria,
-                                 @RequestParam Long responsavelId,
+                                 @RequestParam(required = false) Long responsavelId,
                                  @RequestParam(required = false) MultipartFile anexo,
                                  @AuthenticationPrincipal UserDetails userDetails,
                                  Model model) {
         try {
             Usuario usuario = usuarioRepository.findByEmail(userDetails.getUsername()).orElseThrow();
-            Usuario responsavel = usuarioRepository.findById(responsavelId)
-                    .orElseThrow(() -> new RuntimeException("Responsável não encontrado."));
+            Usuario responsavel = (responsavelId != null)
+                    ? usuarioRepository.findById(responsavelId).orElse(null) : null;
             incidenteService.criar(observacao, bloco, localEspecifico, categoria, anexo, usuario, responsavel);
             model.addAttribute("sucesso", "Chamado enviado com sucesso!");
             model.addAttribute("nomeUsuario", usuario.getNome());
@@ -65,7 +64,6 @@ public class IncidenteController {
         model.addAttribute("blocos",      BlocoLocal.values());
         model.addAttribute("todosLocais", LocalEspecifico.values());
         model.addAttribute("categorias",  CategoriaIncidente.values());
-        model.addAttribute("tecnicos",    usuarioRepository.findByRole(Role.MANUTENCAO));
         return "incidente/novo";
     }
 }
