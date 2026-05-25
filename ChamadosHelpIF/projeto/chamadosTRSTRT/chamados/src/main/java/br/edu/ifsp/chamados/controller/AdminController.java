@@ -12,15 +12,15 @@ import br.edu.ifsp.chamados.service.UsuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -30,7 +30,6 @@ public class AdminController {
     private final UsuarioService usuarioService;
 
     @GetMapping
-    @Transactional(readOnly = true)
     public String painel(Model model) {
         List<Incidente> incidentes = incidenteService.listarTodos();
         if (incidentes == null) incidentes = new ArrayList<>();
@@ -41,6 +40,8 @@ public class AdminController {
 
         List<Usuario> usuarios = usuarioService.listarTodos();
         if (usuarios == null) usuarios = new ArrayList<>();
+
+        log.debug("Painel admin — incidentes: {}, usuarios: {}", incidentes.size(), usuarios.size());
 
         model.addAttribute("incidentes",    incidentes);
         model.addAttribute("usuarios",      usuarios);
@@ -53,11 +54,11 @@ public class AdminController {
 
     @GetMapping("/incidente/editar/{id}")
     public String editarIncidente(@PathVariable Long id, Model model) throws JsonProcessingException {
-        model.addAttribute("incidente", incidenteService.buscarPorId(id));
-        model.addAttribute("blocos",    BlocoLocal.values());
-        model.addAttribute("locaisPorBloco", buildLocaisPorBlocoJson());
-        model.addAttribute("statuses",  StatusIncidente.values());
-        model.addAttribute("categorias", CategoriaIncidente.values());
+        model.addAttribute("incidente",   incidenteService.buscarPorId(id));
+        model.addAttribute("blocos",       BlocoLocal.values());
+        model.addAttribute("todosLocais",  LocalEspecifico.values());
+        model.addAttribute("statuses",     StatusIncidente.values());
+        model.addAttribute("categorias",   CategoriaIncidente.values());
         return "admin/editar-incidente";
     }
 
