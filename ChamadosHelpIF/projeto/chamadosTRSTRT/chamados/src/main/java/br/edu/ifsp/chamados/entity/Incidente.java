@@ -50,6 +50,11 @@ public class Incidente {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    /** Técnico da manutenção responsável pelo chamado. Obrigatório. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "responsavel_id", nullable = true)
+    private Usuario responsavel;
+
     @Column(nullable = false)
     private LocalDateTime datetime;
 
