@@ -2,7 +2,9 @@ package br.edu.ifsp.chamados.controller;
 
 import br.edu.ifsp.chamados.entity.Incidente;
 import br.edu.ifsp.chamados.enums.BlocoLocal;
+import br.edu.ifsp.chamados.enums.Role;
 import br.edu.ifsp.chamados.enums.StatusIncidente;
+import br.edu.ifsp.chamados.repository.UsuarioRepository;
 import br.edu.ifsp.chamados.service.IncidenteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import java.util.Base64;
 public class ManutencaoController {
 
     private final IncidenteService incidenteService;
+    private final UsuarioRepository usuarioRepository;
 
     @GetMapping
     public String listar(Model model) {
@@ -32,6 +35,7 @@ public class ManutencaoController {
         model.addAttribute("qtdEmAnalise",  qtdEmAnalise);
         model.addAttribute("qtdConcluidos", qtdConcluidos);
         model.addAttribute("blocos",        BlocoLocal.values());
+        model.addAttribute("tecnicos",      usuarioRepository.findByRole(Role.MANUTENCAO));
         return "manutencao/lista";
     }
 

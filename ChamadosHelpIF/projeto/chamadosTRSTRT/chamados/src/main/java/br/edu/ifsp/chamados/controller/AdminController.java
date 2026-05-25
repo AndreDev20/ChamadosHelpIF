@@ -1,12 +1,14 @@
 package br.edu.ifsp.chamados.controller;
 
 import br.edu.ifsp.chamados.enums.BlocoLocal;
+import br.edu.ifsp.chamados.enums.Role;
 import br.edu.ifsp.chamados.enums.CategoriaIncidente;
 import br.edu.ifsp.chamados.enums.LocalEspecifico;
 import br.edu.ifsp.chamados.enums.Role;
 import br.edu.ifsp.chamados.enums.StatusIncidente;
 import br.edu.ifsp.chamados.entity.Incidente;
 import br.edu.ifsp.chamados.entity.Usuario;
+import br.edu.ifsp.chamados.repository.UsuarioRepository;
 import br.edu.ifsp.chamados.service.IncidenteService;
 import br.edu.ifsp.chamados.service.UsuarioService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,6 +30,7 @@ public class AdminController {
 
     private final IncidenteService incidenteService;
     private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
     @GetMapping
     public String painel(Model model) {
@@ -59,6 +62,7 @@ public class AdminController {
         model.addAttribute("todosLocais",  LocalEspecifico.values());
         model.addAttribute("statuses",     StatusIncidente.values());
         model.addAttribute("categorias",   CategoriaIncidente.values());
+        model.addAttribute("tecnicos",     usuarioRepository.findByRole(Role.MANUTENCAO));
         return "admin/editar-incidente";
     }
 
@@ -68,8 +72,11 @@ public class AdminController {
                                   @RequestParam BlocoLocal bloco,
                                   @RequestParam LocalEspecifico localEspecifico,
                                   @RequestParam CategoriaIncidente categoria,
-                                  @RequestParam StatusIncidente status) {
-        incidenteService.atualizar(id, observacao, bloco, localEspecifico, categoria, status);
+                                  @RequestParam StatusIncidente status,
+                                  @RequestParam Long responsavelId) {
+        Usuario responsavel = usuarioRepository.findById(responsavelId)
+                .orElseThrow(() -> new RuntimeException("Responsável não encontrado."));
+        incidenteService.atualizar(id, observacao, bloco, localEspecifico, categoria, status, responsavel);
         return "redirect:/admin";
     }
 
