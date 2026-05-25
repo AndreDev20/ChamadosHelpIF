@@ -233,20 +233,22 @@
                                       required th:text="${incidente.observacao}"></textarea>
                         </div>
 
-                    </div>
+                        <div class="divider"></div>
 
-                    <!-- RESPONSÁVEL -->
-                    <div class="section-label">👷 Responsável</div>
-                    <div class="field-group">
-                        <label class="field-label" for="responsavelId">Técnico de Manutenção</label>
-                        <select id="responsavelId" name="responsavelId" required>
-                            <option value="" disabled>Selecione o responsável</option>
-                            <option th:each="tec : ${tecnicos}"
-                                    th:value="${tec.id}"
-                                    th:text="${tec.nome}"
-                                    th:selected="${incidente.responsavel != null and tec.id == incidente.responsavel.id}">
-                            </option>
-                        </select>
+                        <!-- RESPONSÁVEL -->
+                        <div class="section-label">👷 Responsável</div>
+                        <div class="field-group">
+                            <label class="field-label" for="responsavelId">Técnico de Manutenção</label>
+                            <select id="responsavelId" name="responsavelId" required>
+                                <option value="" disabled>Selecione o responsável</option>
+                                <option th:each="tec : ${tecnicos}"
+                                        th:value="${tec.id}"
+                                        th:text="${tec.nome}"
+                                        th:selected="${incidente.responsavel != null and tec.id == incidente.responsavel.id}">
+                                </option>
+                            </select>
+                        </div>
+
                     </div>
 
                     <div class="form-footer">
