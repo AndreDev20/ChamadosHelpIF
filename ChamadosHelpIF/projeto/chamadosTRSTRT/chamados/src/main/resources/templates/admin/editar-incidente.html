@@ -4,397 +4,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Chamado — HelpIF</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --navy: #0a1628; --navy-mid: #112240; --navy-light: #1d3461;
-            --accent: #00d68f; --accent-dim: #00a36c; --accent-glow: rgba(0,214,143,0.15);
-            --warn: #ffb830; --warn-bg: rgba(255,184,48,0.12);
-            --info: #3b82f6; --info-bg: rgba(59,130,246,0.12);
-            --danger: #ff5c5c; --danger-bg: rgba(255,92,92,0.1);
-            --success-bg: rgba(0,214,143,0.12);
-            --surface: #f4f7fb; --card: #ffffff; --border: #e2e8f0;
-            --text: #0f1923; --muted: #6b7a99;
-            --font: 'Outfit', sans-serif; --mono: 'JetBrains Mono', monospace;
+            --navy:#0a1628;--navy-mid:#112240;--navy-light:#1d3461;
+            --accent:#00d68f;--accent-dim:#00a36c;--accent-glow:rgba(0,214,143,0.15);
+            --warn:#f59e0b;--warn-bg:rgba(245,158,11,0.12);
+            --info:#3b82f6;--info-bg:rgba(59,130,246,0.12);
+            --success:#10b981;--success-bg:rgba(16,185,129,0.12);
+            --danger:#ef4444;--danger-bg:rgba(239,68,68,0.08);
+            --surface:#f4f7fb;--card:#fff;--border:#e2e8f0;
+            --text:#0f1923;--muted:#6b7a99;
+            --font:'Outfit',sans-serif;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font); background: var(--surface); color: var(--text); min-height: 100vh; }
-        .app-shell { display: flex; min-height: 100vh; }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:var(--font);background:var(--surface);color:var(--text);min-height:100vh;}
+        .app-shell{display:flex;min-height:100vh;}
 
-        .sidebar {
-            width: 72px; background: var(--navy);
-            display: flex; flex-direction: column; align-items: center;
-            padding: 1.5rem 0; gap: 0.5rem;
-            position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
-        }
-        .sidebar-logo {
-            width: 42px; height: 42px; background: var(--accent); border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 1.5rem; font-weight: 800; font-size: 1.1rem;
-            color: var(--navy); letter-spacing: -1px; box-shadow: 0 0 20px var(--accent-glow);
-        }
-        .sidebar-icon {
-            width: 44px; height: 44px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: background 0.2s;
-            color: rgba(255,255,255,0.45); text-decoration: none;
-        }
-        .sidebar-icon:hover { background: var(--navy-light); color: white; }
-        .sidebar-icon.active { background: var(--accent-glow); color: var(--accent); }
-        .sidebar-bottom { margin-top: auto; }
-        .main-area { margin-left: 72px; flex: 1; display: flex; flex-direction: column; }
+        /* SIDEBAR */
+        .sidebar{width:72px;background:var(--navy);display:flex;flex-direction:column;align-items:center;padding:1.5rem 0;gap:.4rem;position:fixed;top:0;left:0;bottom:0;z-index:100;}
+        .sidebar-logo{width:42px;height:42px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;font-weight:800;font-size:1rem;color:var(--navy);box-shadow:0 0 24px var(--accent-glow);letter-spacing:-1px;}
+        .sidebar-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);text-decoration:none;transition:background .2s,color .2s;}
+        .sidebar-icon:hover{background:var(--navy-light);color:rgba(255,255,255,.9);}
+        .sidebar-icon.active{background:var(--accent-glow);color:var(--accent);}
+        .sidebar-bottom{margin-top:auto;}
 
-        .topbar {
-            background: white; border-bottom: 1px solid var(--border);
-            padding: 0 2rem; height: 64px;
-            display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 50;
-        }
-        .topbar-breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--muted); }
-        .topbar-breadcrumb .crumb-active { color: var(--text); font-weight: 600; }
-        .topbar-right { display: flex; align-items: center; gap: 1rem; }
-        .user-chip {
-            display: flex; align-items: center; gap: 0.6rem;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 40px; padding: 0.35rem 0.9rem 0.35rem 0.5rem;
-            font-size: 0.85rem; font-weight: 500;
-        }
-        .user-avatar {
-            width: 28px; height: 28px; background: var(--navy); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--accent); font-size: 0.75rem; font-weight: 700;
-        }
+        /* MAIN */
+        .main-area{margin-left:72px;flex:1;display:flex;flex-direction:column;}
 
-        .content { padding: 2.5rem; max-width: 780px; width: 100%; margin: 0 auto; }
+        /* TOPBAR */
+        .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+        .topbar-breadcrumb{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--muted);}
+        .crumb-active{color:var(--text);font-weight:600;}
+        .user-chip{display:flex;align-items:center;gap:.6rem;background:var(--surface);border:1px solid var(--border);border-radius:40px;padding:.35rem 1rem .35rem .5rem;font-size:.85rem;font-weight:500;text-decoration:none;color:var(--text);}
+        .user-avatar{width:30px;height:30px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:.75rem;font-weight:800;}
 
-        .page-header { margin-bottom: 2rem; animation: slideDown 0.5s ease both; }
-        .page-header h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.5px; color: var(--navy); }
-        .page-header p { color: var(--muted); margin-top: 0.3rem; font-size: 0.95rem; }
+        /* CONTENT */
+        .content{padding:2.5rem;max-width:800px;width:100%;margin:0 auto;}
+        .page-header{margin-bottom:2rem;}
+        .id-chip{display:inline-flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.3rem .7rem;font-size:.82rem;color:var(--muted);margin-bottom:.5rem;}
+        .page-header h1{font-size:1.9rem;font-weight:800;letter-spacing:-.5px;color:var(--navy);}
+        .page-header p{color:var(--muted);margin-top:.35rem;font-size:.95rem;}
 
-        .id-chip {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 8px; padding: 0.3rem 0.7rem;
-            font-family: var(--mono); font-size: 0.82rem;
-            color: var(--muted); margin-bottom: 0.4rem;
-        }
+        /* FORM CARD */
+        .form-card{background:var(--card);border-radius:20px;border:1px solid var(--border);overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.06);}
+        .form-card-header{background:var(--navy-mid);padding:1.8rem 2rem;position:relative;overflow:hidden;}
+        .form-card-header::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(0,214,143,.08);border-radius:50%;}
+        .header-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(245,158,11,.15);color:var(--warn);font-size:.75rem;font-weight:600;padding:.25rem .7rem;border-radius:20px;margin-bottom:.6rem;border:1px solid rgba(245,158,11,.3);position:relative;}
+        .form-card-header h2{font-size:1.15rem;font-weight:700;color:#fff;position:relative;}
+        .form-card-header p{font-size:.85rem;color:rgba(255,255,255,.5);margin-top:.2rem;position:relative;}
 
-        .form-card {
-            background: white; border-radius: 20px; border: 1px solid var(--border);
-            overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-            animation: slideUp 0.5s ease 0.1s both;
-        }
-        .form-card-header {
-            background: var(--navy-mid); padding: 1.8rem 2rem;
-            position: relative; overflow: hidden;
-        }
-        .form-card-header::before {
-            content: ''; position: absolute; top: -40px; right: -40px;
-            width: 160px; height: 160px; background: rgba(0,214,143,0.08); border-radius: 50%;
-        }
-        .header-badge {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            background: rgba(255,184,48,0.15); color: var(--warn);
-            font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.7rem;
-            border-radius: 20px; margin-bottom: 0.6rem;
-            border: 1px solid rgba(255,184,48,0.3); position: relative;
-        }
-        .form-card-header h2 { font-size: 1.15rem; font-weight: 700; color: white; position: relative; }
-        .form-card-header p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; position: relative; }
+        /* FORM FIELDS */
+        .form-body{padding:2rem;display:flex;flex-direction:column;gap:1.4rem;}
+        .field-group{display:flex;flex-direction:column;gap:.5rem;}
+        .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+        .section-label{display:flex;align-items:center;gap:.6rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+        .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+        .divider{height:1px;background:var(--border);margin:.2rem 0;}
 
-        .form-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.4rem; }
-        .field-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+        label{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy-light);}
+        input, select, textarea{
+            width:100%;padding:.78rem 1rem;
+            border:1.5px solid var(--border);border-radius:10px;
+            font-size:.93rem;font-family:var(--font);color:var(--text);
+            background:var(--surface);transition:border-color .2s,box-shadow .2s,background .2s;
+            outline:none;appearance:none;
+        }
+        input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);background:#fff;}
+        select{
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7a99' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;background-position:right .9rem center;
+            padding-right:2.5rem;cursor:pointer;
+        }
+        textarea{resize:vertical;min-height:120px;line-height:1.6;}
 
-        label {
-            font-size: 0.8rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.06em; color: var(--navy-light);
+        /* CATEGORIA PILLS */
+        .cat-pills{display:flex;gap:.8rem;}
+        .cat-pill{flex:1;position:relative;}
+        .cat-pill input[type="radio"]{position:absolute;opacity:0;width:0;height:0;}
+        .cat-pill label{
+            display:flex;align-items:center;justify-content:center;gap:.5rem;
+            padding:.85rem 1rem;border:2px solid var(--border);border-radius:12px;
+            cursor:pointer;font-size:.88rem;font-weight:600;
+            text-transform:none;letter-spacing:0;color:var(--muted);
+            background:var(--surface);transition:all .2s;
         }
-        .field-hint { font-size: 0.78rem; color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; }
-
-        input, select, textarea {
-            width: 100%; padding: 0.78rem 1rem;
-            border: 1.5px solid var(--border); border-radius: 10px;
-            font-size: 0.93rem; font-family: var(--font); color: var(--text);
-            background: var(--surface); transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-            outline: none; appearance: none;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); background: white;
-        }
-        select {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7a99' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: right 0.9rem center;
-            padding-right: 2.5rem; cursor: pointer;
-        }
-        select:disabled { opacity: 0.5; cursor: not-allowed; }
-        textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
-
-        /* ── CATEGORIA PILLS ─────────────────────────────────── */
-        .categoria-pills {
-            display: flex;
-            gap: 0.8rem;
-        }
-
-        .categoria-pill {
-            flex: 1;
-            position: relative;
-        }
-
-        .categoria-pill input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .categoria-pill label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.85rem 1rem;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.88rem;
-            font-weight: 600;
-            text-transform: none;
-            letter-spacing: 0;
-            color: var(--muted);
-            background: var(--surface);
-            transition: all 0.2s;
-        }
-
-        .categoria-pill input[type="radio"]:checked + label {
-            border-color: var(--accent);
-            background: rgba(0, 214, 143, 0.08);
-            color: var(--navy);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .categoria-pill label:hover {
-            border-color: var(--accent-dim);
-            color: var(--navy);
-        }
-
-        .divider { height: 1px; background: var(--border); margin: 0.4rem 0; }
-        .section-label {
-            display: flex; align-items: center; gap: 0.6rem;
-            font-size: 0.78rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
-        }
-        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        .cat-pill input[type="radio"]:checked + label{border-color:var(--accent);background:rgba(0,214,143,.08);color:var(--navy);box-shadow:0 0 0 3px var(--accent-glow);}
+        .cat-pill label:hover{border-color:var(--accent-dim);color:var(--navy);}
 
         /* STATUS PILLS */
-        .status-selector { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-        .status-pill {
-            flex: 1; min-width: 120px;
-            padding: 0.7rem 1rem; border-radius: 10px; border: 2px solid var(--border);
-            font-size: 0.85rem; font-weight: 600; font-family: var(--font);
-            cursor: pointer; transition: all 0.2s; text-align: center; background: var(--surface);
-            display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+        .status-pills{display:flex;gap:.6rem;flex-wrap:wrap;}
+        .status-pill{
+            flex:1;min-width:120px;padding:.7rem 1rem;border-radius:10px;
+            border:2px solid var(--border);font-size:.85rem;font-weight:600;
+            font-family:var(--font);cursor:pointer;transition:all .2s;
+            text-align:center;background:var(--surface);
+            display:flex;align-items:center;justify-content:center;gap:.4rem;
         }
-        .status-pill input[type="radio"] { display: none; }
-        .status-pill.selected-CRIADO { background: var(--warn-bg); border-color: var(--warn); color: #92660a; }
-        .status-pill.selected-EM_ANALISE { background: var(--info-bg); border-color: var(--info); color: #1d4ed8; }
-        .status-pill.selected-CONCLUIDO { background: var(--success-bg); border-color: var(--accent); color: #047857; }
+        .status-pill:hover{border-color:var(--muted);}
+        .pill-CRIADO.active{background:var(--warn-bg);border-color:var(--warn);color:#92660a;}
+        .pill-EM_ANALISE.active{background:var(--info-bg);border-color:var(--info);color:#1d4ed8;}
+        .pill-CONCLUIDO.active{background:var(--success-bg);border-color:var(--success);color:#047857;}
 
-        #statusHidden { display: none; }
+        /* FORM FOOTER */
+        .form-footer{padding:1.5rem 2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--surface);}
+        .btn-submit{display:inline-flex;align-items:center;gap:.6rem;background:var(--accent);color:var(--navy);border:none;border-radius:12px;padding:.85rem 2rem;font-size:.95rem;font-weight:700;font-family:var(--font);cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,214,143,.35);}
+        .btn-submit:hover{background:var(--accent-dim);transform:translateY(-1px);}
+        .btn-back{display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:var(--muted);border:1.5px solid var(--border);border-radius:12px;padding:.85rem 1.5rem;font-size:.9rem;font-weight:600;font-family:var(--font);text-decoration:none;transition:all .2s;}
+        .btn-back:hover{border-color:var(--navy);color:var(--navy);}
 
-        .form-footer {
-            padding: 1.5rem 2rem; border-top: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: space-between;
-            gap: 1rem; background: var(--surface);
+        /* ALERT DE ERRO */
+        .alert-erro{background:var(--danger-bg);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:.8rem 1rem;color:var(--danger);font-size:.85rem;font-weight:500;margin-bottom:1rem;}
+
+        /* MOBILE */
+        .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--navy);z-index:200;border-top:1px solid rgba(255,255,255,.08);align-items:center;justify-content:space-around;}
+        .mobile-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.5);text-decoration:none;gap:.15rem;font-size:.6rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;flex:1;height:100%;transition:color .2s;}
+        .mobile-nav a.active,.mobile-nav a:hover{color:var(--accent);}
+
+        @media(max-width:768px){
+            .sidebar{display:none!important;}
+            .mobile-nav{display:flex!important;}
+            .main-area{margin-left:0!important;}
+            .content{padding:1rem 1rem 5rem!important;max-width:100%!important;}
+            .topbar{padding:0 1rem!important;height:56px!important;}
+            .topbar-breadcrumb>*:not(:last-child){display:none;}
+            .topbar-breadcrumb>svg{display:none;}
+            .user-chip span{display:none;}
+            .user-chip{padding:.3rem!important;border-radius:50%!important;}
+            .page-header h1{font-size:1.3rem!important;}
+            .field-row{grid-template-columns:1fr!important;}
+            .cat-pills{flex-direction:column!important;}
+            .status-pills{flex-direction:column!important;}
+            .form-footer{flex-direction:column-reverse!important;}
+            .btn-submit,.btn-back{width:100%!important;justify-content:center!important;}
+            .form-body{padding:1.2rem!important;}
+            .form-card-header{padding:1.2rem!important;}
         }
-        .btn-submit {
-            display: inline-flex; align-items: center; gap: 0.6rem;
-            background: var(--accent); color: var(--navy); border: none;
-            border-radius: 12px; padding: 0.85rem 2rem;
-            font-size: 0.95rem; font-weight: 700; font-family: var(--font);
-            cursor: pointer; transition: all 0.2s; letter-spacing: 0.01em;
-            box-shadow: 0 4px 16px rgba(0,214,143,0.35);
-        }
-        .btn-submit:hover { background: var(--accent-dim); transform: translateY(-1px); }
-        .btn-back {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            background: white; color: var(--muted); border: 1.5px solid var(--border);
-            border-radius: 12px; padding: 0.85rem 1.5rem;
-            font-size: 0.9rem; font-weight: 600; font-family: var(--font);
-            text-decoration: none; transition: all 0.2s;
-        }
-        .btn-back:hover { border-color: var(--navy); color: var(--navy); }
-
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 600px) {
-            .sidebar { width: 0; overflow: hidden; }
-            .main-area { margin-left: 0; }
-            .content { padding: 1.2rem; }
-            .field-row { grid-template-columns: 1fr; }
-            .form-footer { flex-direction: column-reverse; }
-            .btn-submit, .btn-back { width: 100%; justify-content: center; }
-            .categoria-pills { flex-direction: column; }
-        }
-    
-        /* ════════════════════════════════════════════
-           RESPONSIVIDADE MOBILE
-           ════════════════════════════════════════════ */
-
-        /* Bottom nav (mobile) */
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: 60px;
-            background: var(--navy);
-            z-index: 200;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            align-items: center;
-            justify-content: space-around;
-        }
-        .mobile-nav a {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.5); text-decoration: none; gap: 0.15rem;
-            font-size: 0.6rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-            flex: 1; height: 100%; transition: color 0.2s;
-        }
-        .mobile-nav a.active, .mobile-nav a:hover { color: var(--accent); }
-        .mobile-nav svg { flex-shrink: 0; }
-
-        @media (max-width: 768px) {
-            /* Esconde sidebar, mostra bottom nav */
-            .sidebar { display: none !important; }
-            .mobile-nav { display: flex !important; }
-
-            /* Remove margem da sidebar */
-            .main-area { margin-left: 0 !important; }
-
-            /* Padding do content + espaço p/ bottom nav */
-            .content { padding: 1rem 1rem 5rem 1rem !important; }
-
-            /* Topbar mais compacta */
-            .topbar { padding: 0 1rem !important; height: 56px !important; }
-            .topbar-breadcrumb { font-size: 0.78rem !important; }
-            /* Esconde partes do breadcrumb no mobile (mantém só o último) */
-            .topbar-breadcrumb > *:not(:last-child) { display: none; }
-            .topbar-breadcrumb > svg { display: none; }
-
-            /* User chip simplificado */
-            .user-chip span { display: none; }
-            .user-chip { padding: 0.3rem !important; border-radius: 50% !important; }
-
-            /* Títulos menores */
-            .page-header h1 { font-size: 1.3rem !important; }
-
-            /* Stats: 2 colunas */
-            .stats-row { grid-template-columns: repeat(2, 1fr) !important; gap: 0.6rem !important; }
-            .stat-value { font-size: 1.5rem !important; }
-
-            /* Info banner compacto */
-            .info-banner { padding: 1rem !important; }
-            .info-banner p { display: none; }
-
-            /* Seção header: empilha título e contagem */
-            .section-header { flex-wrap: wrap; gap: 0.4rem; padding: 0.8rem 1rem !important; }
-
-            /* TABELAS → CARDS em mobile */
-            .tbl-wrap { overflow-x: visible !important; }
-            table { display: block !important; }
-            thead { display: none !important; }
-            tbody { display: flex !important; flex-direction: column !important; gap: 0.75rem !important; padding: 0.75rem !important; }
-            tbody tr {
-                display: grid !important;
-                grid-template-columns: auto 1fr !important;
-                gap: 0.3rem 0.6rem !important;
-                border: 1px solid var(--border) !important;
-                border-radius: 12px !important;
-                padding: 0.9rem !important;
-                background: var(--card) !important;
-                box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
-                border-bottom: 1px solid var(--border) !important;
-            }
-            tbody tr.empty {
-                display: block !important;
-                text-align: center !important;
-                padding: 2rem !important;
-                border: 2px dashed var(--border) !important;
-            }
-            tbody td {
-                display: contents !important;
-                padding: 0 !important;
-                font-size: 0.82rem !important;
-            }
-            tbody td::before {
-                content: attr(data-label);
-                font-size: 0.65rem !important;
-                font-weight: 700 !important;
-                text-transform: uppercase !important;
-                letter-spacing: 0.06em !important;
-                color: var(--muted) !important;
-                align-self: center !important;
-                white-space: nowrap !important;
-            }
-            /* Ações: ocupa linha inteira */
-            tbody td:last-child {
-                grid-column: 1 / -1 !important;
-                display: flex !important;
-                flex-wrap: wrap !important;
-                gap: 0.4rem !important;
-                margin-top: 0.4rem !important;
-                padding-top: 0.5rem !important;
-                border-top: 1px dashed var(--border) !important;
-            }
-            tbody td:last-child::before { display: none !important; }
-            .actions { flex-wrap: wrap !important; }
-            .btn { font-size: 0.8rem !important; padding: 0.4rem 0.8rem !important; }
-
-            /* Obs cell: não trunca no mobile */
-            .obs-cell { white-space: normal !important; max-width: none !important; }
-
-            /* Formulários */
-            .field-row { grid-template-columns: 1fr !important; }
-            .form-footer { flex-direction: column-reverse !important; gap: 0.6rem !important; }
-            .btn-submit, .btn-back, .btn-save {
-                width: 100% !important;
-                justify-content: center !important;
-            }
-            .form-body { padding: 1.2rem !important; }
-            .content { max-width: 100% !important; }
-
-            /* Grids de layout */
-            .content-grid { grid-template-columns: 1fr !important; }
-            .content-side { position: static !important; display: flex !important; flex-direction: column !important; }
-            .detail-grid  { grid-template-columns: 1fr !important; }
-
-            /* Categoria pills */
-            .categoria-pills { flex-direction: column !important; }
-            .status-selector { flex-direction: column !important; }
-
-            /* Card detalhe */
-            .info-row { grid-template-columns: 110px 1fr !important; }
-
-            /* Page header */
-            .page-header { flex-direction: column !important; align-items: flex-start !important; }
-        }
-
-        @media (max-width: 380px) {
-            .stats-row { grid-template-columns: 1fr 1fr !important; }
-            .btn { font-size: 0.75rem !important; padding: 0.35rem 0.6rem !important; }
-        }
-</style>
+    </style>
 </head>
 <body>
 <div class="app-shell">
     <nav class="sidebar">
         <div class="sidebar-logo">HI</div>
-        <a href="#" class="sidebar-icon active" title="Admin">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <a th:href="@{/admin}" class="sidebar-icon active" title="Painel">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </a>
         <div class="sidebar-bottom">
             <a th:href="@{/auth/logout}" class="sidebar-icon" title="Sair">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             </a>
         </div>
     </nav>
@@ -404,45 +161,75 @@
             <div class="topbar-breadcrumb">
                 <span>HelpIF</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                <a th:href="@{/admin}" style="color:inherit; text-decoration:none;">Administração</a>
+                <a th:href="@{/admin}" style="color:inherit;text-decoration:none;">Administração</a>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
                 <span class="crumb-active">Editar Chamado</span>
             </div>
-            <div class="topbar-right">
-                <div class="user-chip">
-                    <div class="user-avatar">A</div>
-                    <span>Admin</span>
-                </div>
+            <div class="user-chip">
+                <div class="user-avatar">A</div>
+                <span>Admin</span>
             </div>
         </header>
 
         <main class="content">
             <div class="page-header">
-                <div class="id-chip">
-                    📋 Chamado <span th:text="'#' + ${incidente.id}"></span>
-                </div>
+                <div class="id-chip">📋 Chamado <span th:text="'#' + ${incidente.id}"></span></div>
                 <h1>Editar Chamado</h1>
-                <p>Altere as informações e atualize o status do chamado</p>
+                <p>Altere as informações e atualize o status do chamado.</p>
             </div>
 
             <div class="form-card">
                 <div class="form-card-header">
                     <div class="header-badge">✏️ Modo de Edição</div>
-                    <h2>Atualizar Chamado <span th:text="'#' + ${incidente.id}"></span></h2>
-                    <p>Aberto em <span th:text="${#temporals.format(incidente.datetime, 'dd/MM/yyyy \'às\' HH:mm')}"></span></p>
+                    <h2>Chamado <span th:text="'#' + ${incidente.id}"></span></h2>
+                    <p th:text="${incidente.datetime != null} ? 'Aberto em ' + ${#temporals.format(incidente.datetime, 'dd/MM/yyyy HH:mm')} : 'Data não disponível'"></p>
                 </div>
 
                 <form method="post" th:action="@{/admin/incidente/editar/{id}(id=${incidente.id})}">
 
                     <div class="form-body">
 
-                        <!-- ① LOCALIZAÇÃO -->
-                        <div class="section-label">📍 Localização</div>
+                        <!-- STATUS -->
+                        <div class="section-label">🔄 Status do Chamado</div>
 
+                        <!-- select hidden submetido pelo form -->
+                        <select id="statusSelect" name="status" style="display:none;" required>
+                            <option th:each="s : ${statuses}"
+                                    th:value="${s.name()}"
+                                    th:text="${s.name()}"
+                                    th:selected="${s == incidente.status}"></option>
+                        </select>
+
+                        <!-- pills visuais -->
+                        <div class="status-pills">
+                            <button type="button"
+                                    class="status-pill pill-CRIADO"
+                                    th:classappend="${incidente.status.name() == 'CRIADO'} ? ' active' : ''"
+                                    data-status="CRIADO">
+                                🟡 Criado
+                            </button>
+                            <button type="button"
+                                    class="status-pill pill-EM_ANALISE"
+                                    th:classappend="${incidente.status.name() == 'EM_ANALISE'} ? ' active' : ''"
+                                    data-status="EM_ANALISE">
+                                🔵 Em Análise
+                            </button>
+                            <button type="button"
+                                    class="status-pill pill-CONCLUIDO"
+                                    th:classappend="${incidente.status.name() == 'CONCLUIDO'} ? ' active' : ''"
+                                    data-status="CONCLUIDO">
+                                ✅ Concluído
+                            </button>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- LOCALIZAÇÃO -->
+                        <div class="section-label">📍 Localização</div>
                         <div class="field-row">
                             <div class="field-group">
                                 <label for="bloco">Área / Bloco</label>
-                                <select id="bloco" name="bloco" required onchange="atualizarLocais('')">
+                                <select id="bloco" name="bloco" required>
                                     <option th:each="b : ${blocos}"
                                             th:value="${b.name()}"
                                             th:text="${b.descricao}"
@@ -452,20 +239,19 @@
                             <div class="field-group">
                                 <label for="localEspecifico">Local Específico</label>
                                 <select id="localEspecifico" name="localEspecifico" required>
-                                    <option value="">Carregando...</option>
+                                    <!-- preenchido pelo JS via data attribute -->
                                 </select>
                             </div>
                         </div>
 
                         <div class="divider"></div>
 
-                        <!-- ② CATEGORIA -->
+                        <!-- CATEGORIA -->
                         <div class="section-label">🏷️ Categoria</div>
-
                         <div class="field-group">
                             <label>Tipo de chamado</label>
-                            <div class="categoria-pills">
-                                <div class="categoria-pill" th:each="cat : ${categorias}">
+                            <div class="cat-pills">
+                                <div class="cat-pill" th:each="cat : ${categorias}">
                                     <input type="radio"
                                            name="categoria"
                                            th:id="'cat-' + ${cat.name()}"
@@ -473,7 +259,7 @@
                                            th:checked="${cat == incidente.categoria}"
                                            required>
                                     <label th:for="'cat-' + ${cat.name()}"
-                                           th:text="${cat == T(br.edu.ifsp.chamados.enums.CategoriaIncidente).MANUTENCAO} ? '🔧 Manutenção' : '🔬 Laboratório'">
+                                           th:text="${cat.name() == 'MANUTENCAO'} ? '🔧 Manutenção' : '🔬 Laboratório'">
                                     </label>
                                 </div>
                             </div>
@@ -481,116 +267,106 @@
 
                         <div class="divider"></div>
 
-                        <!-- ③ DESCRIÇÃO -->
+                        <!-- DESCRIÇÃO -->
                         <div class="section-label">📋 Descrição</div>
-
                         <div class="field-group">
                             <label for="observacao">Observação</label>
                             <textarea id="observacao" name="observacao" required
                                       th:text="${incidente.observacao}"></textarea>
                         </div>
 
-                        <div class="divider"></div>
-
-                        <!-- ④ STATUS -->
-                        <div class="section-label">🔄 Status do Chamado</div>
-
-                        <!-- Hidden select que será submetido -->
-                        <select id="statusHidden" name="status" required>
-                            <option th:each="s : ${statuses}"
-                                    th:value="${s.name()}"
-                                    th:text="${s.name()}"
-                                    th:selected="${s == incidente.status}"></option>
-                        </select>
-
-                        <!-- Pills visuais -->
-                        <div class="status-selector" id="statusPills">
-                            <label class="status-pill" th:each="s : ${statuses}"
-                                   th:id="'pill-' + ${s.name()}"
-                                   th:classappend="${s == incidente.status} ? 'selected-' + ${s.name()} : ''"
-                                   th:data-status="${s.name()}">
-                                <input type="radio" th:value="${s.name()}" th:checked="${s == incidente.status}">
-                                <span th:text="${s.name() == 'CRIADO'} ? '🟡 Criado' :
-                                               (${s.name() == 'EM_ANALISE'} ? '🔵 Em Análise' : '✅ Concluído')"></span>
-                            </label>
-                        </div>
-
-                    </div>
+                    </div><!-- /form-body -->
 
                     <div class="form-footer">
                         <a class="btn-back" th:href="@{/admin}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                             Cancelar
                         </a>
                         <button type="submit" class="btn-submit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                             Salvar Alterações
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                         </button>
                     </div>
 
                 </form>
-            </div>
+            </div><!-- /form-card -->
         </main>
     </div>
 </div>
 
-<script th:inline="javascript">
-    const locaisPorBloco = /*[[${locaisPorBloco}]]*/ '{}';
-    const dados = JSON.parse(locaisPorBloco);
-    const localAtual = /*[[${incidente.localEspecifico.name()}]]*/ '';
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+    <a th:href="@{/admin}" class="active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Painel
+    </a>
+    <a th:href="@{/auth/logout}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+    </a>
+</nav>
 
-    function atualizarLocais(selecionado) {
-        const bloco  = document.getElementById('bloco').value;
-        const select = document.getElementById('localEspecifico');
-        select.innerHTML = '';
+<!--
+    locaisPorBloco: JSON com os locais de cada bloco, gerado pelo AdminController.
+    Usamos th:data-* no <body> para evitar problemas com th:inline="javascript"
+    e caracteres especiais no JSON (acentos, aspas, etc).
+-->
+<div id="locaisData"
+     th:attr="data-locais=${locaisPorBloco}"
+     th:attr="data-local-atual=${incidente.localEspecifico.name()}"
+     style="display:none;"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ── LOCAIS POR BLOCO ──────────────────────────────────────────────────────
+    var locaisDataEl  = document.getElementById('locaisData');
+    var dados         = JSON.parse(locaisDataEl.getAttribute('data-locais') || '{}');
+    var localAtual    = locaisDataEl.getAttribute('data-local-atual') || '';
+
+    var selectBloco  = document.getElementById('bloco');
+    var selectLocal  = document.getElementById('localEspecifico');
+
+    function preencherLocais(localSelecionado) {
+        var bloco = selectBloco.value;
+        selectLocal.innerHTML = '';
         if (bloco && dados[bloco]) {
-            dados[bloco].forEach(function(local) {
-                const opt = document.createElement('option');
+            dados[bloco].forEach(function (local) {
+                var opt = document.createElement('option');
                 opt.value = local.name;
                 opt.textContent = local.descricao;
-                if (local.name === selecionado) opt.selected = true;
-                select.appendChild(opt);
+                if (local.name === localSelecionado) opt.selected = true;
+                selectLocal.appendChild(opt);
             });
         }
     }
 
-    document.getElementById('bloco').addEventListener('change', function() { atualizarLocais(''); });
-    atualizarLocais(localAtual);
+    selectBloco.addEventListener('change', function () {
+        preencherLocais('');
+    });
 
-    // Status pills - usa data-status, sem th:onclick inline
-    function selectStatus(statusName) {
-        document.getElementById('statusHidden').value = statusName;
-        document.querySelectorAll('.status-pill').forEach(p => p.className = 'status-pill');
-        const pill = document.getElementById('pill-' + statusName);
-        if (pill) pill.classList.add('selected-' + statusName);
-    }
+    // Preenche com o local atual do incidente
+    preencherLocais(localAtual);
 
-    document.querySelectorAll('.status-pill').forEach(function(pill) {
-        pill.addEventListener('click', function() {
-            selectStatus(this.dataset.status);
+    // ── STATUS PILLS ──────────────────────────────────────────────────────────
+    var selectStatus = document.getElementById('statusSelect');
+
+    document.querySelectorAll('.status-pill').forEach(function (pill) {
+        pill.addEventListener('click', function () {
+            var status = this.getAttribute('data-status');
+            // Atualiza o select hidden
+            selectStatus.value = status;
+            // Remove active de todos
+            document.querySelectorAll('.status-pill').forEach(function (p) {
+                p.classList.remove('active');
+            });
+            // Adiciona active no clicado
+            this.classList.add('active');
         });
     });
 
-    // Inicializa status correto
-    const statusInicial = /*[[${incidente.status.name()}]]*/ 'CRIADO';
-    selectStatus(statusInicial);
+});
 </script>
-
-    <!-- MOBILE BOTTOM NAV -->
-    <nav class="mobile-nav">
-        <a th:href="@{/admin}" class="active">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            Painel
-        </a>
-        <a th:href="@{/admin/usuario/novo}">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Usuários
-        </a>
-        <a th:href="@{/auth/logout}">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            Sair
-        </a>
-    </nav>
 
 </body>
 </html>
