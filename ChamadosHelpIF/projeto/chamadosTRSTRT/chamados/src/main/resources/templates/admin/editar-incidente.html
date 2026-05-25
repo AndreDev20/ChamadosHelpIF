@@ -508,7 +508,7 @@
                             <label class="status-pill" th:each="s : ${statuses}"
                                    th:id="'pill-' + ${s.name()}"
                                    th:classappend="${s == incidente.status} ? 'selected-' + ${s.name()} : ''"
-                                   th:onclick="'selectStatus(\'' + ${s.name()} + '\')'">
+                                   th:data-status="${s.name()}">
                                 <input type="radio" th:value="${s.name()}" th:checked="${s == incidente.status}">
                                 <span th:text="${s.name() == 'CRIADO'} ? '🟡 Criado' :
                                                (${s.name() == 'EM_ANALISE'} ? '🔵 Em Análise' : '✅ Concluído')"></span>
@@ -557,19 +557,23 @@
     document.getElementById('bloco').addEventListener('change', function() { atualizarLocais(''); });
     atualizarLocais(localAtual);
 
-    // Inicializa status correto no hidden e destaca a pill ativa
-    const statusInicial = /*[[${incidente.status.name()}]]*/ 'CRIADO';
-    selectStatus(statusInicial);
-
-    // Status pills
+    // Status pills - usa data-status, sem th:onclick inline
     function selectStatus(statusName) {
         document.getElementById('statusHidden').value = statusName;
-        document.querySelectorAll('.status-pill').forEach(p => {
-            p.className = 'status-pill';
-        });
+        document.querySelectorAll('.status-pill').forEach(p => p.className = 'status-pill');
         const pill = document.getElementById('pill-' + statusName);
         if (pill) pill.classList.add('selected-' + statusName);
     }
+
+    document.querySelectorAll('.status-pill').forEach(function(pill) {
+        pill.addEventListener('click', function() {
+            selectStatus(this.dataset.status);
+        });
+    });
+
+    // Inicializa status correto
+    const statusInicial = /*[[${incidente.status.name()}]]*/ 'CRIADO';
+    selectStatus(statusInicial);
 </script>
 
     <!-- MOBILE BOTTOM NAV -->

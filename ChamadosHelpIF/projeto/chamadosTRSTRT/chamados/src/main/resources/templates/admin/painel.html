@@ -494,8 +494,8 @@
                                     <span th:if="${inc.anexo == null or #strings.isEmpty(inc.anexo)}" class="no-img">—</span>
                                     <img  th:if="${inc.anexo != null and !#strings.isEmpty(inc.anexo)}"
                                           th:src="${inc.anexo}"
-                                          class="thumb" alt="Anexo"
-                                          th:id="'thumb-' + ${inc.id}"/>
+                                          th:id="'thumb-' + ${inc.id}"
+                                          class="thumb" alt="Anexo"/>
                                 </td>
 
                                 <td data-label="Status">
@@ -646,7 +646,7 @@
         document.addEventListener('click', function (e) {
             var thumb = e.target.closest('.thumb');
             if (thumb) {
-                openLightbox(thumb.src);
+                openLightbox(thumb.dataset.src || thumb.src);
                 return;
             }
             /* Clique no backdrop fecha o lightbox */
