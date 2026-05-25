@@ -612,6 +612,24 @@
                                     </div>
                                 </div>
 
+                                <!-- RESPONSÁVEL -->
+                                <div class="form-section">
+                                    <div class="section-title">
+                                        <span class="section-icon">👷</span>
+                                        <span>Responsável pela Manutenção</span>
+                                    </div>
+                                    <div class="field-group">
+                                        <label for="responsavelId">Técnico responsável</label>
+                                        <select id="responsavelId" name="responsavelId" required>
+                                            <option value="" disabled selected>Selecione o técnico responsável</option>
+                                            <option th:each="tec : ${tecnicos}"
+                                                    th:value="${tec.id}"
+                                                    th:text="${tec.nome}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div><!-- end form-body -->
 
                             <div class="form-footer">
