@@ -544,8 +544,13 @@
 
                                 <div class="field-group">
                                     <label for="localEspecifico">Local Específico</label>
-                                    <select id="localEspecifico" name="localEspecifico" required disabled>
-                                        <option value="">Selecione a área primeiro...</option>
+                                    <select id="localEspecifico" name="localEspecifico" required>
+                                        <option value="" disabled selected>Selecione o local...</option>
+                                        <option th:each="loc : ${todosLocais}"
+                                                th:value="${loc.name()}"
+                                                th:text="${loc.descricao}"
+                                                th:attr="data-bloco=${loc.bloco.name()}">
+                                        </option>
                                     </select>
                                 </div>
 
@@ -732,24 +737,30 @@
     </a>
 </nav>
 
-<script th:inline="javascript">
-    /* Dados de locais por bloco */
-    const locaisPorBloco = /*[[${locaisPorBloco}]]*/ '{}';
-    const dados = JSON.parse(locaisPorBloco);
+<script>
+    /* Filtra locais pelo bloco usando data-bloco nas options — sem JSON */
+    var todasOpcoesLocais = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectLocal = document.getElementById('localEspecifico');
+        todasOpcoesLocais = Array.from(selectLocal.options).map(function(o) {
+            return { value: o.value, text: o.textContent, bloco: o.getAttribute('data-bloco') };
+        });
+    });
 
     function atualizarLocais() {
-        const bloco  = document.getElementById('bloco').value;
-        const select = document.getElementById('localEspecifico');
-        select.innerHTML = '<option value="">Selecione o local...</option>';
-        select.disabled = true;
-        if (bloco && dados[bloco]) {
-            dados[bloco].forEach(function(local) {
-                const opt = document.createElement('option');
-                opt.value = local.name;
-                opt.textContent = local.descricao;
+        var bloco  = document.getElementById('bloco').value;
+        var select = document.getElementById('localEspecifico');
+        select.innerHTML = '<option value="" disabled selected>Selecione o local...</option>';
+        if (bloco && todasOpcoesLocais) {
+            todasOpcoesLocais.filter(function(o) {
+                return o.bloco === bloco;
+            }).forEach(function(o) {
+                var opt = document.createElement('option');
+                opt.value = o.value;
+                opt.textContent = o.text;
                 select.appendChild(opt);
             });
-            select.disabled = false;
         }
     }
 
