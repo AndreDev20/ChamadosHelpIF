@@ -1,6 +1,7 @@
 package br.edu.ifsp.chamados.repository;
 
 import br.edu.ifsp.chamados.entity.Usuario;
+import br.edu.ifsp.chamados.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
