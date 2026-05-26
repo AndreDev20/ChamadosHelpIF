@@ -164,7 +164,7 @@
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 300px;
-            gap: 1.5rem;
+            gap: 2rem;
             align-items: start;
         }
         .content-main { min-width: 0; }
@@ -398,10 +398,7 @@
         }
         .mobile-nav a.active, .mobile-nav a:hover { color: var(--accent); }
 
-        @media (max-width: 820px) {
-            .content-grid { grid-template-columns: 1fr; }
-            .content-side { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        }
+
 
         @media (max-width: 768px) {
             .sidebar { display: none !important; }
@@ -419,7 +416,7 @@
             .form-footer { flex-direction: column-reverse !important; gap: 0.6rem !important; }
             .btn-submit { width: 100% !important; justify-content: center !important; }
             .categoria-pills { flex-direction: column !important; }
-            .content-side { grid-template-columns: 1fr !important; }
+
             .user-dropdown { right: -0.5rem; }
         }
     </style>
@@ -499,20 +496,21 @@
                 <p>Preencha os campos abaixo para registrar seu chamado.</p>
             </div>
 
-            <!-- ALERTS -->
-            <div class="alert alert-success" th:if="${sucesso}">
-                <span class="alert-icon">✅</span>
-                <span th:text="${sucesso}"></span>
-            </div>
-            <div class="alert alert-error" th:if="${erro}">
-                <span class="alert-icon">⚠️</span>
-                <span th:text="${erro}"></span>
-            </div>
-
             <div class="content-grid">
 
                 <!-- FORMULÁRIO -->
                 <div class="content-main">
+
+                    <!-- ALERTS -->
+                    <div class="alert alert-success" th:if="${sucesso}">
+                        <span class="alert-icon">✅</span>
+                        <span th:text="${sucesso}"></span>
+                    </div>
+                    <div class="alert alert-error" th:if="${erro}">
+                        <span class="alert-icon">⚠️</span>
+                        <span th:text="${erro}"></span>
+                    </div>
+
                     <div class="form-card">
                         <div class="form-card-header">
                             <div class="header-badge">
@@ -633,7 +631,6 @@
 
                         </form>
                     </div>
-                </div>
 
                 <!-- LATERAL -->
                 <div class="content-side">
