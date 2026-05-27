@@ -6,6 +6,7 @@ import br.edu.ifsp.chamados.enums.CategoriaIncidente;
 import br.edu.ifsp.chamados.enums.LocalEspecifico;
 import br.edu.ifsp.chamados.enums.Role;
 import br.edu.ifsp.chamados.repository.UsuarioRepository;
+import br.edu.ifsp.chamados.service.AtribuicaoService;
 import br.edu.ifsp.chamados.service.IncidenteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +25,7 @@ public class IncidenteController {
 
     private final IncidenteService incidenteService;
     private final UsuarioRepository usuarioRepository;
+    private final AtribuicaoService atribuicaoService;
 
     @GetMapping("/novo")
     public String novoIncidente(Model model,
@@ -49,8 +51,8 @@ public class IncidenteController {
                                  Model model) {
         try {
             Usuario usuario = usuarioRepository.findByEmail(userDetails.getUsername()).orElseThrow();
-            Usuario responsavel = (responsavelId != null)
-                    ? usuarioRepository.findById(responsavelId).orElse(null) : null;
+            // Atribuição automática: técnico com menor carga de chamados abertos
+            Usuario responsavel = atribuicaoService.escolherResponsavel();
             incidenteService.criar(observacao, bloco, localEspecifico, categoria, anexo, usuario, responsavel);
             model.addAttribute("sucesso", "Chamado enviado com sucesso!");
             model.addAttribute("nomeUsuario", usuario.getNome());
