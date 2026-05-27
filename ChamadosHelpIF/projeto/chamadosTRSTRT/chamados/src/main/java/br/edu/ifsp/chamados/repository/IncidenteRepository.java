@@ -5,6 +5,7 @@ import br.edu.ifsp.chamados.entity.Usuario;
 import br.edu.ifsp.chamados.enums.StatusIncidente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,4 +35,8 @@ public interface IncidenteRepository extends JpaRepository<Incidente, Long> {
     List<Incidente> findByUsuario(Usuario usuario);
     List<Incidente> findByStatus(StatusIncidente status);
     List<Incidente> findAllByOrderByDatetimeDesc();
+
+    /** Conta chamados não concluídos de um responsável (para balanceamento de carga). */
+    @Query(value = "SELECT COUNT(*) FROM incidentes WHERE responsavel_id = :responsavelId AND status != 'CONCLUIDO'", nativeQuery = true)
+    long countAbertosporResponsavel(@Param("responsavelId") Long responsavelId);
 }
