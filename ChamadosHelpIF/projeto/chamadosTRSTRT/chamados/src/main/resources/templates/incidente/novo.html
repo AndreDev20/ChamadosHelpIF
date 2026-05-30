@@ -400,6 +400,20 @@
 
 
 
+        /* Tablet: cards laterais vão para baixo em 2 colunas */
+        @media (max-width: 960px) {
+            .content-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .content-side {
+                position: static !important;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+            }
+        }
+
+        /* Mobile: tudo em coluna única */
         @media (max-width: 768px) {
             .sidebar { display: none !important; }
             .mobile-nav { display: flex !important; }
@@ -415,18 +429,24 @@
             .form-body { grid-template-columns: 1fr !important; padding: 1.2rem !important; }
             .form-footer { flex-direction: column-reverse !important; gap: 0.6rem !important; }
             .btn-submit { width: 100% !important; justify-content: center !important; }
-            .categoria-pills { flex-direction: column !important; }
+
+            /* Grid principal: 1 coluna, cards abaixo do form */
+            .content-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .content-side {
+                position: static !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            /* Info cards mais compactos em mobile */
+            .info-card-body { padding: 1rem !important; gap: 0.7rem !important; }
+            .info-tip { padding: 0.65rem !important; }
 
             .user-dropdown { right: -0.5rem; }
         }
-
-        /* ── ATRIBUIÇÕES DA EQUIPE ── */
-        .atrib-item  { display: flex; align-items: flex-start; gap: 0.65rem; }
-        .atrib-num   { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
-        .atrib-title { font-size: 0.8rem; font-weight: 700; color: var(--navy); margin-bottom: 0.15rem; }
-        .atrib-desc  { font-size: 0.74rem; color: var(--muted); line-height: 1.55; }
-        .atrib-sep   { height: 1px; background: var(--border); }
-
     </style>
 </head>
 <body>
@@ -560,7 +580,26 @@
                                     </select>
                                 </div>
 
-
+                                <!-- CATEGORIA -->
+                                <div class="form-section-full">
+                                    <div class="divider"></div>
+                                    <div class="section-label" style="margin-top:0.8rem;">🏷️ Categoria</div>
+                                    <div class="field-group" style="margin-top:0.8rem;">
+                                        <label>Tipo de Chamado
+                                            <span class="field-hint">— Selecione a categoria que melhor descreve o problema</span>
+                                        </label>
+                                        <div class="categoria-pills">
+                                            <div class="categoria-pill" th:each="cat : ${categorias}">
+                                                <input type="radio" name="categoria"
+                                                       th:id="'cat-' + ${cat.name()}"
+                                                       th:value="${cat.name()}" required>
+                                                <label th:for="'cat-' + ${cat.name()}"
+                                                       th:text="${cat == T(br.edu.ifsp.chamados.enums.CategoriaIncidente).MANUTENCAO} ? '🔧 Manutenção' : '🔬 Laboratório'">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- DESCRIÇÃO -->
                                 <div class="form-section-full">
@@ -655,34 +694,34 @@
                         </div>
                     </div>
 
-                    <!-- Atribuições da equipe -->
+                    <!-- Fluxo -->
                     <div class="info-card">
                         <div class="info-card-header">
-                            <h3>🔧 Equipe de Manutenção</h3>
-                            <p>Principais atribuições da equipe</p>
+                            <h3>🔄 Fluxo do chamado</h3>
+                            <p>O que acontece após o envio</p>
                         </div>
-                        <div class="info-card-body" style="gap:0.7rem;">
-                            <div class="atrib-item">
-                                <span class="atrib-num">1️⃣</span>
-                                <div>
-                                    <div class="atrib-title">Infraestrutura e Marcenaria</div>
-                                    <div class="atrib-desc">Portas, fechaduras, janelas, mobiliário, quadros, divisórias e pequenos reparos estruturais.</div>
+                        <div class="info-card-body">
+                            <div class="status-steps">
+                                <div class="status-step">
+                                    <div class="step-dot active">1</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Abertura</div>
+                                        <div class="step-desc">Chamado registrado e aguardando triagem da equipe.</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="atrib-sep"></div>
-                            <div class="atrib-item">
-                                <span class="atrib-num">2️⃣</span>
-                                <div>
-                                    <div class="atrib-title">Elétrica e Climatização</div>
-                                    <div class="atrib-desc">Lâmpadas, reatores, tomadas, quadros de energia, rede elétrica e ar-condicionado.</div>
+                                <div class="status-step">
+                                    <div class="step-dot">2</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Em andamento</div>
+                                        <div class="step-desc">Equipe técnica designada para resolver o problema.</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="atrib-sep"></div>
-                            <div class="atrib-item">
-                                <span class="atrib-num">3️⃣</span>
-                                <div>
-                                    <div class="atrib-title">Hidráulica e Utilidades</div>
-                                    <div class="atrib-desc">Vazamentos, desentupimentos, banheiros, caixas d'água, tubulações e bebedouros.</div>
+                                <div class="status-step">
+                                    <div class="step-dot">3</div>
+                                    <div class="step-content">
+                                        <div class="step-title">Concluído</div>
+                                        <div class="step-desc">Problema resolvido e chamado encerrado.</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
