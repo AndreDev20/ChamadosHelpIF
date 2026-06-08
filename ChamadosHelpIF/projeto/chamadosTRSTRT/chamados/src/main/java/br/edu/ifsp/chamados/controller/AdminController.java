@@ -71,12 +71,17 @@ public class AdminController {
                                   @RequestParam String observacao,
                                   @RequestParam BlocoLocal bloco,
                                   @RequestParam LocalEspecifico localEspecifico,
-                                  @RequestParam CategoriaIncidente categoria,
+                                  @RequestParam(required = false) CategoriaIncidente categoria,
                                   @RequestParam StatusIncidente status,
-                                  @RequestParam Long responsavelId) {
+                                  @RequestParam Long responsavelId,
+                                  @RequestParam(required = false) String observacaoTecnica) {
         Usuario responsavel = usuarioRepository.findById(responsavelId)
                 .orElseThrow(() -> new RuntimeException("Responsável não encontrado."));
-        incidenteService.atualizar(id, observacao, bloco, localEspecifico, categoria, status, responsavel);
+        // Mantém categoria original se não enviada pelo formulário
+        if (categoria == null) {
+            categoria = incidenteService.buscarPorId(id).getCategoria();
+        }
+        incidenteService.atualizar(id, observacao, bloco, localEspecifico, categoria, status, responsavel, observacaoTecnica);
         return "redirect:/admin";
     }
 
