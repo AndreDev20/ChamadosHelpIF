@@ -85,7 +85,7 @@ public class ManutencaoController {
         var inc = incidenteService.buscarPorId(id);
         inc.setStatus(status);
         if (observacaoTecnica != null && !observacaoTecnica.isBlank()) {
-            inc.setObservacao(inc.getObservacao() + "\n\n[MANUTENÇÃO] " + observacaoTecnica);
+            inc.setObservacaoTecnica(observacaoTecnica.trim());
         }
         incidenteService.salvarDireto(inc);
         return "redirect:/manutencao";
