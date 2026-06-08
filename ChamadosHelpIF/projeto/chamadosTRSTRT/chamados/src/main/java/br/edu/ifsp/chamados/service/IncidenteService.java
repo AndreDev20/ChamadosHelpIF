@@ -80,7 +80,7 @@ public class IncidenteService {
     @Transactional
     public Incidente atualizar(Long id, String observacao, BlocoLocal bloco,
                                LocalEspecifico localEspecifico, CategoriaIncidente categoria,
-                               StatusIncidente status, Usuario responsavel) {
+                               StatusIncidente status, Usuario responsavel, String observacaoTecnica) {
         Incidente incidente = buscarPorId(id);
         incidente.setObservacao(observacao);
         incidente.setBloco(bloco);
@@ -88,6 +88,9 @@ public class IncidenteService {
         incidente.setCategoria(categoria);
         incidente.setStatus(status);
         incidente.setResponsavel(responsavel);
+        if (observacaoTecnica != null && !observacaoTecnica.isBlank()) {
+            incidente.setObservacaoTecnica(observacaoTecnica.trim());
+        }
         return incidenteRepository.save(incidente);
     }
 }
