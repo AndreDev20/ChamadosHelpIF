@@ -306,6 +306,10 @@
                                 <span class="info-label">Descrição</span>
                                 <span class="info-value obs" th:text="${incidente.observacao}"></span>
                             </div>
+                            <div class="info-row" th:if="${incidente.observacaoTecnica != null and !#strings.isEmpty(incidente.observacaoTecnica)}">
+                                <span class="info-label">🔧 Obs. Técnica</span>
+                                <span class="info-value obs" style="color:var(--accent-dim,#00a36c);white-space:pre-wrap;" th:text="${incidente.observacaoTecnica}"></span>
+                            </div>
                         </div>
                     </div>
 
