@@ -204,33 +204,23 @@
 
                         <div class="divider"></div>
 
-                        <!-- CATEGORIA -->
-                        <div class="section-label">🏷️ Categoria</div>
-                        <div class="field-group">
-                            <label class="field-label">Tipo de chamado</label>
-                            <div class="cat-pills">
-                                <div class="cat-pill" th:each="cat : ${categorias}">
-                                    <input type="radio"
-                                           name="categoria"
-                                           th:id="'cat-' + ${cat.name()}"
-                                           th:value="${cat.name()}"
-                                           th:checked="${cat == incidente.categoria}"
-                                           required>
-                                    <label th:for="'cat-' + ${cat.name()}"
-                                           th:text="${cat.name() == 'MANUTENCAO'} ? '🔧 Manutenção' : '🔬 Laboratório'">
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="divider"></div>
-
                         <!-- DESCRIÇÃO -->
                         <div class="section-label">📋 Descrição</div>
                         <div class="field-group">
                             <label class="field-label" for="observacao">Observação</label>
                             <textarea id="observacao" name="observacao"
                                       required th:text="${incidente.observacao}"></textarea>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- OBSERVAÇÃO TÉCNICA -->
+                        <div class="section-label">🔧 Observação Técnica</div>
+                        <div class="field-group">
+                            <label class="field-label" for="observacaoTecnica">Observação Técnica <span style="font-weight:400;text-transform:none;font-size:.75rem;color:var(--muted);">— opcional</span></label>
+                            <textarea id="observacaoTecnica" name="observacaoTecnica"
+                                      placeholder="Notas internas da equipe de manutenção…"
+                                      th:text="${incidente.observacaoTecnica}"></textarea>
                         </div>
 
                         <div class="divider"></div>
