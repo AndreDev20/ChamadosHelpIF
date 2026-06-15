@@ -44,7 +44,7 @@ public class IncidenteController {
     public String criarIncidente(@RequestParam String observacao,
                                  @RequestParam BlocoLocal bloco,
                                  @RequestParam LocalEspecifico localEspecifico,
-                                 @RequestParam CategoriaIncidente categoria,
+                                 @RequestParam(required = false, defaultValue = "MANUTENCAO") CategoriaIncidente categoria,
                                  @RequestParam(required = false) Long responsavelId,
                                  @RequestParam(required = false) MultipartFile anexo,
                                  @AuthenticationPrincipal UserDetails userDetails,
