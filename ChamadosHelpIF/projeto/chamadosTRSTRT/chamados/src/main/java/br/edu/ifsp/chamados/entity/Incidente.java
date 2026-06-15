@@ -39,7 +39,6 @@ public class Incidente {
     @Column(nullable = false)
     private LocalEspecifico localEspecifico;
 
-    @NotBlank
     @Column(columnDefinition = "TEXT")
     private String observacaoTecnica;
 
