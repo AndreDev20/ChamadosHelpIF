@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                .requestMatchers("/auth/**", "/css/**", "/js/**", "/images/**", "/favicon.ico", "/health").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/manutencao/**").hasAnyRole("MANUTENCAO", "ADMIN")
                 .requestMatchers("/incidente/**").hasAnyRole("COMUM", "ADMIN", "MANUTENCAO")
