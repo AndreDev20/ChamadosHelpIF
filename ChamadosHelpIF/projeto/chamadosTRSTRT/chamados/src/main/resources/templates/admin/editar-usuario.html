@@ -173,11 +173,21 @@
                             </div>
                             <div class="field-group">
                                 <label for="role">Tipo de Usuário</label>
-                                <select id="role" name="role" required>
+                                <select id="role" name="role" required onchange="atualizarTipoManutencao()">
                                     <option th:each="r : ${roles}"
                                             th:value="${r}"
                                             th:text="${r.name() == 'ADMIN'} ? 'Administrador' : (${r.name() == 'MANUTENCAO'} ? 'Manutenção' : 'Comum')"
                                             th:selected="${r == usuario.role}"></option>
+                                </select>
+                            </div>
+                            <div class="field-group" id="tipoManutencaoGroup" style="display:none;">
+                                <label for="tipo">Especialidade</label>
+                                <select id="tipo" name="tipo">
+                                    <option value="" disabled>Selecione a especialidade...</option>
+                                    <option th:each="t : ${tipos}"
+                                            th:value="${t.name()}"
+                                            th:text="${t.descricao}"
+                                            th:selected="${usuario.tipo != null and t == usuario.tipo}"></option>
                                 </select>
                             </div>
                             <div class="form-actions">
@@ -191,5 +201,17 @@
         </main>
     </div>
 </div>
+<script>
+function atualizarTipoManutencao() {
+    var role = document.getElementById('role');
+    var group = document.getElementById('tipoManutencaoGroup');
+    var tipo = document.getElementById('tipo');
+    var manutencao = role && role.value === 'MANUTENCAO';
+    group.style.display = manutencao ? 'block' : 'none';
+    tipo.required = manutencao;
+    if (!manutencao) tipo.value = '';
+}
+document.addEventListener('DOMContentLoaded', atualizarTipoManutencao);
+</script>
 </body>
 </html>

@@ -6,6 +6,7 @@ import br.edu.ifsp.chamados.enums.BlocoLocal;
 import br.edu.ifsp.chamados.enums.CategoriaIncidente;
 import br.edu.ifsp.chamados.enums.LocalEspecifico;
 import br.edu.ifsp.chamados.enums.StatusIncidente;
+import br.edu.ifsp.chamados.enums.TipoManutencao;
 import br.edu.ifsp.chamados.repository.IncidenteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,20 +26,25 @@ public class IncidenteService {
 
     @Transactional
     public Incidente criar(String observacao, BlocoLocal bloco, LocalEspecifico localEspecifico,
-                           CategoriaIncidente categoria, MultipartFile anexo,
+                           CategoriaIncidente categoria, TipoManutencao tipo, MultipartFile anexo,
                            Usuario usuario, Usuario responsavel) throws IOException {
+        if (tipo == null) {
+            throw new RuntimeException("Selecione o tipo de manutencao do chamado.");
+        }
+
         Incidente incidente = Incidente.builder()
                 .observacao(observacao)
                 .bloco(bloco)
                 .localEspecifico(localEspecifico)
                 .categoria(categoria)
+                .tipo(tipo)
                 .usuario(usuario)
                 .responsavel(responsavel)
                 .status(StatusIncidente.CRIADO)
                 .build();
 
         if (anexo != null && !anexo.isEmpty()) {
-            String base64  = Base64.getEncoder().encodeToString(anexo.getBytes());
+            String base64 = Base64.getEncoder().encodeToString(anexo.getBytes());
             String mimeType = anexo.getContentType();
             incidente.setAnexo("data:" + mimeType + ";base64," + base64);
         }
@@ -57,7 +63,7 @@ public class IncidenteService {
 
     public Incidente buscarPorId(Long id) {
         return incidenteRepository.findByIdWithUsuario(id)
-                .orElseThrow(() -> new RuntimeException("Incidente não encontrado: " + id));
+                .orElseThrow(() -> new RuntimeException("Incidente nao encontrado: " + id));
     }
 
     @Transactional
@@ -80,12 +86,18 @@ public class IncidenteService {
     @Transactional
     public Incidente atualizar(Long id, String observacao, BlocoLocal bloco,
                                LocalEspecifico localEspecifico, CategoriaIncidente categoria,
-                               StatusIncidente status, Usuario responsavel, String observacaoTecnica) {
+                               TipoManutencao tipo, StatusIncidente status, Usuario responsavel,
+                               String observacaoTecnica) {
+        if (tipo == null) {
+            throw new RuntimeException("Selecione o tipo de manutencao do chamado.");
+        }
+
         Incidente incidente = buscarPorId(id);
         incidente.setObservacao(observacao);
         incidente.setBloco(bloco);
         incidente.setLocalEspecifico(localEspecifico);
         incidente.setCategoria(categoria);
+        incidente.setTipo(tipo);
         incidente.setStatus(status);
         incidente.setResponsavel(responsavel);
         if (observacaoTecnica != null && !observacaoTecnica.isBlank()) {

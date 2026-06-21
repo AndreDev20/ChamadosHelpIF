@@ -2,6 +2,7 @@ package br.edu.ifsp.chamados.service;
 
 import br.edu.ifsp.chamados.entity.Usuario;
 import br.edu.ifsp.chamados.enums.Role;
+import br.edu.ifsp.chamados.enums.TipoManutencao;
 import br.edu.ifsp.chamados.repository.IncidenteRepository;
 import br.edu.ifsp.chamados.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Distribui chamados automaticamente entre os técnicos de manutenção
- * usando round-robin: quem tem menos chamados abertos recebe o próximo.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,15 +21,20 @@ public class AtribuicaoService {
     private final IncidenteRepository incidenteRepository;
 
     @Transactional(readOnly = true)
-    public Usuario escolherResponsavel() {
-        List<Usuario> tecnicos = usuarioRepository.findByRole(Role.MANUTENCAO);
-
-        if (tecnicos.isEmpty()) {
-            log.warn("Nenhum técnico de manutenção cadastrado para atribuição automática.");
-            return null;
+    public Usuario escolherResponsavel(TipoManutencao tipo) {
+        if (tipo == null) {
+            throw new RuntimeException("Selecione o tipo de manutencao do chamado.");
         }
 
-        // Escolhe o técnico com menor número de chamados abertos (não concluídos)
+        List<Usuario> tecnicos = usuarioRepository.findByRoleAndTipo(Role.MANUTENCAO, tipo);
+
+        if (tecnicos.isEmpty()) {
+            log.warn("Nenhum tecnico de manutencao cadastrado para o tipo {}.", tipo);
+            throw new RuntimeException(
+                    "Nao ha tecnico disponivel para o tipo selecionado: " + tipo.getDescricao() + "."
+            );
+        }
+
         return tecnicos.stream()
                 .min((a, b) -> {
                     long cargaA = incidenteRepository.countAbertosporResponsavel(a.getId());

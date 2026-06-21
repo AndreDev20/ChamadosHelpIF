@@ -282,6 +282,10 @@
                                 <span class="info-value" th:text="${incidente.categoria.name() == 'MANUTENCAO'} ? 'Manutenção' : 'Laboratório'"></span>
                             </div>
                             <div class="info-row">
+                                <span class="info-label">Tipo</span>
+                                <span class="info-value" th:text="${incidente.tipo != null ? incidente.tipo.descricao : '-'}"></span>
+                            </div>
+                            <div class="info-row">
                                 <span class="info-label">Bloco / Área</span>
                                 <span class="info-value" th:text="${incidente.bloco.descricao}"></span>
                             </div>

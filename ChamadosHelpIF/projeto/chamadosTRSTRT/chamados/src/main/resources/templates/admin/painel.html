@@ -460,6 +460,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Observação</th>
+                                <th>Tipo</th>
                                 <th>Local</th>
                                 <th>Solicitante</th>
                                 <th>Responsável</th>
@@ -480,6 +481,8 @@
                                 <td data-label="Observação" class="obs-cell"
                                     th:text="${#strings.abbreviate(inc.observacao, 55)}"
                                     th:title="${inc.observacao}"></td>
+
+                                <td data-label="Tipo" th:text="${inc.tipo != null ? inc.tipo.descricao : '-'}"></td>
 
                                 <td data-label="Local">
                                     <div class="local-bloco" th:text="${inc.bloco.descricao}"></div>
@@ -556,19 +559,20 @@
                                 <th>ID</th>
                                 <th>Nome</th>
                                 <th>E-mail</th>
-                                <th>Tipo</th>
+                                <th>Perfil</th>
+                                <th>Especialidade</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:if="${#lists.isEmpty(usuarios)}" class="empty">
-                                <td colspan="5">Nenhum usuário cadastrado.</td>
+                                <td colspan="6">Nenhum usuário cadastrado.</td>
                             </tr>
                             <tr th:each="u : ${usuarios}">
                                 <td data-label="ID" class="id-cell" th:text="'#' + ${u.id}"></td>
                                 <td data-label="Nome" style="font-weight:600;" th:text="${u.nome}"></td>
                                 <td data-label="E-mail" style="color:var(--muted); font-size:0.83rem;" th:text="${u.email}"></td>
-                                <td data-label="Tipo">
+                                <td data-label="Perfil">
                                     <span class="role-badge"
                                           th:classappend="${u.role.name() == 'ADMIN'} ? 'role-ADMIN' :
                                                          (${u.role.name() == 'MANUTENCAO'} ? 'role-MANUTENCAO' : 'role-COMUM')"
@@ -576,6 +580,8 @@
                                                    (${u.role.name() == 'MANUTENCAO'} ? 'Manutenção' : 'Comum')">
                                     </span>
                                 </td>
+                                <td data-label="Especialidade"
+                                    th:text="${u.role.name() == 'MANUTENCAO' and u.tipo != null ? u.tipo.descricao : '-'}"></td>
                                 <td data-label="Ações">
                                     <div class="actions">
                                         <a class="btn btn-edit"
