@@ -4,6 +4,7 @@ import br.edu.ifsp.chamados.enums.BlocoLocal;
 import br.edu.ifsp.chamados.enums.CategoriaIncidente;
 import br.edu.ifsp.chamados.enums.LocalEspecifico;
 import br.edu.ifsp.chamados.enums.StatusIncidente;
+import br.edu.ifsp.chamados.enums.TipoManutencao;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,11 @@ public class Incidente {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CategoriaIncidente categoria;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoManutencao tipo;
 
     @NotNull
     @Enumerated(EnumType.STRING)

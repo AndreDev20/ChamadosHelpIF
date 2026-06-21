@@ -204,6 +204,19 @@
 
                         <div class="divider"></div>
 
+                        <div class="section-label">Tipo de Atendimento</div>
+                        <div class="field-group">
+                            <label class="field-label" for="tipo">Especialidade Necessaria</label>
+                            <select id="tipo" name="tipo" required>
+                                <option th:each="t : ${tipos}"
+                                        th:value="${t.name()}"
+                                        th:text="${t.descricao}"
+                                        th:selected="${t == incidente.tipo}"></option>
+                            </select>
+                        </div>
+
+                        <div class="divider"></div>
+
                         <!-- DESCRIÇÃO -->
                         <div class="section-label">📋 Descrição</div>
                         <div class="field-group">
@@ -233,7 +246,7 @@
                                 <option value="" disabled>Selecione o responsável</option>
                                 <option th:each="tec : ${tecnicos}"
                                         th:value="${tec.id}"
-                                        th:text="${tec.nome}"
+                                        th:text="${tec.tipo != null ? tec.nome + ' - ' + tec.tipo.descricao : tec.nome}"
                                         th:selected="${incidente.responsavel != null and tec.id == incidente.responsavel.id}">
                                 </option>
                             </select>

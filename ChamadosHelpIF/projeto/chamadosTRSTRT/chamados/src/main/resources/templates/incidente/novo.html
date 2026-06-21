@@ -728,6 +728,16 @@
                                     </select>
                                 </div>
 
+                                <div class="field-group">
+                                    <label for="tipo">Tipo de atendimento</label>
+                                    <select id="tipo" name="tipo" required>
+                                        <option value="" disabled selected>Selecione o tipo...</option>
+                                        <option th:each="t : ${tipos}"
+                                                th:value="${t.name()}"
+                                                th:text="${t.descricao}"></option>
+                                    </select>
+                                </div>
+
 
 
                                 <!-- DESCRIÇÃO -->

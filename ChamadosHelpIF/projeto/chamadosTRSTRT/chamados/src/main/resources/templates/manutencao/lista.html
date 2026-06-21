@@ -377,6 +377,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Descrição</th>
+                                <th>Tipo</th>
                                 <th>Local</th>
                                 <th>Solicitante</th>
                                 <th>Responsável</th>
@@ -406,6 +407,8 @@
                                 <td class="obs-cell" data-label="Descrição"
                                     th:text="${#strings.abbreviate(inc.observacao, 50)}"
                                     th:title="${inc.observacao}"></td>
+
+                                <td data-label="Tipo" th:text="${inc.tipo != null ? inc.tipo.descricao : '-'}"></td>
 
                                 <td data-label="Local">
                                     <div class="local-bloco" th:text="${inc.bloco.descricao}"></div>
