@@ -19,7 +19,7 @@ public enum LocalEspecifico {
     BP_CENTRAL_GAS_GASTRONOMIA(BlocoLocal.TERREO_BLOCO_PEDAGOGICO, "Central de Gás - Laboratório de Gastronomia"),
     BP_COORD_ALMOXARIFADO_PATRIMONIO(BlocoLocal.TERREO_BLOCO_PEDAGOGICO, "Coordenadoria de Almoxarifado e Patrimônio"),
     BP_COORD_SOCIOPEDAGOGICA(BlocoLocal.TERREO_BLOCO_PEDAGOGICO, "Coordenadoria Sociopedagógica"),
-    BP_COORD_NAPNEE(BlocoLocal.TERREO_BLOCO_PEDAGOGICO, "Coordenadoria do NAPNEE"),
+    BP_COORD_NAPNEE(BlocoLocal.TERREO_BLOCO_PEDAGOGICO, "Coordenadoria do NAPNE"),
     BP_DEPOSITO_PATRIMONIO_INSERVIVEIS(BlocoLocal.TERREO_BLOCO_PEDAGOGICO, "Depósito Temporário do Patrimônio - Inservíveis"),
     BP_DEPOSITO_LIMPEZA(BlocoLocal.TERREO_BLOCO_PEDAGOGICO, "Depósito de Limpeza"),
     BP_ESTACIONAMENTO_PCD(BlocoLocal.TERREO_BLOCO_PEDAGOGICO, "Estacionamento - Pessoas com Deficiência"),
